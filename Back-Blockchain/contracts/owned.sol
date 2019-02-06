@@ -2,27 +2,35 @@ pragma solidity ^0.4.13;
 
 contract Owned {
 	address internal owner = msg.sender;
+  address ownerCandidate;
 
-	modifier onlyOwner 
-	{ 
-		require(msg.sender == owner); 
-		_; 
+	modifier onlyOwner
+	{
+		require(msg.sender == owner);
+		_;
 	}
 
+  modifier onlyOwnerCandidate
+  {
+    require (msg.sender == ownerCandidate);
+    _;
+  }
+
+	event NewOwnerCandidate(address indexed old, address indexed invited);
 	event NewOwner(address indexed old, address indexed current);
 
-    function getOwner() view public returns(address)
+    function getOwner() public returns(address)
     {
     	return owner;
     }
 
-    function setOwner(address _new) public onlyOwner 
-    { 
-    	if (owner != 0x0)
-    		require(msg.sender == owner);
+	  function inviteOwner(address _new) public onlyOwner {
+	    ownerCandidate = _new;
+    	NewOwnerCandidate(owner, _new);
+	  }
 
-    	owner = _new; 
-    	NewOwner(owner, _new); 
-    }
-
+	  function acceptOwnership() public onlyOwnerCandidate {
+	    owner = ownerCandidate;
+    	NewOwner(owner, msg.sender);
+	  }
 }
