@@ -1,0 +1,48 @@
+<div class="form-group">
+
+    <div class="conteudo">
+        <div class="row">
+            <div class="form-group col-md-4 col-sm-4">
+                <label>Endereço:</label>
+                <input [(ngModel)]="endereco" class="form-control form-control-sm" (ngModelChange)="recuperaInformacoesDerivadasEndereco()"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4 col-sm-4">
+                <label>CNPJ:</label>
+                <input type="text" class="form-control form-control-sm" [ngModel]="cnpj" readonly disabled/>
+            </div>
+
+            <div class="form-group col-md-4 col-sm-4">
+                <label>Razão Social:</label>
+                <input type="text" class="form-control form-control-sm" [ngModel]="razaoSocial" readonly disabled/>
+            </div>
+
+            <div class="form-group col-md-4 col-sm-4">
+                <label>Subcrédito:</label>
+                <input type="text" class="form-control form-control-sm" [ngModel]="identificacaoSubcredito" readonly disabled/>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4 col-sm-4">
+                <label>Saldo atual:</label>
+                <input type="text" class="form-control form-control-sm" [ngModel]="saldo" readonly disabled/>
+            </div>
+
+            <div class="form-group col-md-4 col-sm-4">
+                <label>Novo Saldo:</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="novoSaldo" [disabled]="!formHabilitado" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button (click)="salvarNovoSaldo()" type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Salvar" [disabled]="!formHabilitado || novoSaldo <= 0">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+        </button>
+    </div>
+
+</div>

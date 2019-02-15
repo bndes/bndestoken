@@ -1,0 +1,18 @@
+<app-bloco-animado [title]="'Assinatura da Declaração'" [checked]="checkAssinador">
+    <textarea name="declaracao" class="form-control declaracao" [(ngModel)]="msgDeclaracao" rows="5" readonly></textarea>
+
+    <div class="panel" id="not-available" *ngIf="!possuiAssinador">
+      <p>WebSign não instalado!</p>
+      <a href="https://www.dropbox.com/s/6m0jy6ekttwic6m/WebSign.Setup.exe?dl=0&raw=1">Clique aqui para instalar</a>
+    </div>
+
+    <button type="button" *ngIf="possuiAssinador" id="signBtn" class="btn btn-secondary btn-cabecalho" placement="bottom" (click)="executarAssinador()">
+      <i class="fa fa-desktop"></i> Assinador
+    </button>
+  </app-bloco-animado>
+
+  <div class="conteudo" *ngIf="checkDeclaracaoAssinada">
+    <img class="imgDeclaracao" src="../assets/img/declaracaoAssinada.png">
+    <label>Assinatura realizada com sucesso!</label>
+    <i class="fa fa-check" style="color:#28a745" *ngIf="checkDeclaracaoAssinada"></i>
+  </div>

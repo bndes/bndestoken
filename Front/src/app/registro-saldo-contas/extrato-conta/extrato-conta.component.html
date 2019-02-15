@@ -1,0 +1,57 @@
+<hr>
+
+<h3>Extrato da Conta</h3>
+
+<p>Conta: {{contaBlockchainExtrato}}</p>
+
+<div class="form-inline box-qtd-itens">
+  <div class="form-group col-md-5 col-sm-5 offset-md-3">
+    <label>Itens por página</label>
+  </div>
+  <div class="form-group col-md-2 col-sm-2">
+    <select name="qtdItemsPorPagina" [(ngModel)]="qtdPorPagina" class="form-control form-control-sm" (ngModelChange)="atualizaQtdItensPorPagina($event)">
+      <option [ngValue]="10">10</option>
+      <option [ngValue]="20">20</option>
+      <option [ngValue]="30">30</option>
+    </select>
+  </div>
+</div>
+
+<div class="table-responsive-md">
+  <table class="table table-sm">
+
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Tipo de Transação</th>
+        <th>CNPJ</th>
+        <th>Descrição</th>
+        <th>Saldo em BNDESTokens</th>
+        <th>Saldo em R$</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let extrato of listaExtrato | orderBy: 'dataHora' | filter:filter | paginate: { itemsPerPage: qtdPorPagina, currentPage: p } ; let i = index">
+        <td>{{extrato.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
+        <td>{{extrato.tipoDeTransacao}}</td>
+        <td>{{extrato.cnpj | cnpjMask}}</td>
+        <td>{{extrato.descricao}}</td>
+        <td [class.red]="extrato.valor < 0">{{extrato.valor | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
+        <td [class.red]="extrato.valor < 0">{{extrato.valor | currency:'BRL':'symbol':'1.2-2':'pt'}}</td>
+      </tr>
+      <tr class="tr-final">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Total:</td>
+        <td>{{valorTotal | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
+        <td>{{valorTotal | currency:'BRL':'symbol':'1.2-2':'pt'}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="text-center">
+    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Próximo" class="paginacao"></pagination-controls>
+  </div>
+</div>

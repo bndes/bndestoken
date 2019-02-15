@@ -1,0 +1,101 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+
+  <div>
+    <h2 class="page-header">Ordens de Pagamento para Fornecedores</h2>
+
+    <div class="row">
+      <label class="col-sm-3 col-form-label">CNPJ:</label>
+      <div class="form-group col-md-4 col-sm-4">
+        <input [textMask]="{mask: maskCnpj}" type="text" class="form-control form-control-sm" [ngModel]="registroAcompanhamento.cnpj" readonly disabled/>
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="col-sm-3 col-form-label">Razão Social:</label>
+      <div class="form-group col-md-4 col-sm-4">
+        <input type="text" class="form-control form-control-sm" [ngModel]="registroAcompanhamento.razaoSocial" readonly disabled/>
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="col-sm-3 col-form-label">Subcredito:</label>
+      <div class="form-group col-md-4 col-sm-4">
+        <select name="subcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="subcreditoSelecionado" (change)="recuperaTransferencias()">
+          <option [value]="-1" selected>Todos</option>
+          <option *ngFor="let subcredito of registroAcompanhamento.subcreditos" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
+        </select>
+      </div>
+    </div>
+    <P></P>
+    <P></P>
+
+    <input class="form-control barra-filtro" type="text" name="search" [(ngModel)]="filter" placeholder="Filtro">
+
+    <div class="table-responsive-md" *ngIf="registroAcompanhamento.listaTransferencias && registroAcompanhamento.listaTransferencias.length > 0">
+      <table class="table table-striped table-bordered table-sm">
+
+        <thead>
+          <tr>
+            <th align="center" class="cnpj-table-cell" [class.active]="order === 'cnpjDestino'" (click)="setOrder('cnpjDestino')" scope="col">CNPJ
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'razaoSocialDestino'" (click)="setOrder('razaoSocialDestino')" scope="col">Razão Social
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'valorTransferencia'" (click)="setOrder('valorTransferencia')" scope="col">Valor
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'descricao'" (click)="setOrder('descricao')" scope="col">Descrição
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'documentoDeSuporte'" (click)="setOrder('documentoDeSuporte')" scope="col">Documento de Suporte
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'dataHora'" (click)="setOrder('dataHora')" scope="col">Data/Hora
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th scope="col">Conta Blockchain</th>
+            <th scope="col">HashId</th>
+            <th scope="col">Acompanhamento</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let transferencia of registroAcompanhamento.listaTransferencias  | orderBy: order : reverse : 'caseInsensitive' | filter:filter | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index">
+            <td>{{transferencia.cnpjDestino | cnpjMask }}</td>
+            <td>{{transferencia.razaoSocialDestino}}</td>
+            <td>{{(transferencia.valorTransferencia*1) | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
+            <td>{{transferencia.descricao}}</td>
+            <td>{{transferencia.documentoDeSuporte}}</td>
+            <td>{{transferencia.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td>{{transferencia.contaBlockchainDestino}}</td>
+            <td class="text-center">
+              <a href="https://rinkeby.etherscan.io/tx/{{transferencia.hashOperacao}}">
+                <i class="fa fa-link" aria-hidden="true"></i>
+              </a>
+            </td>
+            <!-- <td><button type="submit" class="btn btn-success" placement="bottom" ngbTooltip="Acompanhamento"><i class="fa fa-external-link" aria-hidden="true"></i></button></td> -->
+            <td class="text-center">
+              <!-- <a href="#"> -->
+              <a>
+                <i class="fa fa-external-link" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-center">
+      <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Próximo" class="paginacao"></pagination-controls>
+    </div>
+
+  </div>
+</div>

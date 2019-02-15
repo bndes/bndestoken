@@ -1,0 +1,23 @@
+table, th, td {
+   border: 1px solid #ced4da;
+}
+
+thead th {
+  cursor: pointer;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+thead th i {
+  display: none;
+}
+thead th.active {
+  color: #000;
+}
+thead th.active i {
+  display: inline;
+}
+
+.seletor-table {
+  padding-bottom: 12px;
+  padding-left: 10px;
+}

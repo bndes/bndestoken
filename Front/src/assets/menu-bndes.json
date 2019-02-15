@@ -1,0 +1,50 @@
+[
+	{
+		"titulo": "Home",
+    	"url": "/bndes/home",
+    	"topo": true
+	},
+	{
+		"titulo": "BNDES",
+			"url":"",
+			"topo": true,
+			"subitem": [
+				{
+					"titulo": "Liberar",
+					"url": "/bndes/liberacao",
+					"separador": false
+				},
+				{
+					"titulo": "Validar Cadastro",
+					"url": "bndes/val-cadastro",
+					"separador": false
+				},
+				{
+					"titulo": "Liquidar Resgates",
+					"url": "/bndes/liquidar",
+					"separador": false
+				}
+			]
+	},
+	{
+    	"titulo": "Sociedade",
+    	"topo": true,
+		"subitem": [
+			{
+				"titulo": "Dashboard Cadastro",
+				"url": "/sociedade/dash-empresas",
+				"separador": false
+			},
+			{
+				"titulo": "Dashboard Transações",
+				"url": "/sociedade/dash-transf",
+				"separador": false
+			},
+			{
+				"titulo": "Dashboard Resgates e Liquidações",
+				"url": "/sociedade/dash-resgates",
+				"separador": false
+			}
+		]
+	}
+]

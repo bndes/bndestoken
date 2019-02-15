@@ -1,0 +1,118 @@
+<app-metamsg></app-metamsg>
+
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+  <div class="title-loading">
+    <h2 class="page-header">Gerenciar Relacionamentos</h2>
+    <app-bn-loading class="loading" *ngIf="estadoLista === 'undefined'"></app-bn-loading>
+  </div>
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Alteração dos Dados Bancários</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #smallForm="ngForm">
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group col-md-8 col-sm-8">
+              <app-input-validation errorMessage="Campo Obrigatório">
+                <label class="required">Banco:</label>
+                <input name="banco" class="form-control form-control-sm" [(ngModel)]="novoBanco" minlength="3" maxlength="4" required />
+              </app-input-validation>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-8 col-sm-8">
+              <app-input-validation errorMessage="Campo Obrigatório e Somente números">
+                <label class="required">Agência:</label>
+                <input name="agencia" class="form-control form-control-sm" [(ngModel)]="novaAgencia" minlength="4" maxlength="4" pattern="^[0-9]*$"
+                  required/>
+              </app-input-validation>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-10 col-sm-10">
+              <label class="required">Conta Corrente:</label>
+              <app-input-validation errorMessage="Campo Obrigatório">
+                <div class="input-group">
+                  <input name="contaCorrente" class="form-control form-control-sm col-md-10 col-sm-10" [(ngModel)]="novaContaCorrente" maxlength="11"
+                    pattern="^[0-9]*$" required/> -
+                  <input name="digitoContaCorrente" class="form-control form-control-sm col-md-2 col-sm-2" [(ngModel)]="novoDigitoContaCorrente"
+                    maxlength="2" required/>
+                </div>
+              </app-input-validation>
+            </div>
+          </div>
+
+          <app-assinador [msgDeclaracao]="declaracao" (declaracaoAssinada)="receberDeclaracaoAssinada($event)"></app-assinador>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" [disabled]="declaracaoAssinada === undefined || !smallForm.valid" (click)="c(alterarDadaosBancarios())">Alterar</button>
+    </div>
+  </ng-template>
+
+  <button hidden #popup (click)="openPopUp(content)"></button>
+
+  <div *ngIf="estadoLista === 'vazia'">
+    Não há conta ativa para este endereço na blockchain. {{listaContaSaldo}}
+  </div>
+
+  <div *ngIf="estadoLista === 'cheia'">
+    <input class="form-control barra-filtro" type="text" name="search" [(ngModel)]="filter" placeholder="Filtro">
+
+    <div class="table-responsive-md">
+      <table class="table table-striped table-bordered table-sm">
+
+        <thead>
+          <tr>
+            <th [class.active]="order === 'contaBlockchain'" (click)="setOrder('contaBlockchain')" scope="col">Conta Blockchain
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'status'" (click)="setOrder('status')" scope="col">Status
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th [class.active]="order === 'saldo'" (click)="setOrder('saldo')" scope="col">Saldo em BNDESTokens
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+            <th>Saldo em R$</th>
+            <th *ngIf="ehFornecedor">Banco</th>
+            <th *ngIf="ehFornecedor">Agência</th>
+            <th *ngIf="ehFornecedor">Conta Corrente</th>
+            <th *ngIf="ehFornecedor">Editar</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr #linha *ngFor="let reg of listaContaSaldo | orderBy: order :reverse : 'caseInsensitive' :customComparator | filter:filter | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index"
+            (click)="selecionaConta(i, reg)" [class.table-active]="isActive[i]">
+            <td>{{reg.conta}}</td>
+            <td *ngIf="reg.status === 'OK'" class="green">{{reg.status}}</td>
+            <td *ngIf="reg.status === 'Desativada'" class="red">{{reg.status}}</td>
+            <td>{{reg.saldo | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
+            <td>{{reg.saldo | currency:'BRL':'symbol':'1.2-2':'pt'}}</td>
+            <td *ngIf="ehFornecedor">{{reg.dadosBancarios.banco}}</td>
+            <td *ngIf="ehFornecedor">{{reg.dadosBancarios.agencia}}</td>
+            <td *ngIf="ehFornecedor">{{reg.dadosBancarios.contaCorrente }}</td>
+            <td *ngIf="ehFornecedor" class="text-center">
+              <a href="javascript:void(0)" [class.not-active]="reg.dadosBancarios.banco === '-' || reg.status === 'Desativada'" (click)="passarDadosParaPopUp(i)"
+                (click)="popup.click()">
+                <i class="fa fa-edit"></i>
+              </a>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-extrato-conta *ngIf="extratoAberto" [contaBlockchainExtrato]="contaExtrato"></app-extrato-conta>
+
+</div>

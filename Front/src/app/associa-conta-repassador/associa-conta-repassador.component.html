@@ -1,0 +1,102 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+
+  <form (ngSubmit)="associaContaRepassador()" #registerForm="ngForm">
+
+    <div class="form-group">
+      <h2>Associar Conta Blockchain ao e-CNPJ</h2>
+    </div>
+
+    <div class="form-group" *ngIf="!repassador.dadosCadastrais">
+      <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Selecionar arquivo" (click)="certificado.click()">
+        <i class="fa fa-id-card" aria-hidden="true"></i> Selecionar arquivo
+      </button>
+      <input id="certificado" name="certificado" type="file" #certificado (change)="carregaCertificadoDigital($event)" hidden/>
+    </div>
+
+    <div class="conteudo form-group" *ngIf="repassador.dadosCadastrais">
+      <div class="row">
+
+        <div class="col-md-12 col-sm-12">
+          <p>Dados Cadastrais</p>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Razão Social:</label>
+          <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="repassador.dadosCadastrais.razaoSocial" readonly
+            disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>CNPJ do Repassador:</label>
+          <input [textMask]="{mask: maskCnpj}" name="cnpj" class="form-control form-control-sm" [(ngModel)]="repassador.cnpj" [disabled]="repassador.cnpj"
+            required/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Cidade:</label>
+          <input name="cidade" class="form-control form-control-sm" [(ngModel)]="repassador.dadosCadastrais.cidade" readonly disabled/>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="conteudo form-group" *ngIf="repassador.dadosCadastrais">
+
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <p>Associação Conta Blockchain e Contrato</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label>CNPJ do Cliente:</label>
+            <input [textMask]="{mask: maskCnpj}" name="cnpjCliente" class="form-control form-control-sm" [(ngModel)]="cnpjCliente" (ngModelChange)="recuperaClientePorCNPJ($event)"
+              required />
+          </app-input-validation>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label>Subcrédito do Cliente:</label>
+            <select name="subcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="subcreditoSelecionado" [disabled]="subcreditosCliente.length <= 0"
+              required>
+              <option *ngIf="subcreditosCliente.length > 0">Selecione</option>
+              <option *ngFor="let subcredito of subcreditosCliente | orderBy: 'nome'" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
+            </select>
+          </app-input-validation>
+        </div>
+
+        <div class="form-group col-md-5 col-sm-5">
+          <label>Conta Blockchain Selecionada:</label>
+          <input name="contaBlockchain" class="form-control form-control-sm" type="text" [ngModel]="contaSelecionada" readonly
+            disabled size="45">
+          <div class="msg-conta-invalida" *ngIf="!contaEstaValida">
+            Conta Blockchain Inválida.
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+
+    <app-assinador *ngIf="repassador.dadosCadastrais" [msgDeclaracao]="declaracao" (declaracaoAssinada)="receberDeclaracaoAssinada($event)"></app-assinador>
+
+    <div class="form-group" *ngIf="repassador.dadosCadastrais">
+      <button type="submit" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Salvar" [disabled]="declaracaoAssinada === undefined || !contaEstaValida">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Enviar
+      </button>
+
+      <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="cancelar" (click)="limparCampos()">
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+
+  <br>
+
+</div>

@@ -1,0 +1,106 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+
+  <div *ngIf="resgate">
+
+    <div class="form-group">
+      <h2>Solicitação de Resgate</h2>
+    </div>
+
+    <div class="conteudo">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h5>Dados Cadastrais:</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-5 col-sm-5">
+          <label>Conta Blockchain:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.contaBlockchainOrigem" readonly disabled size="45">
+        </div>
+        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <label>CNPJ:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.cnpjOrigem | cnpjMask" readonly disabled size="14" />
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Razão Social:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.razaoSocialOrigem" readonly disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Saldo:</label>
+          <input currencyMask type="text" class="form-control form-control-sm" [ngModel]="resgate.saldoOrigem" readonly disabled/>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="conteudo">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h5>Dados Bancários:</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Banco:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.bancoOrigem" readonly disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Agência:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.agenciaOrigem " readonly disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Conta Corrente:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.contaCorrenteOrigem" readonly disabled/>
+        </div>
+      </div>
+    </div>
+
+    <div class="conteudo">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h5>Resgate:</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label class="required">Valor a Resgatar (em BNDESTokens):</label>
+            <input currencyMask [(ngModel)]="resgate.valor" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm" required/>
+          </app-input-validation>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Equivalente em R$:</label>
+          <input currencyMask [options]="{ prefix: 'R$ '}" [(ngModel)]="resgate.valor" class="form-control form-control-sm" readonly
+            disabled />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-success btn-cabecalho" (click)="resgatar()" [disabled]="resgate.valor === undefined || resgate.valor <= 0"
+      type="button" placement="bottom" ngbTooltip="Resgatar">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i> Solicitar
+    </button>
+  </div>
+
+</div>

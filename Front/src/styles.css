@@ -1,0 +1,159 @@
+/* You can add global styles to this file, and also import other style files */
+
+.container {
+  margin-top: 20px;
+}
+
+table {
+  font-size: 14.5px;
+}
+
+table thead th {
+  vertical-align: middle !important;
+  text-align: center;
+}
+
+table tbody td {
+  vertical-align: middle !important;
+}
+
+.refreshContaBlockchain {
+  margin-top: 4px;
+  margin-left: 10px;
+}
+
+.barra-filtro {
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.btn {
+  margin-bottom: 20px;
+}
+
+.is-invalid .form-control  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+.is-valid .form-control  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.required:after {
+  content:" *"; 
+  color: red;
+}
+
+.title-loading {
+  display: inline-flex;
+}
+
+.loading {
+  margin-left: 10px;
+  margin-top: 11px;
+}
+
+.cnpj-table-cell {
+  width: 160px;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+/* Tooltip */
+.tooltipCaixa {
+  position: relative;
+}
+
+.tooltipCaixa .tooltiptext {
+  visibility: hidden;
+  width: 220px;
+  background-color: #1E2021;
+  color: #fff;
+  text-align: center;
+  font-size: 13px;
+  border-radius: 3px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  left: 100%;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  font-weight: normal;
+  padding: 15px;
+}
+
+.tooltipCaixa .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; 
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #1E2021 transparent transparent;
+  
+}
+
+.tooltipCaixa:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* Fim Tooltip */
+
+/* Remove o boneco do usuario e o sair da tela */
+.box-usuario-titulo {
+  display: none;
+}
+
+/* Acerto no menu do bndes-ux4 */
+li div ul {
+  padding-right: 20px !important;
+}
+
+.not-active {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: #1E2021;
+}
+
+.msg-conta-invalida {
+  margin-top: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: red;
+}
+
+.fa-question-circle {
+  display: inline !important;
+}
+
+
+
+
+/* 
+.centro {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+} 
+
+.bnLoading > i {
+  float: right !important; 
+  margin-left: 20px !important;
+  margin-top: 20px !important;
+}
+
+.tituloDash {
+  float: left;
+}*/

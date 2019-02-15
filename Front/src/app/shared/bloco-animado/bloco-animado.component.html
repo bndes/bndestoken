@@ -1,0 +1,16 @@
+<div class="bloco conteudo form-group" (click)="click()" [class.active]="animacaoBloco === 'modificado'" [@animacao-bloco]="animacaoBloco">
+
+  <div class="cursor">
+    <i class="fa fa-caret-right" *ngIf="animacaoBlocoInterno === 'hidden'"></i>
+    <i class="fa fa-caret-down" *ngIf="animacaoBlocoInterno === 'visible'"></i>
+  </div>
+    <p class="title">
+      {{title}}
+      <i class="fa fa-check" style="color:#28a745" *ngIf="checked"></i>
+    </p>
+
+</div>
+
+<div class="bloco-interno" [@animacao-bloco-interno]="animacaoBlocoInterno">
+  <ng-content></ng-content>
+</div>

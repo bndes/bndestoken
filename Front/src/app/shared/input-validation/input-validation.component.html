@@ -1,0 +1,10 @@
+<div class="form-group" [class.is-invalid]="hasError()" >
+                   <!-- [class.is-valid]="hasSucess()"> -->
+                        
+  <!-- <label class="control-label required" for="inputSuccess"> {{label}}</label> -->
+
+  <ng-content></ng-content>
+
+  <!-- <span class="help-block text-success" *ngIf="hasSucess()"><i class="fa fa-check"></i> Ok</span> -->
+  <span class="help-block text-danger" *ngIf="hasError()"><i class="fa fa-remove"></i> {{errorMessage}}</span>
+</div>

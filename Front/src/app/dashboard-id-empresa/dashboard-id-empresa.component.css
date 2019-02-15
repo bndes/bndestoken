@@ -1,0 +1,27 @@
+table, th, td {
+   border: 1px solid #ced4da;
+}
+
+.grafico {
+    width: 50%;
+    height: 50%;
+}
+
+thead th {
+  cursor: pointer;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+thead th i {
+  display: none;
+}
+thead th.active {
+  color: #000;
+}
+thead th.active i {
+  display: inline;
+}
+
+.paginacao /deep/ .ngx-pagination {
+  padding-left: 0px;
+}

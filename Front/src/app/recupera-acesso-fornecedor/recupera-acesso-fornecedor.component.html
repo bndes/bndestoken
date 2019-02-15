@@ -1,0 +1,97 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+
+
+  <form (ngSubmit)="cancelaAssociacaoContaFornecedor()" #registerForm="ngForm">
+
+    <div class="form-group">
+      <h2>Trocar conta blockchain do e-CNPJ</h2>
+    </div>
+
+    <div class="form-group" *ngIf="!fornecedor.dadosCadastrais">
+      <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Selecionar arquivo" (click)="certificado.click()">
+        <i class="fa fa-id-card" aria-hidden="true"></i> Selecionar arquivo
+      </button>
+      <input id="certificado" name="certificado" type="file" #certificado (change)="carregaCertificadoDigital($event)" hidden/>
+    </div>
+
+    <div class="conteudo form-group" *ngIf="fornecedor.dadosCadastrais">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h6>Dados Cadastrais:</h6>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Razão Social:</label>
+          <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly
+            disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>CNPJ do Fornecedor:</label>
+          <input name="cnpj" class="form-control form-control-sm" [ngModel]="fornecedor.cnpj | cnpjMask" [disabled]="fornecedor.cnpj"
+            required/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Cidade:</label>
+          <input name="cidade" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.cidade" readonly disabled/>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="conteudo form-group" *ngIf="fornecedor.contasFornecedor">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h6>Trocar associação de CNPJ e Conta Blockchain:</h6>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-5 col-sm-5">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label>Conta Blockchain Atual:</label>
+            <select name="contaBlockchainAntiga" class="form-control form-control-sm" [(ngModel)]="contaBlockchainAntiga" required>
+              <option *ngFor="let conta of fornecedor.contasFornecedor" [attr.value]="conta.contaBlockchain">{{conta.contaBlockchain}}</option>
+            </select>
+          </app-input-validation>
+        </div>
+
+        <div>
+          <img src="assets/img/seta.png" />
+        </div>
+
+        <div class="form-group col-md-5 col-sm-5">
+          <label>Conta Blockchain Nova:</label>
+          <input name="contaBlockchainNova" class="form-control form-control-sm" type="text" [ngModel]="recuperaContaSelecionada()"
+            readonly disabled>
+          <div class="msg-conta-invalida" *ngIf="!contaEstaValida">
+            Conta Blockchain Inválida.
+          </div>
+        </div>
+
+        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
+      </div>
+
+    </div>
+
+    <app-assinador *ngIf="fornecedor.dadosCadastrais" [msgDeclaracao]="declaracao" (declaracaoAssinada)="receberDeclaracaoAssinada($event)"></app-assinador>
+
+    <div class="form-group" *ngIf="fornecedor.dadosCadastrais">
+      <button type="submit" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Salvar" [disabled]="declaracaoAssinada === undefined || !registerForm.valid || !contaEstaValida">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Enviar
+      </button>
+
+      <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="cancelar" (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

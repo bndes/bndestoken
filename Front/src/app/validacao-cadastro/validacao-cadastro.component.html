@@ -1,0 +1,61 @@
+<div class="title-loading">
+  <h2 class="page-header">Validação de Cadastro</h2>
+</div>
+
+
+<form #registerForm="ngForm">
+<div>
+
+  <div class="table-responsive-md">
+    <table class="table table-striped table-bordered table-sm">
+      <thead>
+        <tr >
+          <th>Razão Social</th>
+          <th>CNPJ</th>
+          <th>Subcrédito</th>
+          <th>SALIC</th>          
+          <th>Conta Blockchain</th>
+          <th>Status</th>
+          <th>HashDeclaração</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>{{pj.razaoSocial}}</td>
+          <td>{{pj.cnpj | cnpjMask}}</td>
+          <td>{{pj.idSubcredito}}</td>
+          <td>{{pj.salic}}</td>
+          <td><input name="pj.contaBlockchain" (keyup)="recuperaClientePorContaBlockchain(pj.contaBlockchain)" [(ngModel)]="pj.contaBlockchain" class="form-control"></td>     
+          <td>{{pj.status}}</td>
+          <td><input name="hashDeclaracaoDigitado" [(ngModel)]="hashDeclaracaoDigitado" class="form-control"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+    <div class="msg-conta-invalida" *ngIf="pj.cnpj && !estaContaEstadoAguardandoValidacao()">
+      Conta não está no status aguardando validação
+    </div>
+      <div class="msg-conta-invalida" *ngIf="pj.cnpj && hashDeclaracaoDigitado && !isHashDigitadoIgualAHashDeclaracao()">
+      Hash digitado é diferente do hash da declaração
+      </div>          
+
+
+
+    <div *ngIf="estaContaEstadoAguardandoValidacao()">
+  <div class="text-center">
+      <button type="submit" (click)="validarCadastro()" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Validar" >
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Validar
+      </button>
+
+    <button type="button" (click)="invalidarCadastro()" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Invalidar" >
+      <i class="fa fa-floppy-o" aria-hidden="true"></i> Invalidar
+    </button>
+  </div>
+
+  </div>
+
+</div>
+
+</form>

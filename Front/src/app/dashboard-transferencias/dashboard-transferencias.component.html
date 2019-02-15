@@ -1,0 +1,118 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+
+<div class="title-loading">
+  <h2 class="page-header">Dashboard Transações</h2>
+  <app-bn-loading class="loading" *ngIf="estadoLista === 'undefined'"></app-bn-loading>
+</div>
+
+<div *ngIf="estadoLista === 'vazia'">
+  <p>Não foi encontrada nenhuma transação na Blockchain!</p>
+</div>
+
+<div *ngIf="estadoLista === 'cheia'">
+  <div class="container">
+    <div class="row" *ngIf="pieChartData.dataTable[1][1] > 0 || pieChartData.dataTable[2][1] > 0 || pieChartData.dataTable[3][1] > 0">
+      <div class="col">
+        <google-chart #pieChart [data]="pieChartData"></google-chart>
+      </div>
+      <div class="col">
+        <google-chart #barChart [data]="barChartData"></google-chart>
+      </div>
+    </div>
+  </div>
+
+  <input class="form-control barra-filtro" type="text" name="search" [(ngModel)]="filter" placeholder="Filtro">
+
+  <div class="table-responsive-md">
+    <table class="table table-striped table-bordered table-sm">
+
+      <thead>
+        <tr *ngIf="listaTransferencias.length > 0">
+          <th [class.active]="order === 'deRazaoSocial'" (click)="setOrder('deRazaoSocial')" scope="col">Razão Social origem
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'deConta'" (click)="setOrder('deConta')" scope="col">Subcrédito origem
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'paraRazaoSocial'" (click)="setOrder('paraRazaoSocial')" scope="col">Razão Social destino
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'paraConta'" (click)="setOrder('paraConta')" scope="col">Subcrédito destino
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'valor'" (click)="setOrder('valor')" scope="col">Valor em BNDESToken
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'valor'" (click)="setOrder('valor')" scope="col">Valor em R$
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+          <th [class.active]="order === 'tipo'" (click)="setOrder('tipo')" scope="col">Tipo
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'dataHora'" (click)="setOrder('dataHora')" scope="col">Data/Hora
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th scope="col">HashId</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let transferencia of listaTransferencias | orderBy: order :reverse : 'caseInsensitive' :customComparator | filter:filter | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index"
+          (click)="selecionaTransacao(i, transferencia)" [class.table-active]="isActive[i]">
+          <td class="tooltipCaixa">{{transferencia.deRazaoSocial}}
+              <span class="tooltiptext">CNPJ: {{transferencia.deCnpj | cnpjMask}}</span>
+          </td>
+          <td>{{transferencia.deConta}}</td>
+          <td class="tooltipCaixa">{{transferencia.paraRazaoSocial}}
+              <span class="tooltiptext">CNPJ: {{transferencia.paraCnpj | cnpjMask}}</span>
+          </td>
+          <td>{{transferencia.paraConta}}</td>
+          <td>{{transferencia.valor | currency:'BND':'symbol':'1.2-2':'pt' }}</td>
+          <td>{{transferencia.valor | currency:'R$':'symbol':'1.2-2':'pt' }}</td>
+          <td>{{transferencia.tipo}}</td>
+          <td>{{transferencia.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
+          <td class="text-center">
+            <a target="_blank" href="https://rinkeby.etherscan.io/tx/{{transferencia.hashID}}">
+              <i class="fa fa-link" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="text-center">
+      <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Próximo" class="paginacao"></pagination-controls>
+    </div>
+  </div>
+
+  <div class="mapa">
+    <agm-map [latitude]="latitudeInicial" [longitude]="longitudeInicial" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="true"
+      [mapTypeControl]="true" [usePanning]="true">
+
+      <agm-polyline *ngFor="let ml of marcadoresLinha">
+        <agm-polyline-point [latitude]="ml.latA" [longitude]="ml.lngA"></agm-polyline-point>
+        <agm-polyline-point [latitude]="ml.latB" [longitude]="ml.lngB"></agm-polyline-point>
+      </agm-polyline>
+
+      <agm-marker *ngFor="let m of marcadores; let i = index" [latitude]="m.lat" [longitude]="m.lng" [label]="labelMap[i]" [markerDraggable]="m.draggable">
+
+        <agm-info-window>
+          <strong>{{m.info}}</strong>
+        </agm-info-window>
+      </agm-marker>
+    </agm-map>
+    <p>
+      <b>A: Origem B: Destino</b>
+    </p>
+  </div>
+</div>
+</div>

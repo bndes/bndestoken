@@ -1,0 +1,143 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+
+  <div *ngIf="transferencia">
+
+    <div class="form-group">
+      <h2>Transferência</h2>
+    </div>
+
+    <div class="conteudo">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h5>Conta Origem:</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-5 col-sm-5">
+          <label>Conta Blockchain:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="transferencia.contaBlockchainOrigem" readonly disabled
+            size="45">
+
+        </div>
+        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="row">
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Subcrédito:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="transferencia.subcredito" readonly disabled size="60"
+          />
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Saldo em BNDESTokens:</label>
+          <input type="text" name="saldo" class="form-control form-control-sm" [ngModel]="transferencia.saldoOrigem" currencyMask readonly
+            disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Saldo em R$:</label>
+          <input type="text" name="saldoReal" class="form-control form-control-sm" [ngModel]="transferencia.saldoOrigem" currencyMask
+            [options]="{ prefix: 'R$ '}" readonly disabled/>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="conteudo">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h5>Conta Destino:</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-5 col-sm-5">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label class="required">Conta Blockchain:</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="transferencia.contaBlockchainDestino" (ngModelChange)="recuperaInformacoesDerivadasConta()"
+              [disabled]="!statusHabilitacaoForm" required>
+          </app-input-validation>
+        </div>
+      </div>
+
+      <div class="msg red" *ngIf="transferencia.msgEmpresaDestino" [class.green]="transferencia.msgEmpresaDestino == 'Repassador do Subcrédito' || transferencia.msgEmpresaDestino == 'Fornecedor'">
+        Transferência para um(a) {{transferencia.msgEmpresaDestino}}
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <label>CNPJ:</label>
+          <input [textMask]="{mask: maskCnpj}" [(ngModel)]="transferencia.cnpjDestino" class="form-control form-control-sm" readonly disabled />
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Razão Social:</label>
+          <input type="text" class="form-control form-control-sm" [ngModel]="transferencia.razaoSocialDestino" readonly disabled/>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label class="required">Descrição:</label>
+            <input [(ngModel)]="transferencia.descricao" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm" required/>
+          </app-input-validation>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Documentos de Suporte:</label>
+          <input [(ngModel)]="transferencia.documentoDeSuporte" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm"
+          />
+          <input #upload name="arquivos[]" type="file" multiple [disabled]="!statusHabilitacaoForm" hidden>
+        </div>
+        <a class="btn btn-success btnUpload" (click)="upload.click()">
+          <i class="fa fa-upload" aria-hidden="true" style="color:white"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="conteudo">
+
+      <div class="row">
+        <div class="form-group col-md-12 col-sm-12">
+          <h5>Transferência:</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4 col-sm-4">
+          <app-input-validation errorMessage="Campo Obrigatório">
+            <label class="required">Valor a transferir (em BNDESTokens):</label>
+            <input currencyMask [(ngModel)]="transferencia.valorTransferencia" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm"
+              required />
+          </app-input-validation>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-4">
+          <label>Equivalente em R$:</label>
+          <input currencyMask [(ngModel)]="transferencia.valorTransferencia" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm"
+            [options]="{ prefix: 'R$ '}" readonly disabled />
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="form-group">
+      <button (click)="transferir()" type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Transferir"
+        [disabled]="transferencia.msgEmpresaDestino != 'Repassador do Subcrédito' && transferencia.msgEmpresaDestino != 'Fornecedor'">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Transferir
+      </button>
+    </div>
+  </div>
+
+
+</div>

@@ -1,0 +1,19 @@
+language: node_js
+
+node_js:
+  - '8.9.4'
+
+before_install:
+  - echo 'antes de instalar'
+
+install:
+ - npm install mocha -g
+ 
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+script:
+  - bash ./travis_teste.sh
+  - bash ./travis_deploy.sh

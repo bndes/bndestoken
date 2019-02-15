@@ -1,0 +1,78 @@
+<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+<div class="title-loading">
+  <h2 class="page-header">Dashboard Cadastros</h2>
+  <app-bn-loading class="loading" *ngIf="estadoLista === 'undefined'"></app-bn-loading>
+</div>
+
+<div *ngIf="estadoLista === 'vazia'">
+  <p>Não foi encontrado nenhum Cadastro na Blockchain!</p>
+</div>
+
+<div *ngIf="estadoLista === 'cheia'">
+  <input class="form-control barra-filtro" type="text" name="search" [(ngModel)]="filter" placeholder="Filtro">
+
+  <div class="table-responsive-md">
+    <table class="table table-striped table-bordered table-sm">
+      <thead>
+        <tr *ngIf="listaTransacoesPJ.length > 0">
+          <th [class.active]="order === 'razaoSocial'" (click)="setOrder('razaoSocial')">Razão Social
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th class="cnpj-table-cell" [class.active]="order === 'cnpj'" (click)="setOrder('cnpj')">CNPJ
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'nomeConta'" (click)="setOrder('nomeConta')">Subcrédito
+              <i [hidden]="reverse" class="fa fa-caret-down"></i>
+              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+            </th>
+          <th [class.active]="order === 'salic'" (click)="setOrder('salic')">SALIC
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>            
+          <th [class.active]="order === 'dataHora'" (click)="setOrder('dataHora')">Data/Hora
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'contaBlockchain'" (click)="setOrder('contaBlockchain')">Conta Blockchain
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th [class.active]="order === 'status'" (click)="setOrder('status')">Status
+            <i [hidden]="reverse" class="fa fa-caret-down"></i>
+            <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+          </th>
+          <th>HashDeclaração</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let transacaoPJ of listaTransacoesPJ | orderBy: order: reverse: 'caseInsensitive':customComparator | filter:filter | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index">
+          <td>{{transacaoPJ.razaoSocial}}</td>
+          <td>{{transacaoPJ.cnpj | cnpjMask}}</td>
+          <td>{{transacaoPJ.nomeConta}}</td>
+          <td>{{transacaoPJ.salic}}</td>
+          <td>{{transacaoPJ.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
+          <td>{{transacaoPJ.contaBlockchain}}</td>
+          <td>{{transacaoPJ.status}}</td>
+          <td>{{transacaoPJ.hashDeclaracao}}</td>
+          <!--<td *ngIf="transacaoPJ.status === 'OK'" class="green text-center">OK</td>
+          <td *ngIf="transacaoPJ.status === 'Desativada'" class="red text-center">Desativada</td>-->
+          <td class="text-center">
+            <a target="_blank" href="https://rinkeby.etherscan.io/tx/{{transacaoPJ.hashID}}">
+              <i class="fa fa-link" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-center">
+    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Próximo" class="paginacao"></pagination-controls>
+  </div>
+</div>
+</div>

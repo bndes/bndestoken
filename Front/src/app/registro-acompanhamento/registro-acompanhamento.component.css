@@ -1,0 +1,21 @@
+thead th {
+  cursor: pointer;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+thead th i {
+  display: none;
+}
+thead th.active {
+  color: #000;
+}
+thead th.active i {
+  display: inline;
+}
+
+.conteudo {
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px
+}

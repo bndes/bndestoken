@@ -1,0 +1,56 @@
+[
+	{
+		"titulo": "Home",
+    	"url": "/fornecedor/home",
+    	"topo": true
+	},
+	{
+		"titulo": "Fornecedor",
+    	"url":"",
+    	"topo": true,
+			"subitem": [
+				{
+					"titulo": "Associar Conta",
+					"url": "/fornecedor/associa-conta-fornecedor",
+					"separador": false
+				},
+				{
+					"titulo": "Solicitar Resgate",
+					"url": "/fornecedor/resgate",
+					"separador": false
+				},
+				{
+					"titulo": "Trocar conta",
+					"url": "/fornecedor/recupera-acesso-fornecedor",
+					"separador": false
+				},
+				{
+					"titulo": "Gerenciar Relacionamentos",
+					"url": "/fornecedor/registro-saldo-contas",
+					"separador": false
+					
+				}
+			]
+	},
+	{
+    	"titulo": "Sociedade",
+    	"topo": true,
+		"subitem": [
+			{
+				"titulo": "Dashboard Cadastro",
+				"url": "/sociedade/dash-empresas",
+				"separador": false
+			},
+			{
+				"titulo": "Dashboard Transações",
+				"url": "/sociedade/dash-transf",
+				"separador": false
+			},
+			{
+				"titulo": "Dashboard Resgates e Liquidações",
+				"url": "/sociedade/dash-resgates",
+				"separador": false
+			}
+		]
+	}
+]

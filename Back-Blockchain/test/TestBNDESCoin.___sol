@@ -1,0 +1,37 @@
+pragma solidity ^0.4.13;
+
+import "truffle/Assert.sol";
+import "truffle/DeployedAddresses.sol";
+import "../contracts/BNDESCoin.sol";
+import "../contracts/stringutils.sol";
+
+contract TestBNDESCoin {
+    BNDESCoin public coin;
+
+  function testCadastro() public {
+    coin = BNDESCoin(DeployedAddresses.BNDESCoin());
+    //MetaCoin meta = MetaCoin(DeployedAddresses.MetaCoin());
+
+    string memory cnpj = "000.000.001/001-01";
+
+    coin.cadastra(cnpj);
+
+    string memory myCNPJ = coin.getCNPJ(this);
+
+    bool cnpjOk = StringUtils.equal(myCNPJ, cnpj);
+    Assert.equal(cnpjOk, true, "CNPJ deveria ter sido cadastrado");
+
+    //Assert.equal(meta.getBalance(tx.origin), expected, "Owner should have 10000 MetaCoin initially");
+  }
+
+  function testNulo() public {
+    //MetaCoin meta = new MetaCoin();
+
+    //uint expected = 10000;
+
+    //Assert.equal(meta.getBalance(tx.origin), expected, "Owner should have 10000 MetaCoin initially");
+
+    Assert.equal(true, true, "Nada");
+  }
+
+}

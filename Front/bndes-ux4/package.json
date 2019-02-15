@@ -1,0 +1,34 @@
+{
+  "name": "bndes-ux4",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.bndes.net:cti-a03/bndes-ux4.git"
+  },
+  "author": {
+    "name": "Felipe Marques Moreira",
+    "email": "felipe.marques@bndes.gov.br"
+  },
+  "keywords": [
+    "angular"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "git@gitlab.bndes.net:cti-a03/bndes-ux4.git/issues"
+  },
+  "main": "bndes-ux4.umd.js",
+  "module": "bndes-ux4.js",
+  "jsnext:main": "bndes-ux4.js",
+  "typings": "bndes-ux4.d.ts",
+  "peerDependencies": {
+    "@angular/common": "^4.4.6",
+    "@angular/compiler": "^4.0.0",
+    "@angular/compiler-cli": "^4.0.0",
+    "@angular/core": "^4.4.6",
+    "@angular/platform-browser": "^4.4.6",
+    "@angular/platform-browser-dynamic": "^4.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
+    "rxjs": "^5.1.0",
+    "zone.js": "^0.8.4"
+  }
+}
