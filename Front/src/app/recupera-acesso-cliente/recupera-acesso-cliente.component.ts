@@ -67,17 +67,6 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     }   
   }
 
-  carregaCertificadoDigital($event): void {
-    let self = this;
-
-    var fileReader = this.uploadArquivo("certificado");
-
-    fileReader.onload = function (e) {
-      self.cliente.cnpj = fileReader.result
-      self.recuperaClientePorCNPJComSubcreditosSemConta(self.cliente.cnpj.trim())
-    }
-  }
-
   receberDeclaracaoAssinada(declaracaoAssinadaRecebida) {
     console.log(declaracaoAssinadaRecebida)
 

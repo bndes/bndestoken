@@ -54,9 +54,9 @@
 
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="subcreditoSelecionado">
 
-        <div class="form-group col-md-5 col-sm-5" *ngIf="subcreditoSelecionado">
+        <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain Associada:</label>
           <input name="contaBlockchainAssociada" class="form-control form-control-sm" type="text" [(ngModel)]="contaBlockchainAssociada" readonly
             disabled size="45" required>
