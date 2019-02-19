@@ -102,11 +102,11 @@ if (comBackMongoDB)
 		console.log("---------------------------");
 		console.log("APAGANDO DADOS MONGODB");
 		console.log("---------------------------");
-		process.chdir("BD");
+		process.chdir("Infra\\BD");
         executaCmd("mongo bndescoin --eval 'db.dropDatabase()' >> ../log/token_BD.log", MESMA_JANELA);
         aguarde(4);
         executaCmd("mongoimport --db bndescoin --collection pessoasjuridicas --file PJ.json >> ../log/token_BD.log", MESMA_JANELA);
-		process.chdir("..");
+		process.chdir("..\\..");
 	}
 }
 
