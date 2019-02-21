@@ -206,24 +206,6 @@ export class ResgateComponent implements OnInit {
               self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
               console.log(s)
 
-              console.log("Início da gravação no BD")
-              self.pessoaJuridicaService.cadastraResgate(self.resgate).subscribe(
-
-                data => {
-                  if (data) {
-                    console.log("Inseriu no BD");
-                    self.mudaStatusHabilitacaoForm(true);
-                    self.inicializaResgate();
-
-                  }
-                  else {
-                    console.log("Não inseriu no BD");
-                  }
-                },
-                error => {
-                  console.log("Erro ao inserir no BD");
-                });
-
               self.zone.run(() => { })
             } else {
               console.log(error)

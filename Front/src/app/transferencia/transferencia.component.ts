@@ -279,33 +279,7 @@ export class TransferenciaComponent implements OnInit {
               let s = "A associação foi confirmada na blockchain.";
               self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
               console.log(s);
-  
-              console.log("Início da gravação no BD");
 
-              self.pessoaJuridicaService.cadastraTransf(self.transferencia).subscribe(
-                data => {
-                  if (data) {
-                    console.log("inseriu no bd");
-
-                    self.zone.run(() => {
-                      self.router.navigate(['sociedade/dash-transf'])
-                    });
-                        
-                    // self.inicializaTransferencia();
-                    // self.mudaStatusHabilitacaoForm(true);
-
-                    // self.ref.detectChanges()
-                  }
-                  else {
-                    console.log("nao inseriu no bd");
-                  }
-                },
-                error => {
-                  console.log("Erro inserir no bd");
-                });
-              
-              console.log("Fim da gravação no BD");
-  
               self.zone.run(() => {});
             }
             else {

@@ -204,24 +204,6 @@ export class AssociaContaClienteComponent implements OnInit {
             self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
             console.log(s);
 
-            console.log("Início da gravação no BD");
-            self.pessoaJuridicaService.associarContaCliente(self.cliente, subcreditoSelecionado, contaBlockchain).subscribe(
-              data => {
-                console.log("PJ alterada no mongo - ");
-                console.log(data);
-
-                self.router.navigate(['sociedade/dash-empresas'])
-              },
-              error => {
-                let s = "Não foi possível realizar atualização no banco de dados, embora os dados tenham sido cadastrados na blockchain";
-                this.bnAlertsService.criarAlerta("error", "Erro", s, 5)
-                console.log(s + error);
-                self.mudaStatusHabilitacaoForm(true);
-
-              }
-            );
-            console.log("Fim da gravação no BD");
-
             self.zone.run(() => { });
           }
           else {

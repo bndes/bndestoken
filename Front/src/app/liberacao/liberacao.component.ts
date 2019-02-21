@@ -217,29 +217,6 @@ export class LiberacaoComponent implements OnInit {
               self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
               console.log(s);
 
-              console.log("Início da gravação no BD")
-              self.pessoaJuridicaService.cadastraLiberacao(self.liberacao).subscribe(
-                data => {
-                  if (data) {
-                    console.log("Inseriu no BD");
-
-                    // self.inicializaLiberacao();
-                    // self.mudaStatusHabilitacaoForm(true);
-
-                    self.zone.run(() => {
-                      self.router.navigate(['sociedade/dash-transf'])
-                    });
-                  }
-                  else {
-                    console.log("Não inseriu no BD");
-                  }
-                },
-                error => {
-                  console.log("Erro ao inserir no BD");
-                });
-
-
-
             }
             else {
               console.log(error);

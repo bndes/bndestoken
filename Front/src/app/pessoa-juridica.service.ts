@@ -24,106 +24,10 @@ export class PessoaJuridicaService {
 
   }
 
-
-  cadastrarPJ(pessoaJuridica): Observable<Object> {
-
-    console.log("cadastrar PJ do service chamado, vai criar observable!");
-
-    return this.http.post<Object>(this.serverUrl + 'pj', pessoaJuridica)
-      //.do(pessoaJuridica => console.log('dado retornado :' +  JSON.stringify(pessoaJuridica)))
-      .catch(this.handleError);
-
-  }
-
-  cadastraTransf(transferencia): Observable<Object> {
-
-    console.log("cadastrar transf do service chamado, vai criar observable!");
-
-    return this.http.post<Object>(this.serverUrl + 'transferencia', transferencia)
-      .catch(this.handleError);
-  }
-
-  cadastraResgate(resgate): Observable<Object> {
-
-    console.log("cadastrar resgate do service chamado, vai criar observable!");
-
-    return this.http.post<Object>(this.serverUrl + 'resgate', resgate)
-      .catch(this.handleError);
-  }
-
-  cadastraLiberacao(liberacao): Observable<Object> {
-
-    console.log("cadastrar liberacao do service chamado, vai criar observable!");
-
-    return this.http.post<Object>(this.serverUrl + 'liberacao', liberacao)
-      .catch(this.handleError);
-
-  }
-
   geraHash(entrada: string): string {
     let saida;
     saida = Md5.hashStr(entrada);
     return saida;
-  }
-
-  associarContaCliente(cliente, subcredito, contaBlockchain): Observable<Object> {
-
-    console.log("Frontend - PessoaJuridicaService - associaContaCliente - iniciando ");
-    console.log("Frontend - PessoaJuridicaService - associaContaCliente - contaBlockchain " + contaBlockchain);
-    console.log("Frontend - PessoaJuridicaService - associaContaCliente - serverlURL: " + this.serverUrl);
-    let data = { cliente: cliente, subcredito: subcredito, contaBlockchain: contaBlockchain };
-
-    return this.http.post<Object>(this.serverUrl + 'associa-conta-cliente', data)
-      //.do(pessoaJuridica => console.log('dado retornado :' +  JSON.stringify(pessoaJuridica)))
-      .catch(this.handleError);
-  }
-
-  associaContaRepassador(repassador): Observable<Object> {
-
-    console.log("associar PJ do service chamado, vai criar observable!");
-
-    let data = { repassador: repassador };
-
-    return this.http.post<Object>(this.serverUrl + 'associa-conta-repassador', data)
-      .catch(this.handleError);
-  }
-
-  associarContaFornecedor(fornecedor): Observable<Object> {
-
-    console.log("associar PJ do service chamado, vai criar observable!");
-
-    let data = { fornecedor: fornecedor };
-
-    return this.http.post<Object>(this.serverUrl + 'associa-conta-fornecedor', data)
-      //.do(pessoaJuridica => console.log('dado retornado :' +  JSON.stringify(pessoaJuridica)))
-      .catch(this.handleError);
-  }
-
-  trocarContaCliente(cliente, numeroSubcredito, contaBlockchain): Observable<Object> {
-    console.log("Trocar conta Cliente")
-
-    let data = { cliente: cliente, numeroSubcredito: numeroSubcredito, contaBlockchain: contaBlockchain }
-
-    return this.http.post<Object>(this.serverUrl + "troca-conta-cliente", data)
-      .catch(this.handleError)
-  }
-
-  trocarContaRepassador(repassador, numeroSubcredito, contaBlockchain): Observable<Object> {
-    console.log("Trocar conta Repassador")
-
-    let data = { repassador: repassador, numeroSubcredito: numeroSubcredito, contaBlockchain: contaBlockchain }
-
-    return this.http.post<Object>(this.serverUrl + "troca-conta-repassador", data)
-      .catch(this.handleError)
-  }
-
-  trocarContaFornecedor(fornecedor, contaBlockchainAntiga, contaBlockchainNova): Observable<Object> {
-    console.log("Trocar conta Fornecedor")
-
-    let data = { fornecedor: fornecedor, contaBlockchainAntiga: contaBlockchainAntiga, contaBlockchainNova: contaBlockchainNova }
-
-    return this.http.post<Object>(this.serverUrl + "troca-conta-fornecedor", data)
-      .catch(this.handleError)
   }
 
   liquidarResgate(hashID, hashIDLiquidacao): Observable<Object> {
@@ -185,11 +89,6 @@ export class PessoaJuridicaService {
 
   buscaLiberacaoPorHash(hashID) {
     return this.http.post<Object>(this.serverUrl + 'busca-liberacao-por-hash', { hashID: hashID })
-      .catch(this.handleError)
-  }
-
-  alterarDadosBancariosFornecedor(contaBlockchain, dadosBancarios): Observable<any> {
-    return this.http.post<Object>(this.serverUrl + 'alterar-dados-bancarios-fornecedor', { contaBlockchain: contaBlockchain, dadosBancarios: dadosBancarios })
       .catch(this.handleError)
   }
 

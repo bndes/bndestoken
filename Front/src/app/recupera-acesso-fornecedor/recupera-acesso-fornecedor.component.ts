@@ -171,22 +171,6 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
             self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
             console.log(s)
 
-            console.log("Início da gravação no BD")
-            self.pessoaJuridicaService.trocarContaFornecedor(self.fornecedor, self.contaBlockchainAntiga, contaBlockchain).subscribe(
-              data => {
-                console.log("PJ alterada no mongo - ")
-
-                self.router.navigate(['sociedade/dash-empresas'])
-              },
-              error => {
-                let s = "Não foi possível realizar atualização no banco de dados, embora os dados tenham sido cadastrados na blockchain"
-                self.bnAlertsService.criarAlerta("error", "Erro", s, 5)
-                console.log(s + error)
-                self.mudaStatusHabilitacaoForm(true)
-
-              }
-            );
-
             self.zone.run(() => { })
           } else {
             console.log(error)

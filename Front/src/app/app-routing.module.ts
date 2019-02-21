@@ -12,14 +12,8 @@ import { ValidacaoCadastroComponent } from './validacao-cadastro/validacao-cadas
 /* Cliente */
 import { AssociaContaClienteComponent } from './associa-conta-cliente/associa-conta-cliente.component';
 import { RecuperaAcessoClienteComponent } from './recupera-acesso-cliente/recupera-acesso-cliente.component';
-
-/* Cliente e Repassador */
 import { TransferenciaComponent } from './transferencia/transferencia.component';
 import { RegistroAcompanhamentoComponent } from './registro-acompanhamento/registro-acompanhamento.component';
-
-/* Repassador */
-import { AssociaContaRepassadorComponent } from './associa-conta-repassador/associa-conta-repassador.component';
-import { RecuperaAcessoRepassadorComponent } from './recupera-acesso-repassador/recupera-acesso-repassador.component';
 
 /* Fornecedor */
 import { ResgateComponent } from './resgate/resgate.component';
@@ -36,7 +30,6 @@ import { RegistroSaldoContasComponent } from './registro-saldo-contas/registro-s
 const routes: Routes = [
   { path: 'bndes/home', component: HomeComponent },
   { path: 'cliente/home', component: HomeComponent },
-  { path: 'repassador/home', component: HomeComponent },
   { path: 'fornecedor/home', component: HomeComponent },
   { path: 'sociedade/home', component: HomeComponent },
   { path: 'bndes/liberacao', component: LiberacaoComponent },
@@ -48,11 +41,6 @@ const routes: Routes = [
   { path: 'cliente/registro-acompanhamento', component: RegistroAcompanhamentoComponent},
   { path: 'cliente/recupera-acesso-cliente', component: RecuperaAcessoClienteComponent},
   { path: 'cliente/registro-saldo-contas', component: RegistroSaldoContasComponent},
-  { path: 'repassador/associa-conta-repassador', component: AssociaContaRepassadorComponent},
-  { path: 'repassador/transf', component: TransferenciaComponent },
-  { path: 'repassador/registro-acompanhamento', component: RegistroAcompanhamentoComponent},
-  { path: 'repassador/recupera-acesso-repassador', component: RecuperaAcessoRepassadorComponent},
-  { path: 'repassador/registro-saldo-contas', component: RegistroSaldoContasComponent},
   { path: 'fornecedor/associa-conta-fornecedor', component: AssociaContaFornecedorComponent},
   { path: 'fornecedor/resgate', component: ResgateComponent },
   { path: 'fornecedor/recupera-acesso-fornecedor', component: RecuperaAcessoFornecedorComponent},

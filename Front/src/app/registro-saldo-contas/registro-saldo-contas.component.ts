@@ -196,24 +196,6 @@ export class RegistroSaldoContasComponent implements OnInit {
     this.declaracaoAssinada = declaracaoAssinadaRecebida
   }
 
-  alterarDadaosBancarios() {
-
-    this.pessoaJuridicaService.alterarDadosBancariosFornecedor(this.listaContaSaldo[this.posicaoRegistroQueSeraAlterado].conta,
-      { banco: this.novoBanco, agencia: this.novaAgencia, contaCorrente: this.novaContaCorrente + "-" + this.novoDigitoContaCorrente }).subscribe(
-      data => {
-        let s = "Os dados bancários foram alterados com sucesso.";
-        this.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
-        console.log(s);
-
-        this.iniciaRegistroSaldoConta()
-      },
-      error => {
-        let s = "Erro ao alterar os dados bancários.";
-        this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-        console.log(s);
-      })
-  }
-
   selecionaConta(posicao, registroSaldoContas) {
 
     this.contaExtrato = registroSaldoContas.conta

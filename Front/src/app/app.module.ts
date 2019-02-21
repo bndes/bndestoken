@@ -30,14 +30,8 @@ import { LiquidacaoResgateComponent } from './liquidacao-resgate/liquidacao-resg
 /* Cliente */
 import { AssociaContaClienteComponent } from './associa-conta-cliente/associa-conta-cliente.component';
 import { RecuperaAcessoClienteComponent } from './recupera-acesso-cliente/recupera-acesso-cliente.component';
-
-/* Cliente e Repassador */
 import { TransferenciaComponent } from './transferencia/transferencia.component';
 import { RegistroAcompanhamentoComponent } from './registro-acompanhamento/registro-acompanhamento.component';
-
-/* Repassador */
-import { AssociaContaRepassadorComponent } from './associa-conta-repassador/associa-conta-repassador.component';
-import { RecuperaAcessoRepassadorComponent } from './recupera-acesso-repassador/recupera-acesso-repassador.component';
 
 /* Fornecedor */
 import { ResgateComponent } from './resgate/resgate.component';
@@ -112,8 +106,6 @@ export const optionsMaskCurrencyBND: CurrencyMaskConfig = {
     AssociaContaFornecedorComponent,
     RecuperaAcessoFornecedorComponent,
     BlocoAnimadoComponent,
-    AssociaContaRepassadorComponent,
-    RecuperaAcessoRepassadorComponent,
     BalanceManutencaoComponent,
     RegistroSaldoContasComponent,
     MetamsgComponent,
