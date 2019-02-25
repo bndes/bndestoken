@@ -303,6 +303,14 @@ export class Web3Service {
             });
     }
 
+    getContaBlockchain(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): string {
+        return this.bndescoinContract.getContaBlockchain(cnpj, idSubcredito,
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
     getAddressOwner(fSuccess: any, fError: any): number {
         return this.bndescoinContract.getOwner(
             (error, result) => {

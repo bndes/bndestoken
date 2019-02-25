@@ -255,6 +255,7 @@ export class DashboardTransferenciasComponent implements OnInit {
             for (var i = 0; i < data.subcreditos.length; i++) {
               if (eventoLiberacao.args.idSubcredito == data.subcreditos[i].numero) {
                 subcredito = data.subcreditos[i].nome + " - " + data.subcreditos[i].numero
+                console.log("subcredito =" + subcredito);
               }
             }
 
@@ -293,6 +294,7 @@ export class DashboardTransferenciasComponent implements OnInit {
               function (error, result) {
                 if (!error) {
                   liberacao.dataHora = new Date(result.timestamp * 1000);
+                  console.log("data hora:" + liberacao.dataHora);
                   self.ref.detectChanges();
                   //TODO: adicionar tratamento para o grafico de barras
                 }
@@ -303,6 +305,8 @@ export class DashboardTransferenciasComponent implements OnInit {
               });
 
               self.isActive = new Array(self.listaTransferencias.length).fill(false)
+
+              console.log("Chegou no final da função");
           },
           error => {
             console.log("Erro ao recuperar empresa por CNPJ do evento liberação")

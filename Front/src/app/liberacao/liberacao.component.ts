@@ -98,6 +98,7 @@ export class LiberacaoComponent implements OnInit {
               subcreditos.push(data.subcreditos[i]);
           }
 
+          this.liberacao.cnpj = cnpj;
           this.liberacao.razaoSocial = data.dadosCadastrais.razaoSocial;
           this.liberacao.todosSubcreditos = JSON.parse(JSON.stringify(subcreditos))
 
@@ -107,12 +108,14 @@ export class LiberacaoComponent implements OnInit {
           if (data.subcreditos && data.subcreditos.length > 0) {
             //inicia com o primeiro subcredito
             this.liberacao.numeroSubcreditoSelecionado = this.liberacao.todosSubcreditos[0].numero;
-            this.liberacao.contaBlockchainCNPJ = this.liberacao.todosSubcreditos[0].contaBlockchain;
+            //this.liberacao.contaBlockchainCNPJ = this.liberacao.todosSubcreditos[0].contaBlockchain;
 
-            console.log("Contablockchain recuperada")
+            //console.log("Contablockchain recuperada")
 
             console.log(this.liberacao.todosSubcreditos[0])
-            console.log(this.liberacao.contaBlockchainCNPJ)
+            //console.log(this.liberacao.contaBlockchainCNPJ)
+
+            this.recuperaContaBlockchainCliente();
 
             this.recuperaSaldoCNPJ();
           }
@@ -156,6 +159,24 @@ export class LiberacaoComponent implements OnInit {
         console.log(error);
         self.liberacao.saldoCNPJ = 0;
       });
+  }
+
+  recuperaContaBlockchainCliente() {
+
+    let self = this;
+
+    this.web3Service.getContaBlockchain(this.liberacao.cnpj, this.liberacao.numeroSubcreditoSelecionado,
+      function (result) {
+        console.log("Saldo do cnpj " + self.liberacao.contaBlockchainCNPJ + " eh " + result);
+        self.liberacao.contaBlockchainCNPJ = result;
+        self.ref.detectChanges();
+      },
+      function (error) {
+        console.log("Erro ao ler o saldo do endereco " + self.liberacao.contaBlockchainCNPJ);
+        console.log(error);
+        self.liberacao.saldoCNPJ = 0;
+      });  
+
   }
 
   atualizaInfoPorMudancaSubcredito() {

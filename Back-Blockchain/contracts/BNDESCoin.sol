@@ -92,32 +92,6 @@ contract BNDESCoin is TokenManager(0,"BNDESCoin", "BND"),  Console {
         TrocaConta(enderecoNovo, _cnpj, _idSubcredito, 0); //TODO: refatorar para incluir salic no metodo troca 
     }
 
-    // function migraAPartirDeContrato(address _contratoAddr) onlyOwner public
-    // {
-        // BNDESCoin contratoAntigo = BNDESCoin (_contratoAddr);
-        // if (contratoAntigo.getTotalSupply() < 0)
-
-        // // Copia array
-        // for (uint i = 0; i < contratoAntigo.getPjsInfoEnderecos().length; i++)
-        // {
-        //     pjsInfoEnderecos.push(contratoAntigo.getPjsInfoEnderecos()[i]);
-        // }
-
-        // // Copia cadastros e saldos
-        // for (uint i2 = 0; i2 < pjsInfoEnderecos.length; i++)
-        // {
-        //     address addr = pjsInfoEnderecos[i];
-        //     pjsInfo[addr] = contratoAntigo.getPJInfo(addr);
-        //     balanceOf[addr] = contratoAntigo.getBalanceOf(addr);
-    
-        // }
-
-        // contratoAntigo.setTotalSupply(totalSupply);
-        // contratoAntigo.setName(name);
-        // contratoAntigo.setSymbol(symbol);
-        // contratoAntigo.setDecimals(decimals);
-    // }
-
     function getVersao() view public returns (uint) {
         return versao;
     }
@@ -134,11 +108,10 @@ contract BNDESCoin is TokenManager(0,"BNDESCoin", "BND"),  Console {
         return (pjsInfo[_addr].cnpj, pjsInfo[_addr].idSubcredito, pjsInfo[_addr].salic, pjsInfo[_addr].hashdeclaracao, (uint) (pjsInfo[_addr].estado));
     }
 
-/*
-    function getPJInfo (address _addr) view public returns (PJInfo) {
-        return pjsInfo[_addr];
+    function getContaBlockchain(uint256 _cnpj, uint256 _idSubcredito) view public returns (address) {
+        return cnpjSubEndereco[_cnpj][_idSubcredito];
     }
-*/
+
     function transfer (address _to, uint256 _value) public {
         address from = msg.sender;
 
