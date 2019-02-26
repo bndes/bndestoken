@@ -67,7 +67,7 @@ export class TransferenciaComponent implements OnInit {
     
     this.transferencia.contaBlockchainOrigem = contaSelecionada + "";
     this.recuperaSaldoOrigem(this.transferencia.contaBlockchainOrigem);
-    this.recuperaEmpresaOrigem(this.transferencia.contaBlockchainOrigem);
+    this.recuperaEmpresaOrigemPorContaBlockchain(this.transferencia.contaBlockchainOrigem);
     this.ref.detectChanges();
   }
 
@@ -92,9 +92,7 @@ export class TransferenciaComponent implements OnInit {
   recuperaInformacoesDerivadasConta() {
 
     if (this.transferencia.contaBlockchainDestino != "") {
-      // this.recuperaEmpresaOrigem(this.transferencia.contaBlockchainOrigem);
-      this.recuperaEmpresaDestino(this.transferencia.contaBlockchainDestino.toLowerCase());
-      // this.ultimaContaBlockchainDestino = this.transferencia.contaBlockchainDestino;
+      this.recuperaEmpresaDestinoPorContaBlockchain(this.transferencia.contaBlockchainDestino.toLowerCase());
     } else {
       this.transferencia.razaoSocialDestino = "";
       this.transferencia.papelEmpresaDestino = "";
@@ -103,79 +101,107 @@ export class TransferenciaComponent implements OnInit {
     }
   }
 
-  recuperaEmpresaOrigem(contaBlockchain) {
+  recuperaEmpresaOrigemPorContaBlockchain(contaBlockchain) {
 
-    console.log("Recupera empresa para - " + contaBlockchain);
+    let self = this;
 
-    this.pessoaJuridicaService.recuperaEmpresaPorContaBlockchain(contaBlockchain).subscribe(
-      data => {
-        if (data) {
-          let todosSubcreditos = data.subcreditos
+    console.log("ContaBlockchain" + contaBlockchain);
 
-          for (var i = 0; i < todosSubcreditos.length; i++) {
-            if (todosSubcreditos[i].contaBlockchain === contaBlockchain) {
-              this.transferencia.subcredito = todosSubcreditos[i].nome + " - " + todosSubcreditos[i].numero
-              this.transferencia.numeroSubcredito = todosSubcreditos[i].numero
-            }
-          }
+    if ( contaBlockchain != undefined && contaBlockchain != "" && contaBlockchain.length == 42 ) {
 
-        } else {
-          console.log("nenhuma empresa encontrada");
-          this.transferencia.papelEmpresaOrigem = "";
-        }
-      },
-      error => {
-        console.log("Erro ao buscar empresa por conta blockchain");
-        this.transferencia.papelEmpresaOrigem = "";
-      });
+      this.web3Service.getPJInfo(contaBlockchain,
 
-    this.web3Service.isRepassador(contaBlockchain,
-      (result) => {
-        if (result) {
-          this.transferencia.papelEmpresaOrigem = "R";
-        } else {
-          this.transferencia.papelEmpresaOrigem = "C"
-        }
-      },
-      (error) => {
-        console.log("Erro ao identificar papel da empresa")
-      })
-  }
+          (result) => {
 
+            if ( result.cnpj != 0 ) { //encontrou uma PJ valida  
 
-  recuperaEmpresaDestino(contaBlockchainDestino) {
-    console.log("Conta blockchain Destino - " + contaBlockchainDestino)
+              console.log(result);
+              self.transferencia.subcredito = result.idSubcredito;
+              if (self.transferencia.subcredito != 0) {
+                self.transferencia.papelEmpresaOrigem = "C";
+              }
+              self.ref.detectChanges();
 
-    let self = this
+           } //fecha if de PJ valida
 
-    this.pessoaJuridicaService.recuperaEmpresaPorContaBlockchain(contaBlockchainDestino).subscribe(
-      data => {
-        if (data) {
-          console.log("RECUPERA EMPRESA DESTINO")
-          console.log(data)
+           else {
+             self.apagaCamposDaEstrutura();
+             console.log("Não encontrou PJ valida para a conta blockchain");
+           }
+           
+          },
+          (error) => {
+            self.apagaCamposDaEstrutura();
+            console.warn("Erro ao buscar dados da conta na blockchain")
+          })
+    } 
+    else {
+        self.apagaCamposDaEstrutura();      
+    }
+}
 
-          this.transferencia.cnpjDestino = data.cnpj
-          this.transferencia.razaoSocialDestino = data.dadosCadastrais.razaoSocial;
+  recuperaEmpresaDestinoPorContaBlockchain(contaBlockchain) {
 
-          this.validaEmpresaDestino(contaBlockchainDestino)
+    let self = this;
 
-        }
-        else {
-          console.log("nenhuma empresa encontrada");
-          this.transferencia.razaoSocialDestino = "";
-          this.transferencia.papelEmpresaDestino = "";
-          this.transferencia.cnpjDestino = ""
-          this.transferencia.msgEmpresaDestino = "Conta Inválida"
-        }
-      },
-      error => {
-        console.log("Erro ao buscar dados da empresa");
-        this.transferencia.razaoSocialDestino = "";
-        this.transferencia.papelEmpresaDestino = "";
-        this.transferencia.cnpjDestino = "";
-        this.transferencia.msgEmpresaDestino = ""
-      });
-  }
+    console.log("ContaBlockchain" + contaBlockchain);
+
+    if ( contaBlockchain != undefined && contaBlockchain != "" && contaBlockchain.length == 42 ) {
+
+      this.web3Service.getPJInfo(contaBlockchain,
+
+          (result) => {
+
+            if ( result.cnpj != 0 ) { //encontrou uma PJ valida  
+
+              console.log(result);
+              self.transferencia.cnpjDestino = result.cnpj;
+
+              this.pessoaJuridicaService.recuperaEmpresaPorCnpj(self.transferencia.cnpjDestino).subscribe(
+                data => {
+                    if (data) {
+                    console.log("RECUPERA EMPRESA DESTINO")
+                    console.log(data)
+                    self.transferencia.razaoSocialDestino = data.dadosCadastrais.razaoSocial;
+                    this.validaEmpresaDestino(contaBlockchain);
+                }
+                else {
+                    console.log("nenhuma empresa encontrada");
+                    this.transferencia.razaoSocialDestino = "";
+                    this.transferencia.papelEmpresaDestino = "";
+                    this.transferencia.cnpjDestino = ""
+                    this.transferencia.msgEmpresaDestino = "Conta Inválida"
+                }
+              },
+              error => {
+                  console.log("Erro ao buscar dados da empresa");
+                  this.transferencia.razaoSocialDestino = "";
+                  this.transferencia.papelEmpresaDestino = "";
+                  this.transferencia.cnpjDestino = "";
+                  this.transferencia.msgEmpresaDestino = ""
+              });              
+
+              self.ref.detectChanges();
+
+           } //fecha if de PJ valida
+
+           else {
+             self.apagaCamposDaEstrutura();
+             console.log("Não encontrou PJ valida para a conta blockchain");
+           }
+           
+          },
+          (error) => {
+            self.apagaCamposDaEstrutura();
+            console.warn("Erro ao buscar dados da conta na blockchain")
+          })
+
+                 
+    } 
+    else {
+        self.apagaCamposDaEstrutura();      
+    }
+}
 
   validaEmpresaDestino(contaBlockchainDestino) {
     let self = this
@@ -305,6 +331,18 @@ export class TransferenciaComponent implements OnInit {
 
 
   }
+
+  apagaCamposDaEstrutura() {
+
+    let self = this;
+    //self.pj.cnpj = "";
+    //self.pj.razaoSocial = "";
+    self.transferencia.subcredito = "";
+    //self.pj.salic = "";
+    //self.pj.status = "";
+    //self.pj.hashDeclaracao = "";
+    //self.hashDeclaracaoDigitado = "";
+  }  
 
 
 }

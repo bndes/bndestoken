@@ -1,6 +1,6 @@
 import { Transferencia } from "../transferencia/Transferencia";
 
-export class RegistroAcompanhamento{
+export class ConsultaTransferencia {
   contaBlockchain: string;
   cnpj: string;
   razaoSocial: string;

@@ -31,7 +31,7 @@ import { LiquidacaoResgateComponent } from './liquidacao-resgate/liquidacao-resg
 import { AssociaContaClienteComponent } from './associa-conta-cliente/associa-conta-cliente.component';
 import { RecuperaAcessoClienteComponent } from './recupera-acesso-cliente/recupera-acesso-cliente.component';
 import { TransferenciaComponent } from './transferencia/transferencia.component';
-import { RegistroAcompanhamentoComponent } from './registro-acompanhamento/registro-acompanhamento.component';
+import { ConsultaTransferenciaComponent } from './consulta-transferencia/consulta-transferencia.component';
 
 /* Fornecedor */
 import { ResgateComponent } from './resgate/resgate.component';
@@ -100,7 +100,7 @@ export const optionsMaskCurrencyBND: CurrencyMaskConfig = {
     TransferenciaComponent,
     AssociaContaClienteComponent,
     RecuperaAcessoClienteComponent,
-    RegistroAcompanhamentoComponent,
+    ConsultaTransferenciaComponent,
     ResgateComponent,
     HomeComponent,
     AssociaContaFornecedorComponent,

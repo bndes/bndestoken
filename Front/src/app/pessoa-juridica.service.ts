@@ -54,8 +54,7 @@ export class PessoaJuridicaService {
 
     console.log("Recupera empresa a partir da contaBlockchainCNPJ " + contaBlockchainCNPJ);
 
-    return this.http.post<Object>(this.serverUrl + 'pj-por-contaBlockchain', { contaBlockchainCNPJ: contaBlockchainCNPJ.toLowerCase() })
-      //.do(pessoaJuridica => console.log('empresa retornada :' +  JSON.stringify(pessoaJuridica)))
+    return this.http.post<Object>(this.serverUrl + 'pj-por-contaBlockchain', { contaBlockchainCNPJ: contaBlockchainCNPJ })
       .catch(this.handleError);
 
   }

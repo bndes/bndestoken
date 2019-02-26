@@ -3,18 +3,18 @@ import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Web3Service } from './../Web3Service';
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
 
-import { RegistroAcompanhamento } from './registro-acompanhamento'
+import { ConsultaTransferencia } from './consulta-transferencia'
 import { Transferencia } from '../transferencia/Transferencia';
 import { Utils } from '../shared/utils';
 
 @Component({
-  selector: 'app-registro-acompanhamento',
-  templateUrl: './registro-acompanhamento.component.html',
-  styleUrls: ['./registro-acompanhamento.component.css']
+  selector: 'app-consulta-transferencia',
+  templateUrl: './consulta-transferencia.component.html',
+  styleUrls: ['./consulta-transferencia.component.css']
 })
-export class RegistroAcompanhamentoComponent implements OnInit {
+export class ConsultaTransferenciaComponent implements OnInit {
 
-  registroAcompanhamento: RegistroAcompanhamento
+  consultaTransferencia: ConsultaTransferencia
   subcreditoSelecionado: number;
 
   ultimoCNPJ: string;
@@ -29,29 +29,29 @@ export class RegistroAcompanhamentoComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this.inicializaRegistroAcompanhamento();
+      this.inicializaConsultaTransferencia();
     }, 500)
   }
 
-  inicializaRegistroAcompanhamento() {
+  inicializaConsultaTransferencia() {
     this.ultimoCNPJ = "";
 
-    this.registroAcompanhamento = new RegistroAcompanhamento();
-    this.registroAcompanhamento.cnpj = null;
-    this.registroAcompanhamento.razaoSocial = null;
-    this.registroAcompanhamento.contaBlockchain = null;
-    this.registroAcompanhamento.listaTransferencias = new Array();
+    this.consultaTransferencia = new ConsultaTransferencia();
+    this.consultaTransferencia.cnpj = null;
+    this.consultaTransferencia.razaoSocial = null;
+    this.consultaTransferencia.contaBlockchain = null;
+    this.consultaTransferencia.listaTransferencias = new Array();
 
     this.recuperaContaSelecionada();
-    this.recuperaEmpresa(this.registroAcompanhamento.contaBlockchain);
+    this.recuperaEmpresa(this.consultaTransferencia.contaBlockchain);
   }
 
   // refreshContaBlockchainSelecionada() {
-  //   this.inicializaRegistroAcompanhamento();
+  //   this.inicializaConsultaTransferencia();
   // }
 
   async recuperaContaSelecionada() {
-    this.registroAcompanhamento.contaBlockchain = (await this.web3Service.getCurrentAccountSync()) + "";
+    this.consultaTransferencia.contaBlockchain = (await this.web3Service.getCurrentAccountSync()) + "";
   }
   
 
@@ -60,14 +60,14 @@ export class RegistroAcompanhamentoComponent implements OnInit {
       data => {
         if (data) {
           console.log("Razao social de empresa encontrada - " + data["dadosCadastrais"]["razaoSocial"]);
-          this.registroAcompanhamento.razaoSocial = data["dadosCadastrais"]["razaoSocial"];
+          this.consultaTransferencia.razaoSocial = data["dadosCadastrais"]["razaoSocial"];
 
           console.log("CNPJ da empresa encontrada - " + data["cnpj"]);
-          this.registroAcompanhamento.cnpj = data["cnpj"];
+          this.consultaTransferencia.cnpj = data["cnpj"];
 
           console.log("Subcreditos da empresa encontrados")
           console.log(data["subcreditos"])
-          this.registroAcompanhamento.subcreditos = data["subcreditos"]
+          this.consultaTransferencia.subcreditos = data["subcreditos"]
 
           this.subcreditoSelecionado = -1
           this.recuperaTransferencias()
@@ -75,18 +75,18 @@ export class RegistroAcompanhamentoComponent implements OnInit {
         }
         else {
           console.log("nenhuma razao social encontrada");
-          this.registroAcompanhamento.razaoSocial = "";
+          this.consultaTransferencia.razaoSocial = "";
 
           console.log("Nenhum CNPJ foi encontrado");
-          this.registroAcompanhamento.cnpj = "";
+          this.consultaTransferencia.cnpj = "";
         }
       },
       error => {
         console.log("Erro ao buscar razao social da empresa");
-        this.registroAcompanhamento.razaoSocial = "";
+        this.consultaTransferencia.razaoSocial = "";
 
         console.log("Erro ao buscar o CNPJ da empresa");
-        this.registroAcompanhamento.cnpj = "";
+        this.consultaTransferencia.cnpj = "";
       });
   }
 
@@ -96,7 +96,7 @@ export class RegistroAcompanhamentoComponent implements OnInit {
 
     let self = this
 
-    self.registroAcompanhamento.listaTransferencias = []
+    self.consultaTransferencia.listaTransferencias = []
 
     self.web3Service.registraEventosTransferencia(function (error, event) {
       if (!error) {
@@ -106,7 +106,7 @@ export class RegistroAcompanhamentoComponent implements OnInit {
         transferencia.valorTransferencia = self.web3Service.converteInteiroParaDecimal ( event.args.valor )
         transferencia.hashOperacao = event.transactionHash
         let str_cnpj = Utils.completarCnpjComZero(event.args.fromCnpj)
-        if (self.registroAcompanhamento.cnpj == str_cnpj) {
+        if (self.consultaTransferencia.cnpj == str_cnpj) {
 
           self.pessoaJuridicaService.recuperaTransferenciaPorSubcreditoEHashID(self.subcreditoSelecionado, transferencia.hashOperacao).subscribe(
             data => {
@@ -121,7 +121,7 @@ export class RegistroAcompanhamentoComponent implements OnInit {
                 transferencia.dataHora = data[0].dataHora
 
                 self.zone.run(() => {
-                  self.registroAcompanhamento.listaTransferencias.push(transferencia)
+                  self.consultaTransferencia.listaTransferencias.push(transferencia)
                 })
 
               }

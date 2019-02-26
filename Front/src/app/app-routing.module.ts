@@ -13,7 +13,7 @@ import { ValidacaoCadastroComponent } from './validacao-cadastro/validacao-cadas
 import { AssociaContaClienteComponent } from './associa-conta-cliente/associa-conta-cliente.component';
 import { RecuperaAcessoClienteComponent } from './recupera-acesso-cliente/recupera-acesso-cliente.component';
 import { TransferenciaComponent } from './transferencia/transferencia.component';
-import { RegistroAcompanhamentoComponent } from './registro-acompanhamento/registro-acompanhamento.component';
+import { ConsultaTransferenciaComponent } from './consulta-transferencia/consulta-transferencia.component';
 
 /* Fornecedor */
 import { ResgateComponent } from './resgate/resgate.component';
@@ -38,7 +38,7 @@ const routes: Routes = [
   { path: 'bndes/balanco', component: BalanceManutencaoComponent},
   { path: 'cliente/transf', component: TransferenciaComponent },
   { path: 'cliente/associa-conta-cliente', component: AssociaContaClienteComponent },
-  { path: 'cliente/registro-acompanhamento', component: RegistroAcompanhamentoComponent},
+  { path: 'cliente/consulta-transferencia', component: ConsultaTransferenciaComponent},
   { path: 'cliente/recupera-acesso-cliente', component: RecuperaAcessoClienteComponent},
   { path: 'cliente/registro-saldo-contas', component: RegistroSaldoContasComponent},
   { path: 'fornecedor/associa-conta-fornecedor', component: AssociaContaFornecedorComponent},
