@@ -139,10 +139,9 @@ export class AssociaContaClienteComponent implements OnInit {
 
           for (var i = 0; i < empresa["subcreditos"].length; i++) {
             var teste1 = empresa["subcreditos"][i].papel === "cliente";
-            var teste2 = empresa["subcreditos"][i].contaBlockchain === "";
-            var teste3 = empresa["subcreditos"][i].isActive;
+            var teste2 = empresa["subcreditos"][i].isActive;
 
-            if (teste1 && teste2 && teste3) {
+            if (teste1 && teste2) {
               subcreditos.push(empresa["subcreditos"][i]);
             }
           }
@@ -191,7 +190,7 @@ export class AssociaContaClienteComponent implements OnInit {
       return
     }
 
-    this.web3Service.cadastra(parseInt(self.cliente.cnpj), subcreditoSelecionado, this.salic, 0, false, this.hashdeclaracao,
+    this.web3Service.cadastra(parseInt(self.cliente.cnpj), subcreditoSelecionado, this.salic, this.hashdeclaracao,
 
       function (txHash) {
         let s = "Associação do cnpj " + self.cliente.cnpj + " enviada. Aguarde a confirmação.";

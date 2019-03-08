@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.5.0;
 
 contract Owned {
 	address internal owner = msg.sender;
@@ -18,11 +18,11 @@ contract Owned {
 
     function setOwner(address _new) public onlyOwner 
     { 
-    	if (owner != 0x0)
+    	if (owner != address(0x0))
     		require(msg.sender == owner);
 
     	owner = _new; 
-    	NewOwner(owner, _new); 
+    	emit NewOwner(owner, _new); 
     }
 
 }

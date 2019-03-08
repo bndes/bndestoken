@@ -20,6 +20,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   subcreditoSelecionado: number;
   contaBlockchainAssociada: string;
   contaSelecionada: any;
+  hashdeclaracao: string;
 
   file: any = null;
 
@@ -44,6 +45,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     this.cliente.dadosCadastrais = undefined;
     this.cliente.subcreditos = undefined;
     this.subcreditoSelecionado = 0;
+    this.hashdeclaracao = "";
   }
 
   refreshContaBlockchainSelecionada() {
@@ -63,7 +65,8 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     if ( cnpj.length == 14 ) {
       console.log (" Buscando o CNPJ do cliente (14 digitos fornecidos)...  " + cnpj)
       this.cliente.cnpj = cnpj;
-      this.recuperaClientePorCNPJComSubcreditosComConta(cnpj);
+      this.recuperaClientePorCNPJ(cnpj);
+      this.recuperaContaBlockchainCliente();
     }   
   }
 
@@ -115,7 +118,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   }
 
 
-  recuperaClientePorCNPJComSubcreditosComConta(cnpj) {
+  recuperaClientePorCNPJ(cnpj) {
     console.log("RECUPERA CLIENTE com CNPJ = " + cnpj);
 
     this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
@@ -129,10 +132,9 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
           for (var i = 0; i < empresa["subcreditos"].length; i++) {
             var teste1 = empresa["subcreditos"][i].papel === "cliente";
-            var teste2 = empresa["subcreditos"][i].contaBlockchain != "";
-            var teste3 = empresa["subcreditos"][i].isActive;
+            var teste2 = empresa["subcreditos"][i].isActive;
 
-            if (teste1 && teste2 && teste3) {
+            if (teste1 && teste2) {
               subcreditos.push(empresa["subcreditos"][i]);
             }
           }
@@ -143,7 +145,6 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
           if (this.cliente.subcreditos && this.cliente.subcreditos.length>0) {            
             this.subcreditoSelecionado = this.cliente.subcreditos[0].numero;
-            this.contaBlockchainAssociada = this.cliente.subcreditos[0].contaBlockchain;            
           }
 
           this.declaracao = "Declaro que sou a empresa de Razão Social " + this.cliente.dadosCadastrais.razaoSocial + " com o CNPJ " + this.cliente.cnpj
@@ -159,23 +160,22 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
   }
 
-  recuperaContaBlockchainAssociada() {
+  recuperaContaBlockchainCliente() {
 
-    console.log("RECUPERA Conta Blockchain associada ao subcrédito");
-    console.log(this.subcreditoSelecionado);
+    let self = this;
 
-    var i = 0;
+    this.web3Service.getContaBlockchain(this.cliente.cnpj, this.subcreditoSelecionado,
+      function (result) {
+        console.log("Saldo do cnpj " + self.contaBlockchainAssociada + " eh " + result);
+        self.contaBlockchainAssociada = result;
+        self.ref.detectChanges();
+      },
+      function (error) {
+        console.log("Erro ao ler o saldo do endereco " + self.contaBlockchainAssociada);
+        console.log(error);
+      });  
 
-    for (i = 0; this.cliente.subcreditos[i]; i++) {
-      console.log("i=" + i);
-        if (this.cliente.subcreditos[i].numero == this.subcreditoSelecionado) {
-          console.log("Dentro do if"); 
-          this.contaBlockchainAssociada = this.cliente.subcreditos[i].contaBlockchain;
-        }
-    }
-
-    console.log("Conta Blockchain Associada = " + this.contaBlockchainAssociada);
-  }
+  }  
 
   cancelaAssociacaoContaCliente() {
 
@@ -187,7 +187,13 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
       let msg = "O subcrédito selecionado não possui conta blockchain associada"
       self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
-    } else {
+    } else if (self.hashdeclaracao === "" || self.hashdeclaracao === undefined) {
+      console.log("Não for informado o hash da declaração");
+
+      let msg = "Não for informado o hash da declaração";
+      self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);      
+    }
+    else {
 
       self.web3Service.cancelarAssociacaoDeConta(parseInt(self.cliente.cnpj), self.subcreditoSelecionado, 0, false,
 

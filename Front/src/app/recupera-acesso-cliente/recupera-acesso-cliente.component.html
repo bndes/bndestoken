@@ -44,7 +44,7 @@
         <div class="form-group col-md-4 col-sm-4">
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Subcrédito:</label>
-            <select name="subcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="subcreditoSelecionado" (ngModelChange)="recuperaContaBlockchainAssociada()" 
+            <select name="subcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="subcreditoSelecionado" (ngModelChange)="recuperaContaBlockchainCliente()" 
               required>
               <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
             </select>
@@ -81,6 +81,13 @@
         </a>                    
 
       </div>  
+
+      <div class="row">
+          <div class="form-group col-md-6 col-sm-6 ">
+              <label>Hash da Declaração:</label>
+              <input  name="hashdeclaracao" [(ngModel)]="hashdeclaracao" class="form-control form-control-sm" required/>
+          </div>          
+      </div>      
 
     </div>
 

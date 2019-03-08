@@ -117,7 +117,7 @@ export class TransferenciaComponent implements OnInit {
 
               console.log(result);
               self.transferencia.subcredito = result.idSubcredito;
-              if (self.transferencia.subcredito != 0) {
+              if (self.transferencia.subcredito != "") {
                 self.transferencia.papelEmpresaOrigem = "C";
               }
               self.ref.detectChanges();

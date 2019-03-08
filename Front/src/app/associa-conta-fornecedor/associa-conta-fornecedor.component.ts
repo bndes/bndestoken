@@ -184,7 +184,7 @@ export class AssociaContaFornecedorComponent implements OnInit {
     //this.hashdeclaracao = this.pessoaJuridicaService.geraHash( this.hashdeclaracao );
     console.log("this.hashdeclaracao = " + this.hashdeclaracao );
 
-    this.web3Service.cadastra(parseInt(fornecedor.cnpj), 0, 0, 0, false, this.hashdeclaracao,
+    this.web3Service.cadastra(parseInt(fornecedor.cnpj), 0, 0, this.hashdeclaracao,
       function (txHash) {
         let s = "Associação do cnpj " + fornecedor.cnpj + "  enviada. Aguarde a confirmação."
         self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)

@@ -16,7 +16,7 @@ export class Web3Service {
     private adding: boolean = false;            // If we're adding a question
     private web3Instance: any;                  // Current instance of web3
 
-    private bndescoinContract: any;
+    private bndesTokenContract: any;
 
     // Application Binary Interface so we can use the question contract
     private ABI
@@ -96,7 +96,7 @@ export class Web3Service {
             return; 
         }
 
-        this.bndescoinContract = this.web3.eth.contract(this.ABI).at(this.contractAddr);
+        this.bndesTokenContract = this.web3.eth.contract(this.ABI).at(this.contractAddr);
 
         let self = this;
 
@@ -107,8 +107,8 @@ export class Web3Service {
             console.log("Erro ao buscar owner=" + error);
         });
 
-        console.log("INICIALIZOU O WEB3 - bndescoinContract abaixo");
-        console.log(this.bndescoinContract);
+        console.log("INICIALIZOU O WEB3 - bndesTokenContract abaixo");
+        console.log(this.bndesTokenContract);
 
 }
 
@@ -157,42 +157,42 @@ export class Web3Service {
     }
 
     registraEventosCadastro(callback) {
-        this.eventoCadastro = this.bndescoinContract.CadastroConta({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesTokenContract.CadastroConta({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosTroca(callback) {
-        this.eventoCadastro = this.bndescoinContract.TrocaConta({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesTokenContract.TrocaConta({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosLiberacao(callback) {
         this.intializeWeb3(); //forca inicializa
-        this.eventoLiberacao = this.bndescoinContract.Liberacao({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLiberacao = this.bndesTokenContract.Liberacao({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiberacao.watch(callback);
     }
     registraEventosTransferencia(callback) {
-        this.eventoTransferencia = this.bndescoinContract.Transferencia({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoTransferencia = this.bndesTokenContract.Transferencia({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoTransferencia.watch(callback);
     }
     registraEventosRepasse(callback) {
-        this.eventoRepasse = this.bndescoinContract.Repasse({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoRepasse = this.bndesTokenContract.Repasse({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoRepasse.watch(callback);
     }
     registraEventosResgate(callback) {
-        this.eventoResgate = this.bndescoinContract.Resgate({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoResgate = this.bndesTokenContract.Resgate({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoResgate.watch(callback);
     }
     registraEventosLiquidacaoResgate(callback) {
-        this.eventoLiquidacaoResgate = this.bndescoinContract.LiquidacaoResgate({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLiquidacaoResgate = this.bndesTokenContract.LiquidacaoResgate({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiquidacaoResgate.watch(callback);
     }
 
     registraEventosLog(callback) {
-        this.eventoLog[0] = this.bndescoinContract.LogUint({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[1] = this.bndescoinContract.LogInt({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[2] = this.bndescoinContract.LogBytes({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[3] = this.bndescoinContract.LogBytes32({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[4] = this.bndescoinContract.LogAddress({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[5] = this.bndescoinContract.LogBool({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLog[0] = this.bndesTokenContract.LogUint({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLog[1] = this.bndesTokenContract.LogInt({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLog[2] = this.bndesTokenContract.LogBytes({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLog[3] = this.bndesTokenContract.LogBytes32({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLog[4] = this.bndesTokenContract.LogAddress({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLog[5] = this.bndesTokenContract.LogBool({}, { fromBlock: 0, toBlock: 'latest' });
         
         this.eventoLog[0].watch(callback);
         this.eventoLog[1].watch(callback);
@@ -208,7 +208,7 @@ export class Web3Service {
         console.info("Callback ", callback);
         const filtro = { fromBlock: 0, toBlock: 'latest' }; 
         
-        this.eventoGenerico = this.bndescoinContract.allEvents( filtro );                 
+        this.eventoGenerico = this.bndesTokenContract.allEvents( filtro );                 
         this.eventoGenerico.watch( function (error, result) {
             console.log("Watcher executando...")
             self.procuraTransacao(error, result, txHashProcurado, self, callback);
@@ -237,19 +237,17 @@ export class Web3Service {
     }
 
 
-    async cadastra(cnpj: number, idSubcredito: number, salic: number, cnpjOrigemRepasse: number, isRepassador: boolean,
-             hashdeclaracao: string,
+    async cadastra(cnpj: number, idSubcredito: number, salic: number, hashdeclaracao: string,
         fSuccess: any, fError: any) {
 
         let contaBlockchain = await this.getCurrentAccountSync();    
 
         console.log("Web3Service - Cadastra")
-        console.log("CNPJ: " + cnpj + ", Subcredito: " + idSubcredito + ",salic: "+ salic + ", cnpjOrigemRepasse: " + cnpjOrigemRepasse +
-            ", isRepassador: " + isRepassador +
+        console.log("CNPJ: " + cnpj + ", Subcredito: " + idSubcredito + ",salic: "+ salic + 
             ", hashdeclaracao: " + hashdeclaracao
             )
 
-        this.bndescoinContract.cadastra(cnpj, idSubcredito, salic, cnpjOrigemRepasse, isRepassador,
+        this.bndesTokenContract.cadastra(cnpj, idSubcredito, salic, 
             hashdeclaracao, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
@@ -261,7 +259,7 @@ export class Web3Service {
     getTotalSupply(fSuccess: any, fError: any): number {
         console.log("vai recuperar o totalsupply. " );
         let self = this;
-        return this.bndescoinContract.getTotalSupply(
+        return this.bndesTokenContract.getTotalSupply(
             (error, totalSupply) => {
                 if (error) fError(error);
                 else fSuccess( self.converteInteiroParaDecimal(  parseInt ( totalSupply ) ) );
@@ -271,7 +269,7 @@ export class Web3Service {
     getBalanceOf(address: string, fSuccess: any, fError: any): number {
         console.log("vai recuperar o balanceOf de " + address);
         let self = this;
-        return this.bndescoinContract.getBalanceOf(address,
+        return this.bndesTokenContract.getBalanceOf(address,
             (error, valorSaldoCNPJ) => {
                 if (error) fError(error);
                 else fSuccess( self.converteInteiroParaDecimal( parseInt ( valorSaldoCNPJ ) ) );
@@ -280,7 +278,7 @@ export class Web3Service {
     }
 
     getCNPJ(addr: string, fSuccess: any, fError: any): number {
-        return this.bndescoinContract.getCNPJ(addr,
+        return this.bndesTokenContract.getCNPJ(addr,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -288,7 +286,7 @@ export class Web3Service {
     }
 
     getPJInfo(addr: string, fSuccess: any, fError: any): number {
-        return this.bndescoinContract.getPJInfo(addr,
+        return this.bndesTokenContract.getPJInfo(addr,
             (error, result) => {
                 if (error) fError(error);
                 else {
@@ -304,7 +302,7 @@ export class Web3Service {
     }
 
     getContaBlockchain(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): string {
-        return this.bndescoinContract.getContaBlockchain(cnpj, idSubcredito,
+        return this.bndesTokenContract.getContaBlockchain(cnpj, idSubcredito,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -312,7 +310,7 @@ export class Web3Service {
     }
 
     getAddressOwner(fSuccess: any, fError: any): number {
-        return this.bndescoinContract.getOwner(
+        return this.bndesTokenContract.getOwner(
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -325,7 +323,7 @@ export class Web3Service {
 
     inicializaQtdDecimais() {
         let self = this;
-        this.bndescoinContract.getDecimals(
+        this.bndesTokenContract.getDecimals(
             (error, result) => {
                 if (error) { 
                     console.log( "Decimais: " +  error);  
@@ -356,7 +354,7 @@ export class Web3Service {
         console.log('TransferAmount=' + transferAmount);
 
         transferAmount = this.converteDecimalParaInteiro(transferAmount);     
-        this.bndescoinContract.transfer(target, transferAmount, { from: contaSelecionada, gas: 500000 },
+        this.bndesTokenContract.transfer(target, transferAmount, { from: contaSelecionada, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -373,7 +371,7 @@ export class Web3Service {
     // aguardaLiberacao(cnpj: string, subcredito: number, valor: number)
     // {
     //     this.intializeWeb3(); //forca inicializa        
-    //     var evento = this.bndescoinContract.Liberacao({cnpj: cnpj, sucredito: subcredito, valor: valor}, 
+    //     var evento = this.bndesTokenContract.Liberacao({cnpj: cnpj, sucredito: subcredito, valor: valor}, 
     //         { fromBlock: 'pending', toBlock: 'latest' });
 
     //     evento.watch(function (erro, result) {
@@ -410,7 +408,7 @@ export class Web3Service {
         console.log("HashResgate - " + hashResgate)
         console.log("HashComprovante - " + hashComprovante)
 
-        this.bndescoinContract.notificaLiquidacaoResgate(hashResgate, hashComprovante,
+        this.bndesTokenContract.notificaLiquidacaoResgate(hashResgate, hashComprovante,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -423,7 +421,7 @@ export class Web3Service {
         console.log("CNPJ: " + cnpj + ", Subcredito: " + subcredito + ", cnpjOrigemRepasse: " + cnpjOrigemRepasse +
             ", isRepassador: " + isRepassador)
 
-        this.bndescoinContract.troca(cnpj, subcredito, { gas: 500000 },
+        this.bndesTokenContract.troca(cnpj, subcredito, { gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -435,7 +433,7 @@ export class Web3Service {
         let contaSelecionada = await this.getCurrentAccountSync();    
         
         valor = this.converteDecimalParaInteiro(valor);
-        this.bndescoinContract.setBalanceOf(address, valor, { from: contaSelecionada, gas: 500000 },
+        this.bndesTokenContract.setBalanceOf(address, valor, { from: contaSelecionada, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -460,7 +458,7 @@ export class Web3Service {
     }
 
     isRepassador(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndescoinContract.isRepassador(address,
+        return this.bndesTokenContract.isRepassador(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -468,7 +466,7 @@ export class Web3Service {
     }
 
     isFornecedor(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndescoinContract.isFornecedor(address,
+        return this.bndesTokenContract.isFornecedor(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -476,7 +474,7 @@ export class Web3Service {
     }
 
     isRepassadorSucredito(addrRepassador: string, addrSubcredito, fSuccess: any, fError: any): boolean {
-        return this.bndescoinContract.isRepassadorSubcredito(addrRepassador, addrSubcredito,
+        return this.bndesTokenContract.isRepassadorSubcredito(addrRepassador, addrSubcredito,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -484,7 +482,7 @@ export class Web3Service {
     }
 
     accountIsActive(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndescoinContract.isContaValidada(address, 
+        return this.bndesTokenContract.isContaValidada(address, 
         (error, result) => {
             if(error) fError(error);
             else fSuccess(result);
@@ -492,7 +490,7 @@ export class Web3Service {
     }
 
     getEstadoContaAsString(address: string, fSuccess: any, fError: any): string {
-        return this.bndescoinContract.getEstadoContaAsString(address, 
+        return this.bndesTokenContract.getEstadoContaAsString(address, 
         (error, result) => {
             if(error) fError(error);
             else fSuccess(result);
@@ -503,7 +501,7 @@ export class Web3Service {
         
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndescoinContract.validarCadastro(address, hashTentativa, 
+        this.bndesTokenContract.validarCadastro(address, hashTentativa, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if(error) { fError(error); return false; }
@@ -515,7 +513,7 @@ export class Web3Service {
 
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndescoinContract.invalidarCadastro(address, 
+        this.bndesTokenContract.invalidarCadastro(address, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if(error) { fError(error); return false; }
