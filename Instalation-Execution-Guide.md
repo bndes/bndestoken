@@ -13,6 +13,8 @@ Assure that BACK/config_PRD.json is correctly filled.
 Create a dockerfile with node and npm and follow the steps below.
 
 1. Create a destination folder called rootfs
+?entender porque precisamos dessa pasta e do supervisor etc
+
 
 2. Copy the content of Infra/rootfs-template to rootfs
 
@@ -22,7 +24,7 @@ Create a dockerfile with node and npm and follow the steps below.
 
 5. Execute npm install
 
-6. See existing dockerfile***
+6. Follow existing steps of dockerfile***
 - tirar o initonce porque não vale para PRD?
 - Install mongodb
 ??????????? 2. Create the volume "log" and "data" to be linked to an external volume (outside container). - hoje etá no docker-file
@@ -30,7 +32,7 @@ Create a dockerfile with node and npm and follow the steps below.
 
 ---
 
-AJUSTARRRRRR
+AJUSTARRRRRR TUDO AQUI PARA BAIXO
 
 
 Execute the following steps to prepare the env (if not prepared):
