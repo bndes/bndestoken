@@ -1,6 +1,6 @@
 # BNDES TOKEN
 
-Token para representar as liberações do BNDES de forma a prover mais transparência de recursos públicos.
+Token para representar as liberações do BNDES de forma a prover mais transparência de recursos públicos. <br>
 Do you want to know how to instale or execute these scripts? See Instalation-Execution-Guide.md
 
 
