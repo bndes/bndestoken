@@ -6,21 +6,32 @@
 | NPM              |     3.10.10 or greater |
 
 
-## Installation Guide - PRD
+## Installation Guide - PRD BACKEND
 
-Assure that config/config.json.PRD is correctly filled. 
+Assure that BACK/config_PRD.json is correctly filled. 
 
 Create a dockerfile with node and npm and follow the steps below.
 
-1. Rename the file "config/config.json.PRD" to "config/config.json"
+1. Create a destination folder called rootfs
 
-2. Create the volume "control", "data" e "log" to be linked to an external volume (outside container).
+2. Copy the content of Infra/rootfs-template to rootfs
 
-3. Execute npm install
+3. Copy the content of Back/ to rootfs/app
 
-4. Configure the running of the docker image to fire "npm start".
+4. Rename the file "rootfs/app/config_PRD.json" to "rootfs/app/config.json"
 
-----
+5. Execute npm install
+
+6. See existing dockerfile***
+- tirar o initonce porque não vale para PRD?
+- Install mongodb
+??????????? 2. Create the volume "log" and "data" to be linked to an external volume (outside container). - hoje etá no docker-file
+??Configure the running of the docker image to fire "npm start"? Como sobe o servidor?
+
+---
+
+AJUSTARRRRRR
+
 
 Execute the following steps to prepare the env (if not prepared):
 
