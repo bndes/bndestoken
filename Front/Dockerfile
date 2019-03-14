@@ -10,7 +10,7 @@ RUN npm install
 RUN npm run-script build
 
 # Copy result of build to nginx folder
-COPY ./www /usr/share/nginx/html
+COPY ./dist /usr/share/nginx/html
 
 # Expondo as portas necessárias
 EXPOSE 8000
