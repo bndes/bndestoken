@@ -269,7 +269,7 @@ export class Web3Service {
     getBalanceOf(address: string, fSuccess: any, fError: any): number {
         console.log("vai recuperar o balanceOf de " + address);
         let self = this;
-        return this.bndesTokenContract.getBalanceOf(address,
+        return this.bndesTokenContract.balanceOf(address,
             (error, valorSaldoCNPJ) => {
                 if (error) fError(error);
                 else fSuccess( self.converteInteiroParaDecimal( parseInt ( valorSaldoCNPJ ) ) );

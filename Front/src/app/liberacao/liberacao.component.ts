@@ -117,7 +117,7 @@ export class LiberacaoComponent implements OnInit {
 
             this.recuperaContaBlockchainCliente();
 
-            this.recuperaSaldoCNPJ();
+            //this.recuperaSaldoCNPJ();
           }
           else {
             let s = "A liberação só pode ocorrer para uma empresa cliente.";
@@ -148,7 +148,9 @@ export class LiberacaoComponent implements OnInit {
 
     let self = this;
 
-    this.web3Service.getBalanceOf(this.liberacao.contaBlockchainCNPJ,
+    console.log("O endereço é" + self.liberacao.contaBlockchainCNPJ);
+
+    this.web3Service.getBalanceOf(self.liberacao.contaBlockchainCNPJ,
       function (result) {
         console.log("Saldo do endereco " + self.liberacao.contaBlockchainCNPJ + " eh " + result);
         self.liberacao.saldoCNPJ = result;
@@ -165,14 +167,30 @@ export class LiberacaoComponent implements OnInit {
 
     let self = this;
 
-    this.web3Service.getContaBlockchain(this.liberacao.cnpj, this.liberacao.numeroSubcreditoSelecionado,
+    console.log("Recupera conta blockchain");
+
+    this.web3Service.getContaBlockchain(self.liberacao.cnpj, self.liberacao.numeroSubcreditoSelecionado,
       function (result) {
-        console.log("Saldo do cnpj " + self.liberacao.contaBlockchainCNPJ + " eh " + result);
+        console.log("CNPJ " + self.liberacao.cnpj + " tem conta blockchain " + result);
         self.liberacao.contaBlockchainCNPJ = result;
-        self.ref.detectChanges();
+
+//        self.ref.detectChanges();
+
+        self.web3Service.getBalanceOf(self.liberacao.contaBlockchainCNPJ,
+            function (result) {
+              console.log("Saldo do endereco " + self.liberacao.contaBlockchainCNPJ + " eh " + result);
+              self.liberacao.saldoCNPJ = result;
+              self.ref.detectChanges();
+        },
+        function (error) {
+            console.log("Erro ao ler o saldo do endereco " + self.liberacao.contaBlockchainCNPJ);
+            console.log(error);
+            self.liberacao.saldoCNPJ = 0;
+        });
+
       },
       function (error) {
-        console.log("Erro ao ler o saldo do endereco " + self.liberacao.contaBlockchainCNPJ);
+        console.log("Erro ao ler conta blockchain " + this.liberacao.cnpj);
         console.log(error);
         self.liberacao.saldoCNPJ = 0;
       });  

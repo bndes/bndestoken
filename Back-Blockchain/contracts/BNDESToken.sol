@@ -182,7 +182,6 @@ contract BNDESToken is ERC20, ERC20Detailed("BNDESToken", "BND", 0) , ERC20Minta
 
         require(pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO);
 
-        // Olhar esse keccak256 depois 
         require(keccak256(abi.encodePacked(pjsInfo[_addr].hashdeclaracao)) == keccak256(abi.encodePacked(_hashdeclaracao)));
 
         pjsInfo[_addr].estado = EstadoContaBlockchain.VALIDADA;
