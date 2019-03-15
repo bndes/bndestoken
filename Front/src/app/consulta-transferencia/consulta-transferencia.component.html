@@ -1,5 +1,5 @@
 <app-metamsg></app-metamsg>
-<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">
+<!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
 
   <div>
     <h2 class="page-header">Ordens de Pagamento para Fornecedores</h2>
@@ -29,9 +29,10 @@
     </div>
     <P></P>
     <P></P>
-
+<!--
+  TODO: voltar a incluir o filtro - deu erro no build
     <input class="form-control barra-filtro" type="text" name="search" [(ngModel)]="filter" placeholder="Filtro">
-
+-->
     <div class="table-responsive-md" *ngIf="consultaTransferencia.listaTransferencias && consultaTransferencia.listaTransferencias.length > 0">
       <table class="table table-striped table-bordered table-sm">
 
@@ -68,7 +69,11 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let transferencia of consultaTransferencia.listaTransferencias  | orderBy: order : reverse : 'caseInsensitive' | filter:filter | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index">
+          <tr *ngFor="let transferencia of consultaTransferencia.listaTransferencias  | orderBy: order : reverse : 'caseInsensitive':customComparator | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index">
+         <!--
+           
+            TODO: voltar a incluir o filtro
+          <tr *ngFor="let transferencia of consultaTransferencia.listaTransferencias  | orderBy: order : reverse : 'caseInsensitive':customComparator | filter:filter | paginate: { itemsPerPage: 10, currentPage: p } ; let i = index">            -->
             <td>{{transferencia.cnpjDestino | cnpjMask }}</td>
             <td>{{transferencia.razaoSocialDestino}}</td>
             <td>{{(transferencia.valorTransferencia*1) | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
@@ -98,4 +103,4 @@
     </div>
 
   </div>
-</div>
+<!--</div>-->
