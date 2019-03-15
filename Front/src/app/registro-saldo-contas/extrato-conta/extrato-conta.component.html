@@ -32,7 +32,8 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let extrato of listaExtrato | orderBy: 'dataHora' | filter:filter | paginate: { itemsPerPage: qtdPorPagina, currentPage: p } ; let i = index">
+      <tr *ngFor="let extrato of listaExtrato | orderBy: 'dataHora' | paginate: { itemsPerPage: qtdPorPagina, currentPage: p } ; let i = index">
+      <!--<tr *ngFor="let extrato of listaExtrato | orderBy: 'dataHora' | filter:filter | paginate: { itemsPerPage: qtdPorPagina, currentPage: p } ; let i = index">        -->
         <td>{{extrato.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
         <td>{{extrato.tipoDeTransacao}}</td>
         <td>{{extrato.cnpj | cnpjMask}}</td>

@@ -8,6 +8,7 @@ export declare class MenuPrincipalComponent implements OnInit {
     private loginSv;
     protected bnAlertsService: BnAlertsService;
     private router;
+    public usuario;
     menuItens: Object[];
     txtBusca: string;
     menuUrl: string;
