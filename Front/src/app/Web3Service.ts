@@ -323,14 +323,15 @@ export class Web3Service {
 
     inicializaQtdDecimais() {
         let self = this;
-        this.bndesTokenContract.getDecimals(
+        this.bndesTokenContract.decimals(
             (error, result) => {
                 if (error) { 
-                    console.log( "Decimais: " +  error);  
+                    console.log( "Decimais error: " +  error);  
                     self.decimais = -1 ;
                 } 
                 else {
-                    console.log ( "Decimais: " +  result.c[0] );
+                    console.log ( "Decimais result: " +  result );
+                    console.log ( "Decimais .c[0]: " +  result.c[0] );
                     self.decimais = result.c[0] ;
                 }
                     
