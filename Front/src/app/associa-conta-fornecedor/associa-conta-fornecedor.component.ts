@@ -196,9 +196,8 @@ export class AssociaContaFornecedorComponent implements OnInit {
           if (!error) {
             let s = "A associação de conta foi confirmada na blockchain."
             self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
+            self.zone.run(() => { });
             console.log(s)
-
-            self.zone.run(() => { })
           } else {
             console.log(error)
           }

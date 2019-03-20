@@ -254,6 +254,7 @@ export class LiberacaoComponent implements OnInit {
             if (!error) {
               let s = "A liberação foi confirmada na blockchain.";
               self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+              self.zone.run(() => { });
               console.log(s);
 
             }

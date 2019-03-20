@@ -206,7 +206,7 @@ export class Web3Service {
         this.intializeWeb3(); //forca inicializa
         let self = this;
         console.info("Callback ", callback);
-        const filtro = { fromBlock: 0, toBlock: 'latest' }; 
+        const filtro = { fromBlock: 'latest', toBlock: 'pending' }; 
         
         this.eventoGenerico = this.bndesTokenContract.allEvents( filtro );                 
         this.eventoGenerico.watch( function (error, result) {
@@ -222,18 +222,22 @@ export class Web3Service {
         console.log( "txHashProcurado: " + txHashProcurado );
         console.log( "result.transactionHash: " + result.transactionHash );
         let meuErro;
-        if ( txHashProcurado === result.transactionHash ) {
-            console.log( "Encontrou tx:  " + result );
-            if ( !self.vetorTxJaProcessadas.includes(txHashProcurado)) {
-                console.log( "Chama callback " + result );
-                self.vetorTxJaProcessadas.push(txHashProcurado);
-                meuErro=error;
+        self.web3.eth.getTransactionReceipt(txHashProcurado,  function (error, result) {
+            if ( !error ) {
+                let status = result.status
+                let STATUS_MINED = 0x1
+                console.log("Achou o recibo da transacao... " + status)     
+                if ( status == STATUS_MINED && !self.vetorTxJaProcessadas.includes(txHashProcurado)) {
+                    self.vetorTxJaProcessadas.push(txHashProcurado);
+                    callback(error, result);        
+                } else {
+                    console.log('"Status da tx pendente ou jah processado"')
+                }
             }
-        } 
-        else {
-            meuErro = new Error('"Nao eh o evento de confirmacao procurado"');
-        } 
-        callback(meuErro, result); 
+            else {
+              console.log('Nao eh o evento de confirmacao procurado')
+            } 
+        });     
     }
 
 

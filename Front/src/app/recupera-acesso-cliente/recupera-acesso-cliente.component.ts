@@ -206,9 +206,8 @@ export class RecuperaAcessoClienteComponent implements OnInit {
             if (!error) {
               let s = "A associação foi confirmada na blockchain.";
               self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
-              console.log(s);
-
               self.zone.run(() => { });
+              console.log(s);              
             }
             else {
               console.log(error);
