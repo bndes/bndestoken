@@ -195,6 +195,7 @@ export class AssociaContaClienteComponent implements OnInit {
       function (txHash) {
         let s = "Associação do cnpj " + self.cliente.cnpj + " enviada. Aguarde a confirmação.";
         self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+        console.log("txHash=" + txHash);
         console.log(s);
 
         self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
