@@ -5,7 +5,7 @@ import { BnAlertsService } from 'bndes-ux4'
 import { Fornecedor } from '../fornecedor/Fornecedor'
 import { PessoaJuridicaService } from '../pessoa-juridica.service'
 import { Web3Service } from './../Web3Service'
-
+import { Utils } from '../shared/utils';
 
 @Component({
   selector: 'app-associa-conta-fornecedor',
@@ -185,41 +185,26 @@ export class AssociaContaFornecedorComponent implements OnInit {
     console.log("this.hashdeclaracao = " + this.hashdeclaracao );
 
     this.web3Service.cadastra(parseInt(fornecedor.cnpj), 0, 0, this.hashdeclaracao,
-      function (txHash) {
-        let s = "Associação do cnpj " + fornecedor.cnpj + "  enviada. Aguarde a confirmação."
-        self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
-        console.log(s)
 
-        console.log("contaBlockchain 2 =" + contaBlockchain)
+         (txHash) => {
 
-        self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
-          if (!error) {
-            let s = "A associação de conta foi confirmada na blockchain."
-            self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
-            self.zone.run(() => { });
-            console.log(s)
-          } else {
-            console.log(error)
-          }
-        })
-
-      }, function (error) {
-
-        let s = "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum."
-        self.bnAlertsService.criarAlerta("error", "Erro", s, 5)
-        console.log(s)
-        console.log(error)
-        self.mudaStatusHabilitacaoForm(true)
-      })
-
-    let s = "Confirme a operação no metamask e aguarde a confirmação da associação da conta."
-    self.bnAlertsService.criarAlerta("info", "", s, 5)
-    console.log(s)
-    this.mudaStatusHabilitacaoForm(false)
-
+          Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                              self.web3Service, 
+                                              self.bnAlertsService, 
+                                              "Associação do cnpj " + fornecedor.cnpj + "  enviada. Aguarde a confirmação.", 
+                                              "A associação de conta foi confirmada na blockchain.", 
+                                              self.zone)       
+          }        
+        ,(error) => {
+          Utils.criarAlertaErro( self.bnAlertsService, 
+                                 "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
+                                 error, 
+                                 self.mudaStatusHabilitacaoForm )  
+        }
+      );
+      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                    "Confirme a operação no metamask e aguarde a confirmação da associação da conta.",
+                                    self.mudaStatusHabilitacaoForm )
+    
   }
-
-
-
-
 }

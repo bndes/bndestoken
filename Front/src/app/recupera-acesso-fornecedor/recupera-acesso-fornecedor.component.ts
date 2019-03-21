@@ -162,13 +162,13 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       (txHash) => {
 
         let s = "Troca de conta do cnpj " + self.fornecedor.cnpj + "  enviada. Aguarde a confirmação.";
-        self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+        self.bnAlertsService.criarAlerta("info", "Aviso", s, 5);
         console.log(s);
 
         self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
           if (!error) {
             let s = "A Troca de conta foi confirmada na blockchain."
-            self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
+            self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5)
             console.log(s)
 
             self.zone.run(() => { })

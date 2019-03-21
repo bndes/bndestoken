@@ -169,13 +169,23 @@ export class ValidacaoCadastroComponent implements OnInit {
 
     let booleano = this.web3Service.validarCadastro(self.pj.contaBlockchain, self.hashDeclaracaoDigitado, 
       (result) => {
-          let s = "O cadastro da conta foi validado.";
-          self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+          let s = "Validação de conta enviada. Aguarde a confirmação.";
+          self.bnAlertsService.criarAlerta("info", "Aviso", s, 5);
           console.log(s);
 
-          self.router.navigate(['sociedade/dash-empresas']);
-
-          self.zone.run(() => { });
+          self.web3Service.registraWatcherEventosLocal(result, function (error, internalResult) {
+            if (!error) {
+              let s = "O cadastro da conta foi validado.";
+              self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5);
+              self.zone.run(() => { });
+              console.log(s);              
+              self.router.navigate(['sociedade/dash-empresas']);
+              self.zone.run(() => { });
+            }
+            else {
+              console.log(error);
+            }
+          })
           
     },
     (error) => {

@@ -307,7 +307,7 @@ export class TransferenciaComponent implements OnInit {
 
         function (txHash) {
           let s = "Transferência para cnpj " + self.transferencia.cnpjDestino + "  enviada. Aguarde a confirmação.";
-          self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+          self.bnAlertsService.criarAlerta("info", "Aviso", s, 5);
           console.log(s);
 
           self.transferencia.hashOperacao = txHash;
@@ -315,7 +315,7 @@ export class TransferenciaComponent implements OnInit {
           self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
             if (!error) {
               let s = "A associação foi confirmada na blockchain.";
-              self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+              self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5);
               console.log(s);
 
               self.zone.run(() => {});

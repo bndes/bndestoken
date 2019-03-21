@@ -199,13 +199,13 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
         function (txHash) {
           let s = "Troca de conta do cnpj " + self.cliente.cnpj + "  enviada. Aguarde a confirmação.";
-          self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+          self.bnAlertsService.criarAlerta("info", "Aviso", s, 5);
           console.log(s);
 
           self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
             if (!error) {
               let s = "A associação foi confirmada na blockchain.";
-              self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
+              self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5);
               self.zone.run(() => { });
               console.log(s);              
             }

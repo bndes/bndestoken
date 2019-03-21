@@ -195,7 +195,7 @@ export class ResgateComponent implements OnInit {
 
         function (txHash) {
           let s = "Resgate para cnpj " + self.resgate.cnpjOrigem + "  enviado. Aguarde a confirmação.";
-          self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
+          self.bnAlertsService.criarAlerta("info", "Aviso", s, 5)
           console.log(s);
 
           self.resgate.hashID = txHash
@@ -203,7 +203,7 @@ export class ResgateComponent implements OnInit {
           self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
             if (!error) {
               let s = "O Resgate foi confirmado na blockchain."
-              self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5)
+              self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5)
               console.log(s)
 
               self.zone.run(() => { })
