@@ -134,6 +134,18 @@ export class TransferenciaComponent implements OnInit {
             self.apagaCamposDaEstrutura();
             console.warn("Erro ao buscar dados da conta na blockchain")
           })
+
+      this.web3Service.getBalanceOf(contaBlockchain,
+
+          (result) => {
+
+              console.log(result);
+
+           },
+          (error) => {
+            self.apagaCamposDaEstrutura();
+            console.warn("Erro ao buscar dados de saldo da conta na blockchain")
+          })          
     } 
     else {
         self.apagaCamposDaEstrutura();      
