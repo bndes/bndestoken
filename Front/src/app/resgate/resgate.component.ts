@@ -7,7 +7,7 @@ import { Web3Service } from './../Web3Service';
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
 
 import { BnAlertsService } from 'bndes-ux4';
-
+import { Utils } from '../shared/utils';
 
 @Component({
   selector: 'app-resgate',
@@ -193,43 +193,25 @@ export class ResgateComponent implements OnInit {
 
       this.web3Service.resgata(this.resgate.valor,
 
-        function (txHash) {
-          let s = "Resgate para cnpj " + self.resgate.cnpjOrigem + "  enviado. Aguarde a confirmação.";
-          self.bnAlertsService.criarAlerta("info", "Aviso", s, 5)
-          console.log(s);
+         (txHash) => {
 
-          self.resgate.hashID = txHash
-
-          self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
-            if (!error) {
-              let s = "O Resgate foi confirmado na blockchain."
-              self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5)
-              console.log(s)
-
-              self.zone.run(() => { })
-            } else {
-              console.log(error)
-            }
-          })
-
-        }, function (error) {
-
-          let s = "Erro ao resgatar na blockchain";
-          self.bnAlertsService.criarAlerta("error", "Erro", s, 5)
-          console.log(s);
-          console.log(error);
-          self.mudaStatusHabilitacaoForm(true);
-
-        });
-
-      let s = "Confirme a operação no metamask e aguarde a confirmação do resgate.";
-      self.bnAlertsService.criarAlerta("info", "", s, 5);
-      console.log(s);
-      this.mudaStatusHabilitacaoForm(false);
-
+          Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                              self.web3Service, 
+                                              self.bnAlertsService, 
+                                              "Resgate para cnpj " + self.resgate.cnpjOrigem + "  enviado. Aguarde a confirmação.", 
+                                              "O Resgate foi confirmado na blockchain.", 
+                                              self.zone)       
+          }        
+        ,(error) => {
+          Utils.criarAlertaErro( self.bnAlertsService, 
+                                 "Erro ao resgatar na blockchain", 
+                                 error, 
+                                 self.mudaStatusHabilitacaoForm )  
+        }
+      );
+      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                    "Confirme a operação no metamask e aguarde a confirmação do resgate.",
+                                    self.mudaStatusHabilitacaoForm )         
     }
-
   }
-
-
 }

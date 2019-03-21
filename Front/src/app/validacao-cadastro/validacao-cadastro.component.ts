@@ -7,6 +7,7 @@ import { PessoaJuridica } from '../PessoaJuridica';
 import { LogSol } from '../LogSol';
 import { BnAlertsService } from 'bndes-ux4';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Utils } from '../shared/utils';
 
 @Component({
   selector: 'app-validacao-cadastro',
@@ -168,33 +169,27 @@ export class ValidacaoCadastroComponent implements OnInit {
     console.log("validarConta(): " + self.pj.contaBlockchain + " - " + self.hashDeclaracaoDigitado);
 
     let booleano = this.web3Service.validarCadastro(self.pj.contaBlockchain, self.hashDeclaracaoDigitado, 
-      (result) => {
-          let s = "Validação de conta enviada. Aguarde a confirmação.";
-          self.bnAlertsService.criarAlerta("info", "Aviso", s, 5);
-          console.log(s);
 
-          self.web3Service.registraWatcherEventosLocal(result, function (error, internalResult) {
-            if (!error) {
-              let s = "O cadastro da conta foi validado.";
-              self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5);
-              self.zone.run(() => { });
-              console.log(s);              
-              self.router.navigate(['sociedade/dash-empresas']);
-              self.zone.run(() => { });
-            }
-            else {
-              console.log(error);
-            }
-          })
-          
-    },
-    (error) => {
-      let s = "Erro ao validar cadastro";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
-      console.warn("Erro ao validar cadastro");
-      console.warn(error);
-    });
-
+      
+         (txHash) => {
+          Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                              self.web3Service, 
+                                              self.bnAlertsService, 
+                                              "Validação de conta enviada. Aguarde a confirmação.", 
+                                              "O cadastro da conta foi validado e confirmado na blockchain.", 
+                                              self.zone)
+          self.router.navigate(['sociedade/dash-empresas']);                                                     
+          }        
+        ,(error) => {
+          Utils.criarAlertaErro( self.bnAlertsService, 
+                                 "Erro ao validar cadastro na blockchain", 
+                                 error, 
+                                 undefined )  
+        }
+      );
+      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                    "Confirme a operação no metamask e aguarde a confirmação.",
+                                    undefined )         
   }
 
   invalidarCadastro() {

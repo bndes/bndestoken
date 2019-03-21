@@ -8,7 +8,6 @@ export class Utils {
           bnAlertsService.criarAlerta("info", "Aviso", warningMsg, 5);
           console.log(warningMsg);
 
-//          self.transferencia.hashOperacao = txHash;
           web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
             if (!error) {              
               bnAlertsService.criarAlerta("info", "Confirmação", confirmationMsg, 5);
@@ -26,13 +25,15 @@ export class Utils {
          bnAlertsService.criarAlerta("error", "Erro", errorMsg, 5);
          console.log(errorMsg);
          console.log(error);
-         mudaStatusHabilitacaoForm(true);
+         if ( mudaStatusHabilitacaoForm != undefined )
+            mudaStatusHabilitacaoForm(true);
      }
 
      static criarAlertaAcaoUsuario( bnAlertsService, userMsg, mudaStatusHabilitacaoForm ) {
         bnAlertsService.criarAlerta("info", "", userMsg, 5);
         console.log(userMsg);
-        mudaStatusHabilitacaoForm(false);
+        if ( mudaStatusHabilitacaoForm != undefined )
+            mudaStatusHabilitacaoForm(false);
      }
       
 }

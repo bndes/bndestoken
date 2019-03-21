@@ -6,7 +6,7 @@ import { BnAlertsService } from 'bndes-ux4';
 import { Fornecedor } from '../fornecedor/Fornecedor';
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
 import { Web3Service } from './../Web3Service';
-
+import { Utils } from '../shared/utils';
 
 @Component({
   selector: 'app-recupera-conta-fornecedor',
@@ -159,31 +159,27 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
     }
 
     this.web3Service.cancelarAssociacaoDeConta(parseInt(self.fornecedor.cnpj), subcredito, 0, false,
-      (txHash) => {
+    
+         (txHash) => {
 
-        let s = "Troca de conta do cnpj " + self.fornecedor.cnpj + "  enviada. Aguarde a confirmação.";
-        self.bnAlertsService.criarAlerta("info", "Aviso", s, 5);
-        console.log(s);
+          Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                              self.web3Service, 
+                                              self.bnAlertsService, 
+                                              "Troca de conta do cnpj " + self.fornecedor.cnpj + "  enviada. Aguarde a confirmação.", 
+                                              "A troca foi confirmada na blockchain.", 
+                                              self.zone)       
+          }        
+        ,(error) => {
+          Utils.criarAlertaErro( self.bnAlertsService, 
+                                 "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
+                                 error, 
+                                 self.mudaStatusHabilitacaoForm )  
+        }
+      );
+      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                    "Confirme a operação no metamask e aguarde a confirmação da associação da conta.",
+                                    self.mudaStatusHabilitacaoForm )      
 
-        self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
-          if (!error) {
-            let s = "A Troca de conta foi confirmada na blockchain."
-            self.bnAlertsService.criarAlerta("info", "Confirmação", s, 5)
-            console.log(s)
-
-            self.zone.run(() => { })
-          } else {
-            console.log(error)
-          }
-        })
-      },
-      (error) => {
-        let s = "Erro ao cadastrar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum."
-        self.bnAlertsService.criarAlerta("error", "Erro", s, 5)
-        console.log(s);
-        console.log(error);
-        self.mudaStatusHabilitacaoForm(true);
-      })
   }
 
 }
