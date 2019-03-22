@@ -2,7 +2,7 @@ FROM node:8 as builder
 ADD . /bndestoken-front
 WORKDIR /bndestoken-front
 RUN npm install
-RUN cp -r bndes-ux node_modules
+RUN cp -r bndes-ux4 node_modules
 
 RUN npm run-script build
 
