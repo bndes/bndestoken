@@ -3,7 +3,7 @@ ADD . /bndestoken-front
 WORKDIR /bndestoken-front
 RUN npm install
 RUN npm run-script build
-
+RUN cp -r bndes-ux node_modules
 
 FROM nginx
 # Corrigir timezone
