@@ -195,7 +195,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     }
     else {
 
-      self.web3Service.cancelarAssociacaoDeConta(parseInt(self.cliente.cnpj), self.subcreditoSelecionado, 0, false,
+      self.web3Service.cancelarAssociacaoDeConta(parseInt(self.cliente.cnpj), self.subcreditoSelecionado, 0,
       
          (txHash) => {
 

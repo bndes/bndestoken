@@ -158,7 +158,7 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       return
     }
 
-    this.web3Service.cancelarAssociacaoDeConta(parseInt(self.fornecedor.cnpj), subcredito, 0, false,
+    this.web3Service.cancelarAssociacaoDeConta(parseInt(self.fornecedor.cnpj), subcredito, 0,
     
          (txHash) => {
 

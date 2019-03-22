@@ -420,11 +420,9 @@ export class Web3Service {
             });
     }
 
-    cancelarAssociacaoDeConta(cnpj: number, subcredito: number, cnpjOrigemRepasse: number,
-        isRepassador: boolean, fSuccess: any, fError: any) {
+    cancelarAssociacaoDeConta(cnpj: number, subcredito: number, cnpjOrigemRepasse: number, fSuccess: any, fError: any) {
         console.log("Web3Service - Cancelar Associacao")
-        console.log("CNPJ: " + cnpj + ", Subcredito: " + subcredito + ", cnpjOrigemRepasse: " + cnpjOrigemRepasse +
-            ", isRepassador: " + isRepassador)
+        console.log("CNPJ: " + cnpj + ", Subcredito: " + subcredito + ", cnpjOrigemRepasse: " + cnpjOrigemRepasse)
 
         this.bndesTokenContract.troca(cnpj, subcredito, { gas: 500000 },
             (error, result) => {
@@ -462,24 +460,8 @@ export class Web3Service {
 
     }
 
-    isRepassador(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isRepassador(address,
-            (error, result) => {
-                if (error) fError(error);
-                else fSuccess(result);
-            });
-    }
-
     isFornecedor(address: string, fSuccess: any, fError: any): boolean {
         return this.bndesTokenContract.isFornecedor(address,
-            (error, result) => {
-                if (error) fError(error);
-                else fSuccess(result);
-            });
-    }
-
-    isRepassadorSucredito(addrRepassador: string, addrSubcredito, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isRepassadorSubcredito(addrRepassador, addrSubcredito,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);

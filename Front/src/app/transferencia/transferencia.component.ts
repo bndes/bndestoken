@@ -218,52 +218,22 @@ export class TransferenciaComponent implements OnInit {
   validaEmpresaDestino(contaBlockchainDestino) {
     let self = this
 
-    this.web3Service.isRepassador(contaBlockchainDestino,
+    self.web3Service.isFornecedor(contaBlockchainDestino,
       (result) => {
-        console.log("É um repassador - " + result)
-
-        console.log(contaBlockchainDestino)
-        console.log(self.transferencia.contaBlockchainOrigem)
-
         if (result) {
-          self.web3Service.isRepassadorSucredito(contaBlockchainDestino, self.transferencia.contaBlockchainOrigem,
-            (result) => {
-              console.log(result)
-              if (result) {
-                self.transferencia.msgEmpresaDestino = "Repassador do Subcrédito"
-              } else {
-                self.transferencia.msgEmpresaDestino = "Repassador Inválido"
-              }
-              self.ref.detectChanges()
-            },
-            (erro) => {
-              console.log(erro)
-              self.transferencia.msgEmpresaDestino = ""
-            })
-
-          self.transferencia.papelEmpresaDestino = "R";
+          self.transferencia.msgEmpresaDestino = "Fornecedor"
+          self.transferencia.papelEmpresaDestino = "F";
         } else {
-          self.web3Service.isFornecedor(contaBlockchainDestino,
-            (result) => {
-              if (result) {
-                self.transferencia.msgEmpresaDestino = "Fornecedor"
-                self.transferencia.papelEmpresaDestino = "F";
-              } else {
-                console.log("Conta Invalida")
-                self.transferencia.msgEmpresaDestino = "Conta Inválida"
-                self.transferencia.papelEmpresaDestino = "";
-              }
-              self.ref.detectChanges()
-            },
-            (erro) => {
-              self.transferencia.msgEmpresaDestino = ""
-            })
+          console.log("Conta Invalida")
+          self.transferencia.msgEmpresaDestino = "Conta Inválida"
+          self.transferencia.papelEmpresaDestino = "";
         }
+        self.ref.detectChanges()
       },
       (erro) => {
         console.log(erro)
         self.transferencia.msgEmpresaDestino = ""
-      })
+      })  
   }
 
 
