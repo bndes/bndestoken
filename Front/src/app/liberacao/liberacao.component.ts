@@ -11,6 +11,8 @@ import { PessoaJuridicaService } from '../pessoa-juridica.service';
 import { BnAlertsService } from 'bndes-ux4';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
+import { Utils } from '../shared/utils';
+
 @Component({
   selector: 'app-liberacao',
   templateUrl: './liberacao.component.html',
@@ -238,44 +240,27 @@ export class LiberacaoComponent implements OnInit {
 //      this.liberacao.contaBlockchainBNDES = this.recuperaContaSelecionada();
 
       this.web3Service.liberacao(this.liberacao.contaBlockchainCNPJ, this.liberacao.valor,
-
-        function (txHash) {
-
-          let s = "A liberação está sendo enviada para a blockchain..";
-          self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
-          console.log(s);
-
+         (txHash) => {
           self.liberacao.hashID = txHash;
           self.liberacao.cnpj = self.cnpjSomenteNumeros;
 
-          self.zone.run(() => { });
-
-          self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
-            if (!error) {
-              let s = "A liberação foi confirmada na blockchain.";
-              self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
-              self.zone.run(() => { });
-              console.log(s);
-
-            }
-            else {
-              console.log(error);
-            }
-          });
-
-        }, function (error) {
-
-          let s = "Erro ao liberar na blockchain. Uma possibilidade é a conta selecionada não ser a do BNDES";
-          self.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-          console.log(s);
-          console.log(error);
-          self.mudaStatusHabilitacaoForm(true);
-        });
-
-      let s = "Confirme a operação no metamask e aguarde a confirmação da liberação.";
-      self.bnAlertsService.criarAlerta("info", "", s, 5);
-      console.log(s);
-      this.mudaStatusHabilitacaoForm(false);
+          Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                              self.web3Service, 
+                                              self.bnAlertsService, 
+                                              "A liberação está sendo enviada para a blockchain.", 
+                                              "A liberação foi confirmada na blockchain.", 
+                                              self.zone)       
+          }        
+        ,(error) => {
+          Utils.criarAlertaErro( self.bnAlertsService, 
+                                 "Erro ao liberar na blockchain. Uma possibilidade é a conta selecionada não ser a do BNDES", 
+                                 error, 
+                                 self.mudaStatusHabilitacaoForm )  
+        }
+      );
+      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                    "Confirme a operação no metamask e aguarde a confirmação da liberação.",                                  
+                                    self.mudaStatusHabilitacaoForm )
 
     }
 

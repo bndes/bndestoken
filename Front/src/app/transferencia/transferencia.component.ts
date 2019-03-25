@@ -8,7 +8,7 @@ import { Web3Service } from './../Web3Service';
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
 
 import { BnAlertsService } from 'bndes-ux4';
-
+import { Utils } from '../shared/utils';
 
 @Component({
   selector: 'app-transferencia',
@@ -218,52 +218,22 @@ export class TransferenciaComponent implements OnInit {
   validaEmpresaDestino(contaBlockchainDestino) {
     let self = this
 
-    this.web3Service.isRepassador(contaBlockchainDestino,
+    self.web3Service.isFornecedor(contaBlockchainDestino,
       (result) => {
-        console.log("É um repassador - " + result)
-
-        console.log(contaBlockchainDestino)
-        console.log(self.transferencia.contaBlockchainOrigem)
-
         if (result) {
-          self.web3Service.isRepassadorSucredito(contaBlockchainDestino, self.transferencia.contaBlockchainOrigem,
-            (result) => {
-              console.log(result)
-              if (result) {
-                self.transferencia.msgEmpresaDestino = "Repassador do Subcrédito"
-              } else {
-                self.transferencia.msgEmpresaDestino = "Repassador Inválido"
-              }
-              self.ref.detectChanges()
-            },
-            (erro) => {
-              console.log(erro)
-              self.transferencia.msgEmpresaDestino = ""
-            })
-
-          self.transferencia.papelEmpresaDestino = "R";
+          self.transferencia.msgEmpresaDestino = "Fornecedor"
+          self.transferencia.papelEmpresaDestino = "F";
         } else {
-          self.web3Service.isFornecedor(contaBlockchainDestino,
-            (result) => {
-              if (result) {
-                self.transferencia.msgEmpresaDestino = "Fornecedor"
-                self.transferencia.papelEmpresaDestino = "F";
-              } else {
-                console.log("Conta Invalida")
-                self.transferencia.msgEmpresaDestino = "Conta Inválida"
-                self.transferencia.papelEmpresaDestino = "";
-              }
-              self.ref.detectChanges()
-            },
-            (erro) => {
-              self.transferencia.msgEmpresaDestino = ""
-            })
+          console.log("Conta Invalida")
+          self.transferencia.msgEmpresaDestino = "Conta Inválida"
+          self.transferencia.papelEmpresaDestino = "";
         }
+        self.ref.detectChanges()
       },
       (erro) => {
         console.log(erro)
         self.transferencia.msgEmpresaDestino = ""
-      })
+      })  
   }
 
 
@@ -305,43 +275,27 @@ export class TransferenciaComponent implements OnInit {
 
       this.web3Service.transfer(this.transferencia.contaBlockchainDestino, this.transferencia.valorTransferencia,
 
-        function (txHash) {
-          let s = "Transferência para cnpj " + self.transferencia.cnpjDestino + "  enviada. Aguarde a confirmação.";
-          self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
-          console.log(s);
-
+         (txHash) => {
           self.transferencia.hashOperacao = txHash;
-
-          self.web3Service.registraWatcherEventosLocal(txHash, function (error, result) {
-            if (!error) {
-              let s = "A associação foi confirmada na blockchain.";
-              self.bnAlertsService.criarAlerta("info", "Sucesso", s, 5);
-              console.log(s);
-
-              self.zone.run(() => {});
-            }
-            else {
-              console.log(error);
-            }
-          });
-
-        }, function (error) {
-
-          let s = "Erro ao transferir na blockchain";
-          self.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-          console.log(s);
-          console.log(error);
-          self.mudaStatusHabilitacaoForm(true);
-        });
-
-      let s = "Confirme a operação no metamask e aguarde a confirmação da transferência.";
-      self.bnAlertsService.criarAlerta("info", "", s, 5);
-      console.log(s);
-      this.mudaStatusHabilitacaoForm(false);
-
+          Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                              self.web3Service, 
+                                              self.bnAlertsService, 
+                                              "Transferência para cnpj " + self.transferencia.cnpjDestino + "  enviada. Aguarde a confirmação.", 
+                                              "A Transferência foi confirmada na blockchain.", 
+                                              self.zone)       
+          }        
+        ,(error) => {
+          Utils.criarAlertaErro( self.bnAlertsService, 
+                                 "Erro ao transferir na blockchain", 
+                                 error, 
+                                 self.mudaStatusHabilitacaoForm )  
+        }
+      );
+      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                    "Confirme a operação no metamask e aguarde a confirmação da transferência.",
+                                    self.mudaStatusHabilitacaoForm )  
+           
     }
-
-
   }
 
   apagaCamposDaEstrutura() {
