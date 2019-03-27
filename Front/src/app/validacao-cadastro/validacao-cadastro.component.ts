@@ -19,6 +19,7 @@ export class ValidacaoCadastroComponent implements OnInit {
   pj: PessoaJuridica;
   isHashInvalido: boolean = false;
   hashDeclaracaoDigitado: string;
+  contaSelecionada: any;
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
       private router: Router, private ref: ChangeDetectorRef, private zone: NgZone) {
@@ -41,6 +42,7 @@ export class ValidacaoCadastroComponent implements OnInit {
       },
       status: status
   };
+  this.recuperaContaSelecionada();  
   }
 
   recuperaClientePorContaBlockchain(conta) {
@@ -139,6 +141,14 @@ export class ValidacaoCadastroComponent implements OnInit {
       });
   }
 
+  async recuperaContaSelecionada() {
+    let self = this;
+    
+    this.contaSelecionada = await this.web3Service.getCurrentAccountSync();
+    console.log("contaSelecionada=" + this.contaSelecionada);      
+
+  }  
+
   validarCadastro() {
 
     if (this.pj.contaBlockchain === undefined) {
@@ -152,18 +162,16 @@ export class ValidacaoCadastroComponent implements OnInit {
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2);
       return;
     }
-/*
-      let contaSelecionada = await this.web3Service.getCurrentAccountSync();
 
-      if (contaSelecionada != this.web3Service.getAddressOwnerCacheble()) 
-      {
-          let s = "A validação exige que a conta do BNDES seja a selecionada no Metamask.";
-          this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-          console.log(s);
-          console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
-          return;
-      }
-*/    
+    if (this.contaSelecionada != this.web3Service.getAddressOwnerCacheble()) 
+    {
+        let s = "A validação exige que a conta do BNDES seja a selecionada no Metamask.";
+        this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+        console.log(s);
+        console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
+        return;
+    }
+  
 
     let self = this;
     console.log("validarConta(): " + self.pj.contaBlockchain + " - " + self.hashDeclaracaoDigitado);
@@ -202,6 +210,15 @@ export class ValidacaoCadastroComponent implements OnInit {
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;
     }
+
+    if (this.contaSelecionada != this.web3Service.getAddressOwnerCacheble()) 
+    {
+        let s = "A invalidação exige que a conta do BNDES seja a selecionada no Metamask.";
+        this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+        console.log(s);
+        console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
+        return;
+    }    
 
     let booleano = this.web3Service.invalidarCadastro(self.pj.contaBlockchain, 
       (result) => {
