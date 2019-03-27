@@ -8,18 +8,13 @@ export class Web3Service {
 
     private serverUrl: string;
 
-    @Output() update = new EventEmitter();
     private contractAddr: string = '';
-    private defaultNodeIP: string = 'MetaMask'; // Default node
-    private nodeIP: string;                     // Current nodeIP
-    private nodeConnected: boolean = true;      // If we've established a connection yet
-    private adding: boolean = false;            // If we're adding a question
     private web3Instance: any;                  // Current instance of web3
 
     private bndesTokenContract: any;
 
     // Application Binary Interface so we can use the question contract
-    private ABI
+    private ABI;
 
     private vetorTxJaProcessadas : any[];
 
@@ -66,9 +61,6 @@ export class Web3Service {
             });
     }
 
-   /* public getCurrentAccounts(callback) {
-        return this.web3.eth.getAccounts(callback);
-    }*/
 
     //fonte: https://www.xul.fr/javascript/callback-to-promise.php
     public getCurrentAccountSync() {
@@ -82,13 +74,9 @@ export class Web3Service {
 
 
     private intializeWeb3(): void {
-        this.nodeIP = this.defaultNodeIP;
 
-        if (typeof window['web3'] !== 'undefined' && (this.nodeIP === 'MetaMask')) {
+        if (typeof window['web3'] !== 'undefined') {
             this.web3 = new this.Web3(window['web3'].currentProvider);
-            this.nodeIP = 'MetaMask';
-            this.nodeConnected = true;
-            this.update.emit(null);
             console.log("Conectado com noh");
     
         } else {
@@ -98,29 +86,20 @@ export class Web3Service {
 
         this.bndesTokenContract = this.web3.eth.contract(this.ABI).at(this.contractAddr);
 
+        console.log("INICIALIZOU O WEB3 - bndesTokenContract abaixo");
+        console.log(this.bndesTokenContract);
+
         let self = this;
 
         this.getAddressOwner(function (addrOwner) {
-            console.log("addOwner=" + addrOwner);
+            console.log("Owner Addr =" + addrOwner);
             self.addressOwner = addrOwner;
         }, function (error) {
             console.log("Erro ao buscar owner=" + error);
         });
 
-        console.log("INICIALIZOU O WEB3 - bndesTokenContract abaixo");
-        console.log(this.bndesTokenContract);
-
 }
 
-/*
-    recuperaContaSelecionada() {
-        return this.web3.eth.accounts[0];
-    }
-*/
-
-    get isConnected(): boolean {
-        return this.nodeConnected;
-    }
 
     get web3(): any {
         if (!this.web3Instance) {
@@ -141,19 +120,8 @@ export class Web3Service {
             console.log('Invalid address used');
         }
     }
-    get currentNode(): string {
-        return this.nodeIP;
-    }
-    set currentNode(nodeIP: string) {
-        this.nodeIP = nodeIP;
-    }
-
     get Web3(): any {
         return window['Web3'];
-    }
-
-    get addingQuestion(): boolean {
-        return this.adding;
     }
 
     registraEventosCadastro(callback) {
@@ -260,6 +228,18 @@ export class Web3Service {
             });
     }
 
+
+    getVersao(fSuccess: any, fError: any): number {
+        console.log("vai recuperar a versao. " );
+        let self = this;
+        return this.bndesTokenContract.getVersao(
+            (error, versao) => {
+                if (error) fError(error);
+                else fSuccess(   parseInt ( versao )  );
+            });
+    }
+
+
     getTotalSupply(fSuccess: any, fError: any): number {
         console.log("vai recuperar o totalsupply. " );
         let self = this;
@@ -314,7 +294,7 @@ export class Web3Service {
     }
 
     getAddressOwner(fSuccess: any, fError: any): number {
-        return this.bndesTokenContract.getOwner(
+        return this.bndesTokenContract.owner(
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);

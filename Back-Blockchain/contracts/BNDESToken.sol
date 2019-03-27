@@ -7,9 +7,9 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
-contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC20Mintable, ERC20Burnable, Ownable {
+contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC20Mintable, ERC20Burnable, Ownable() {
 
-    uint private versao = 20181105;
+    uint private versao = 20190325;
 
 
     //TODO: Vale a pena adicionar o estado de conta SUSPENSA para casos excepcionais?
@@ -243,6 +243,10 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
     function isBNDES(address _addr) view public returns (bool) {
         return (_addr == owner());
     }
+
+    function isResponsibleForSettlement(address _addr) view public returns (bool) {
+        return (_addr == responsibleForSettlement);
+    }    
 
     function notificaLiquidacaoResgate(string memory redemptionTransactionHash, string memory receiptHash, bool isOk) 
         public {
