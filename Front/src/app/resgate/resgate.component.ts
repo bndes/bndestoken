@@ -31,6 +31,7 @@ export class ResgateComponent implements OnInit {
     setTimeout(() => {
       this.mudaStatusHabilitacaoForm(true);
       this.inicializaResgate();
+      this.recuperaContaSelecionada();
     }, 1000)
   }
 
@@ -41,7 +42,6 @@ export class ResgateComponent implements OnInit {
     this.recuperaContaSelecionada();
     this.recuperaCNPJ(this.resgate.contaBlockchainOrigem);
     this.recuperaSaldoOrigem(this.resgate.contaBlockchainOrigem);
-    this.recuperaEmpresa(this.resgate.contaBlockchainOrigem);
     this.recuperaAddrCarteiraBNDES();
     this.resgate.valor = 0;
   }
@@ -103,11 +103,11 @@ export class ResgateComponent implements OnInit {
   }
 
 
-  recuperaEmpresa(contaBlockchain) {
+  recuperaEmpresa(cnpj) {
 
-    console.log("Recupera Razao social para - " + contaBlockchain);
+    console.log("Recupera Razao social para - " + cnpj);
 
-    this.pessoaJuridicaService.recuperaEmpresaPorContaBlockchain(contaBlockchain).subscribe(
+    this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
       data => {
         if (data) {
           console.log(data)
@@ -117,15 +117,6 @@ export class ResgateComponent implements OnInit {
 
           if (data.contasFornecedor) {
             this.resgate.ehFornecedor = true;
-
-            for (var i = 0; i < data.contasFornecedor.length; i++) {
-              if (data.contasFornecedor[i].contaBlockchain === contaBlockchain) {
-                this.resgate.bancoOrigem = data["contasFornecedor"][i].dadosBancarios.banco;
-                this.resgate.agenciaOrigem = data["contasFornecedor"][i].dadosBancarios.agencia;
-                this.resgate.contaCorrenteOrigem = data["contasFornecedor"][i].dadosBancarios.contaCorrente;
-              }
-            }
-
           }
           else {
             this.resgate.ehFornecedor = false;

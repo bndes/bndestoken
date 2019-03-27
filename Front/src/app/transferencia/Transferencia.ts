@@ -11,8 +11,8 @@ export class Transferencia {
   msgEmpresaDestino: string;
   valorTransferencia: number;
   numeroSubcredito: number;
-  descricao: string;
+  //descricao: string;
   hashOperacao: string;
-  documentoDeSuporte: string;
+  //documentoDeSuporte: string;
   dataHora: Date;
 }
