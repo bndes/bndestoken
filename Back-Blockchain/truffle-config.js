@@ -13,7 +13,7 @@ module.exports = {
       port: 9545,
       from: "0xd636349f5d7e03037e0f224c9b1ac3ccf104f4a5", // default address to use for any transaction Truffle makes during migrations
       network_id: 4,
-      gas: 4612388  // Gas limit used for deploys
+      gas: 6952388  // Gas limit used for deploys
     },
     ropsten:  {
       host: "localhost",  //geth --testnet --fast --rpc --rpcapi eth,net,web3,personal
