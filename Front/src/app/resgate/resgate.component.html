@@ -20,7 +20,7 @@
           <label>Conta Blockchain:</label>
           <input type="text" class="form-control form-control-sm" [ngModel]="resgate.contaBlockchainOrigem" readonly disabled size="45">
         </div>
-        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="recuperaEmpresa()">
+        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
           <i class="fa fa-refresh" aria-hidden="true"></i>
         </a>
       </div>
@@ -29,7 +29,7 @@
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ:</label>
           <input type="text" class="form-control form-control-sm" [ngModel]="resgate.cnpjOrigem | cnpjMask" 
-          (ngModelChange)="recuperaInformacoesDerivadasConta()" readonly disabled size="14" />
+           readonly disabled size="14" />
         </div>
 
         <div class="form-group col-md-4 col-sm-4">
@@ -40,33 +40,6 @@
         <div class="form-group col-md-4 col-sm-4">
           <label>Saldo:</label>
           <input currencyMask type="text" class="form-control form-control-sm" [ngModel]="resgate.saldoOrigem" readonly disabled/>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="conteudo">
-
-      <div class="row">
-        <div class="form-group col-md-12 col-sm-12">
-          <h5>Dados Bancários:</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-md-4 col-sm-4">
-          <label>Banco:</label>
-          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.bancoOrigem" readonly disabled/>
-        </div>
-
-        <div class="form-group col-md-4 col-sm-4">
-          <label>Agência:</label>
-          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.agenciaOrigem " readonly disabled/>
-        </div>
-
-        <div class="form-group col-md-4 col-sm-4">
-          <label>Conta Corrente:</label>
-          <input type="text" class="form-control form-control-sm" [ngModel]="resgate.contaCorrenteOrigem" readonly disabled/>
         </div>
       </div>
     </div>

@@ -75,6 +75,7 @@ export class ResgateComponent implements OnInit {
           console.log("cnpj abaixo");
           console.log(result.c[0]);
           self.resgate.cnpjOrigem = result.c[0];
+          self.recuperaEmpresa();
           self.ref.detectChanges();
         },
         function (error) {
@@ -103,7 +104,11 @@ export class ResgateComponent implements OnInit {
   }
 
 
-  recuperaEmpresa(cnpj) {
+  recuperaEmpresa() {
+
+    let self = this;    
+
+    let cnpj = this.resgate.cnpjOrigem;
 
     console.log("Recupera Razao social para - " + cnpj);
 
@@ -121,14 +126,13 @@ export class ResgateComponent implements OnInit {
           else {
             this.resgate.ehFornecedor = false;
           }
-
+          self.ref.detectChanges();
 
         }
         else {
           console.log("nenhuma razao social encontrada");
           this.resgate.razaoSocialOrigem = "";
           this.resgate.ehFornecedor = false;
-
         }
       },
       error => {
