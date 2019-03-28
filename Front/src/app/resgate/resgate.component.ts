@@ -31,6 +31,7 @@ export class ResgateComponent implements OnInit {
     setTimeout(() => {
       this.mudaStatusHabilitacaoForm(true);
       this.inicializaResgate();
+      this.recuperaContaSelecionada();
     }, 1000)
   }
 
@@ -41,7 +42,6 @@ export class ResgateComponent implements OnInit {
     this.recuperaContaSelecionada();
     this.recuperaCNPJ(this.resgate.contaBlockchainOrigem);
     this.recuperaSaldoOrigem(this.resgate.contaBlockchainOrigem);
-    this.recuperaEmpresa(this.resgate.contaBlockchainOrigem);
     this.recuperaAddrCarteiraBNDES();
     this.resgate.valor = 0;
   }
@@ -75,6 +75,7 @@ export class ResgateComponent implements OnInit {
           console.log("cnpj abaixo");
           console.log(result.c[0]);
           self.resgate.cnpjOrigem = result.c[0];
+          self.recuperaEmpresa();
           self.ref.detectChanges();
         },
         function (error) {
@@ -103,11 +104,15 @@ export class ResgateComponent implements OnInit {
   }
 
 
-  recuperaEmpresa(contaBlockchain) {
+  recuperaEmpresa() {
 
-    console.log("Recupera Razao social para - " + contaBlockchain);
+    let self = this;    
 
-    this.pessoaJuridicaService.recuperaEmpresaPorContaBlockchain(contaBlockchain).subscribe(
+    let cnpj = this.resgate.cnpjOrigem;
+
+    console.log("Recupera Razao social para - " + cnpj);
+
+    this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
       data => {
         if (data) {
           console.log(data)
@@ -117,27 +122,17 @@ export class ResgateComponent implements OnInit {
 
           if (data.contasFornecedor) {
             this.resgate.ehFornecedor = true;
-
-            for (var i = 0; i < data.contasFornecedor.length; i++) {
-              if (data.contasFornecedor[i].contaBlockchain === contaBlockchain) {
-                this.resgate.bancoOrigem = data["contasFornecedor"][i].dadosBancarios.banco;
-                this.resgate.agenciaOrigem = data["contasFornecedor"][i].dadosBancarios.agencia;
-                this.resgate.contaCorrenteOrigem = data["contasFornecedor"][i].dadosBancarios.contaCorrente;
-              }
-            }
-
           }
           else {
             this.resgate.ehFornecedor = false;
           }
-
+          self.ref.detectChanges();
 
         }
         else {
           console.log("nenhuma razao social encontrada");
           this.resgate.razaoSocialOrigem = "";
           this.resgate.ehFornecedor = false;
-
         }
       },
       error => {

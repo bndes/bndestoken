@@ -59,6 +59,7 @@ export class LiberacaoComponent implements OnInit {
   }
 
   refreshContaBlockchainSelecionada() {
+    this.recuperaContaSelecionada();
     this.inicializaLiberacao();
   }
 

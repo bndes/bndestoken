@@ -34,6 +34,7 @@ export class TransferenciaComponent implements OnInit {
   ngOnInit() {
     this.mudaStatusHabilitacaoForm(true);
     this.inicializaTransferencia();
+    this.recuperaContaSelecionada();
   }
 
   inicializaTransferencia() {

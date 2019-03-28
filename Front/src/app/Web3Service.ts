@@ -334,11 +334,13 @@ export class Web3Service {
 
         let contaSelecionada = await this.getCurrentAccountSync();    
         
+        console.log("conta selecionada=" + contaSelecionada);
         console.log("Web3Service - Transfer");
         console.log('Target=' + target);
         console.log('TransferAmount=' + transferAmount);
 
         transferAmount = this.converteDecimalParaInteiro(transferAmount);     
+
         this.bndesTokenContract.transfer(target, transferAmount, { from: contaSelecionada, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
@@ -371,7 +373,7 @@ export class Web3Service {
 
     resgata(transferAmount: number, fSuccess: any, fError: any): void {
 
-        console.log("Web3Service - Resgata")
+        console.log("Web3Service - Resgata " + transferAmount);
         let self = this;
 
         this.getAddressOwner(
