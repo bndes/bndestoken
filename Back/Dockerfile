@@ -6,7 +6,7 @@ RUN ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 
 ADD . /backend
 
-COPY /backend/config_PRD.json /backend/config.json
+COPY ./config_PRD.json /backend/config.json
 
 WORKDIR /backend
 
