@@ -4,11 +4,13 @@ MAINTAINER SuporteInfraAplicacoes <suporte-infra-aplicacoes@bndes.gov.br>
 # Corrigir timezone
 RUN ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 
-ADD . /backend
+ADD ./Back /backend/Back
 
-COPY ./config_PRD.json /backend/config.json
+COPY ./Back/config_PRD.json /backend/Back/config.json
 
-WORKDIR /backend
+ADD ./Back-Blockchain/ /backend/Back-Blockchain
+
+WORKDIR /backend/Back
 
 RUN npm install
 
