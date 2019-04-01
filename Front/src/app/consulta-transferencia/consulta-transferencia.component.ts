@@ -116,8 +116,8 @@ export class ConsultaTransferenciaComponent implements OnInit {
 
                 transferencia.razaoSocialDestino = data[0].razaoSocialDestino
                 transferencia.contaBlockchainDestino = data[0].contaBlockchainDestino
-                transferencia.descricao = data[0].descricao
-                transferencia.documentoDeSuporte = data[0].documentoDeSuporte
+                //transferencia.descricao = data[0].descricao
+                //transferencia.documentoDeSuporte = data[0].documentoDeSuporte
                 transferencia.dataHora = data[0].dataHora
 
                 self.zone.run(() => {
