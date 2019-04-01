@@ -128,7 +128,7 @@ var n = contratoJson.networks;
 var accounts;
 
 console.log("config.infra.rede_blockchain (4=Rinkeby|4447=local) = " + config.infra.rede_blockchain);
-
+	
 ABI = contratoJson['abi']
 //console.log( "abi = ", this.ABI )
 
@@ -138,6 +138,18 @@ if (config.infra.rede_blockchain == 4) { //Rinkeby
 	endereco_websocket = config.infra.endereco_websocket_rinkeby
 }
 else {
+	
+	try {
+		let test = n[config.infra.rede_blockchain].address 
+	} catch (error) {
+		console.log ("ERROR. Consider: ")
+		console.log ("1) remove the back-blockchain/build and then migrate again...")
+		console.log ("2) the number of the network in your config.json")
+		console.log ("	networks = " + n)
+		console.log ("	config.infra.rede_blockchain = " + config.infra.rede_blockchain)
+		console.log ("	networks[config.infra.rede_blockchain] = " + n[config.infra.rede_blockchain])		
+		process.exit();
+	}
 	addrContrato = n[config.infra.rede_blockchain].address;
 	endereco_websocket = config.infra.endereco_websocket
 }
