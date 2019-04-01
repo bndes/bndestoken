@@ -16,7 +16,7 @@ EXPOSE 8080
 
 VOLUME ["/app/config.json"]
 
-ENTRYPOINT ["npm start"]
+ENTRYPOINT ["npm","start"]
 
 
 
