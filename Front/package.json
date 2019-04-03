@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --preserve-symlinks",
-    "build": "ng build --prod",
+    "build": "ng build --prod --sourcemaps true",
     "postinstall": "cp -r bndes-ux4 node_modules",
     "test": "ng test",
     "lint": "ng lint",
