@@ -144,12 +144,14 @@ export class ValidacaoCadastroComponent implements OnInit {
   async recuperaContaSelecionada() {
     let self = this;
     
-    this.contaSelecionada = await this.web3Service.getCurrentAccountSync();
-    console.log("contaSelecionada=" + this.contaSelecionada);      
+    self.contaSelecionada = await self.web3Service.getCurrentAccountSync();
+    console.log("contaSelecionada=" + self.contaSelecionada);      
 
   }  
 
   validarCadastro() {
+
+    this.recuperaContaSelecionada()
 
     if (this.pj.contaBlockchain === undefined) {
       let s = "A conta blockchain é um Campo Obrigatório";
@@ -168,6 +170,7 @@ export class ValidacaoCadastroComponent implements OnInit {
         let s = "A validação exige que a conta do BNDES seja a selecionada no Metamask.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
         console.log(s);
+        console.log("this.contaSelecionada = " + this.contaSelecionada);
         console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
         return;
     }
