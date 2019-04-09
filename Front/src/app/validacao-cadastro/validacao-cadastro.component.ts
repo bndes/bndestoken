@@ -46,7 +46,7 @@ export class ValidacaoCadastroComponent implements OnInit {
   }
 
   recuperaClientePorContaBlockchain(conta) {
-    let self = this;
+    let self = this;    
 
     if ( conta != undefined && conta != "" && conta.length == 42 ) {
 
@@ -112,6 +112,7 @@ export class ValidacaoCadastroComponent implements OnInit {
     console.log(this.pj.hashDeclaracao);
     
     if (this.pj && this.pj.hashDeclaracao == this.hashDeclaracaoDigitado) {
+      this.recuperaContaSelecionada()            
       return true;
     }
     else {
@@ -142,10 +143,11 @@ export class ValidacaoCadastroComponent implements OnInit {
   }
 
   async recuperaContaSelecionada() {
-    let self = this;
-    
-    self.contaSelecionada = await self.web3Service.getCurrentAccountSync();
-    console.log("contaSelecionada=" + self.contaSelecionada);      
+    if ( this.contaSelecionada === undefined ) {    
+      this.contaSelecionada = await this.web3Service.getCurrentAccountSync();
+      console.log("recuperaContaSelecionada() - carregando");     
+    }
+    console.log("contaSelecionada=" + this.contaSelecionada);      
 
   }  
 
@@ -204,6 +206,9 @@ export class ValidacaoCadastroComponent implements OnInit {
   }
 
   invalidarCadastro() {
+
+    this.recuperaContaSelecionada()
+
     let self = this;
     console.log("invalidarConta(): ");
     console.log(self.pj.contaBlockchain);
