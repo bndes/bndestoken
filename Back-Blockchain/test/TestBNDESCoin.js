@@ -1,4 +1,4 @@
-var BNDESCoin = artifacts.require("./BNDESCoin.sol");
+var BNDESToken = artifacts.require("./BNDESToken.sol");
 var expectThrow = require('./helper.js');
 var coin;
 var cnpj1 = 2222;
@@ -9,7 +9,7 @@ var subcreditoFornecedor = 0;
 var cnpjOrigemVazio = 0;
 var isNotRepassador = false;
 
-contract('BNDESCoin', function (accounts) {
+contract('BNDESToken', function (accounts) {
 
   var bndesAddr = accounts[0];
   var emp1Addr = accounts[1];
@@ -17,7 +17,7 @@ contract('BNDESCoin', function (accounts) {
   var emp3Addr = accounts[3];
 
   it("should create the contract with the correct owner", function () {
-    return BNDESCoin.deployed(
+    return BNDESToken.deployed(
     ).then(function (instance) {
       coin = instance;
       return coin.getOwner.call();

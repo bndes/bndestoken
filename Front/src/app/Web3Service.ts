@@ -337,9 +337,9 @@ export class Web3Service {
         console.log("conta selecionada=" + contaSelecionada);
         console.log("Web3Service - Transfer");
         console.log('Target=' + target);
-        console.log('TransferAmount=' + transferAmount);
-
+        console.log('TransferAmount(before)=' + transferAmount);
         transferAmount = this.converteDecimalParaInteiro(transferAmount);     
+        console.log('TransferAmount(after)=' + transferAmount);
 
         this.bndesTokenContract.transfer(target, transferAmount, { from: contaSelecionada, gas: 500000 },
             (error, result) => {

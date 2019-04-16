@@ -164,7 +164,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
                 // Garante que a conta de origem eh um fornecedor
                 require(isFornecedor(from), "A conta não é de um fornecedor");
 
-                burnFrom(from, _value);
+                _burn(from, _value);
 
                 emit Resgate(pjsInfo[from].cnpj, _value);
 
