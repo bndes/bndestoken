@@ -39,24 +39,7 @@
               <i [hidden]="reverse" class="fa fa-caret-down"></i>
               <i [hidden]="!reverse" class="fa fa-caret-up"></i>
             </th>
-            <th rowspan="2" [class.active]="order === 'paraCnpj'" (click)="setOrder('paraCnpj')" scope="col">Banco
-              <i [hidden]="reverse" class="fa fa-caret-down"></i>
-              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
-            </th>
-            <th rowspan="2" [class.active]="order === 'paraConta'" (click)="setOrder('paraConta')" scope="col">Agência
-              <i [hidden]="reverse" class="fa fa-caret-down"></i>
-              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
-            </th>
-            <th rowspan="2" [class.active]="order === 'valor'" (click)="setOrder('valor')" scope="col">Conta Corrente
-              <i [hidden]="reverse" class="fa fa-caret-down"></i>
-              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
-            </th>
             <th rowspan="2" [class.active]="order === 'tipo'" (click)="setOrder('tipo')" scope="col">Valor
-              <i [hidden]="reverse" class="fa fa-caret-down"></i>
-              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
-            </th>
-            <th rowspan="2" scope="col">Conta Blockchain</th>
-            <th rowspan="2" [class.active]="order === 'dataHora'" (click)="setOrder('dataHora')" scope="col">Data/Hora
               <i [hidden]="reverse" class="fa fa-caret-down"></i>
               <i [hidden]="!reverse" class="fa fa-caret-up"></i>
             </th>
@@ -83,12 +66,7 @@
             </td>
             <td>{{resgate.cnpj}}</td>
             <td>{{resgate.razaoSocial}}</td>
-            <td>{{resgate.banco}}</td>
-            <td>{{resgate.agencia}}</td>
-            <td>{{resgate.contaCorrente}}</td>
             <td>{{resgate.valorResgate | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
-            <td>{{resgate.contaBlockchain}}</td>
-            <td>{{resgate.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
             <td class="text-center">
               <a href="https://rinkeby.etherscan.io/tx/{{resgate.hashID}}">
                 <i class="fa fa-link" aria-hidden="true"></i>
@@ -98,14 +76,14 @@
               <input type="file" #file id="comprovante" placeholder="Browse..." ng2FileSelect [uploader]="uploader" (change)="uploadComprovante(i)"
                 hidden/>
 
-              <a href="javascript:void(0)" (click)="file.click()" *ngIf="!resgate.comprovante.nome">
+              <a href="javascript:void(0)" (click)="file.click()" *ngIf="true">
                 <i class="fa fa-upload" aria-hidden="true"></i>
               </a>
 
-              <i class="fa fa-check green" *ngIf="resgate.comprovante.nome"></i>
+              <i class="fa fa-check green" *ngIf="true"></i>
             </td>
             <td class="text-center">
-              <a href="javascript:void(0)" (click)="baixarComprovante(resgate)" [class.not-active]="!resgate.comprovante.nome">
+              <a href="javascript:void(0)" (click)="baixarComprovante(resgate)" [class.not-active]="true">
                 <i class="fa fa-download" aria-hidden="true"></i>
               </a>
             </td>

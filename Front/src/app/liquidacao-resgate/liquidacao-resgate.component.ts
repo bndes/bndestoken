@@ -111,63 +111,43 @@ export class LiquidacaoResgateComponent implements OnInit {
     let resgate: LiquidacaoResgate
 
     this.web3Service.registraEventosResgate(function (error, event) {
-      if (!error) {
+      if (!error) {        
+          console.log("Encontrou algum dado")
+          console.log(event)
+          self.pessoaJuridicaService.recuperaEmpresaPorCnpj(event.args.cnpj).subscribe(
+              data => {   
+                console.log (data)           
 
-        self.pessoaJuridicaService.recuperaResgatesNaoLiquidados().subscribe(
-          data => {
-            console.log("Encontrou algum dado")
-            console.log(data)
+                resgate = new LiquidacaoResgate()
+                resgate.razaoSocial  = data.dadosCadastrais.razaoSocial
 
-            for (var i = 0; i < data.length; i++) {
-              resgate = new LiquidacaoResgate()
-
-              if (data && event.transactionHash === data[i].hashOperacao) {
-                resgate.id = data[i]._id
-                resgate.cnpj = data[i].cnpjOrigem
-                resgate.razaoSocial = data[i].razaoSocialOrigem
-                resgate.banco = data[i].bancoOrigem
-                resgate.agencia = data[i].agenciaOrigem
-                resgate.contaCorrente = data[i].contaCorrenteOrigem
-                resgate.contaBlockchain = data[i].contaBlockchainOrigem
+                resgate.hashID       = event.transactionHash
+                resgate.cnpj         = event.args.cnpj
                 resgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(event.args.valor))
-                resgate.hashID = data[i].hashOperacao
-                resgate.dataHora = data[i].dataHora
-                resgate.comprovante = data[i].comprovante
+
+                console.log("resgate.razaoSocial"    + resgate.razaoSocial)           
+                console.log("resgate.hashID: "       + resgate.hashID)
+                console.log("resgate.cnpj: "         + resgate.cnpj)
+                console.log("resgate.valorResgate: " + resgate.valorResgate)     
+                
+                resgate.contaBlockchain = ""
 
                 self.resgates.push(resgate)
                 self.estadoLista = "cheia"
                 self.ref.detectChanges()
 
                 console.log(self.resgates)
-              } else {
-                console.log("Nenhuma empresa encontrada.")
-                resgate.razaoSocial = ""
-                resgate.banco = 0
-                resgate.agencia = 0
-                resgate.contaCorrente = 0
-                resgate.contaBlockchain = ""
-                resgate.hashID = ""
+                self.isActive = new Array(self.resgates.length).fill(false)
+              },
+              error => {
+                console.log ("Erro em self.pessoaJuridicaService.recuperaEmpresaPorCnpj(" + resgate.cnpj + ")")           
               }
-
-            }
-            self.isActive = new Array(self.resgates.length).fill(false)
-
-          },
-          error => {
-            console.log("Erro ao buscar dados da empresa.")
-            resgate.razaoSocial = ""
-            resgate.banco = 0
-            resgate.agencia = 0
-            resgate.contaCorrente = 0
-            resgate.contaBlockchain = ""
-          })
+            )
 
       } else {
-        console.log("Erro no registro de eventos de resgate");
-        console.log(error);
+        self.estadoLista = "vazia"
       }
     })
-    self.estadoLista = "vazia"
   }
 
   setOrder(value: string) {
