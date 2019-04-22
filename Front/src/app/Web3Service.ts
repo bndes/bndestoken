@@ -390,12 +390,13 @@ export class Web3Service {
 
     }
 
-    liquidaResgate(hashResgate: any, hashComprovante: any, fSuccess: any, fError: any) {
+    liquidaResgate(hashResgate: any, hashComprovante: any, isOk: boolean, fSuccess: any, fError: any) {
         console.log("Web3Service - liquidaResgate")
         console.log("HashResgate - " + hashResgate)
         console.log("HashComprovante - " + hashComprovante)
+        console.log("isOk - " + isOk)
 
-        this.bndesTokenContract.notificaLiquidacaoResgate(hashResgate, hashComprovante,
+        this.bndesTokenContract.notificaLiquidacaoResgate(hashResgate, hashComprovante, isOk,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
