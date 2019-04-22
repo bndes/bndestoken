@@ -69,7 +69,7 @@ export class AssociaContaClienteComponent implements OnInit {
   }
 
   cancelar() {
-    this.inicializaDadosDerivadosPessoaJuridica();
+    this.cliente = new Cliente();
   }
 
   mudaStatusHabilitacaoForm(statusForm: boolean) {
@@ -161,11 +161,16 @@ export class AssociaContaClienteComponent implements OnInit {
   }
 
 
+
+
+
   associarContaCliente() {
 
-    console.log("ENTROUS" );
-/*
     let self = this;
+//TODO: descobrir porque nao esta funcionando
+
+/*
+
     console.log("hashdeclaracao=" + this.hashdeclaracao);
 
     console.log("salic=" + this.salic);
