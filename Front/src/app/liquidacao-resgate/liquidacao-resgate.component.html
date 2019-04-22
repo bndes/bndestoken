@@ -27,7 +27,7 @@
             <th rowspan="2" scope="col" class="seletor-table">
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="checkTitleActive" (click)="checkAll()">
+                  <!-- <input class="form-check-input" type="checkbox" [(ngModel)]="checkTitleActive" (click)="checkAll()"> -->
                 </label>
               </div>
             </th>
@@ -44,12 +44,7 @@
               <i [hidden]="!reverse" class="fa fa-caret-up"></i>
             </th>
             <th rowspan="2" scope="col">HashID</th>
-            <th colspan="2">Comprovante</th>
-          </tr>
-
-          <tr>
-            <th>Salvar</th>
-            <th>Baixar</th>
+            <th colspan="2" scope="col">Hash da TED</th>
           </tr>
         </thead>
 
@@ -60,7 +55,7 @@
             <td class="seletor-table">
               <div class="form-check">
                 <label class="form-check-label">
-                  <input name="selecionarResgate" class="form-check-input" type="checkbox" [(ngModel)]="isActive[i]" (click)="check(i, resgate.hashID)">
+                  <input name="selecionarResgate" class="form-check-input" type="radio" (click)="check(resgate.hashID)">
                 </label>
               </div>
             </td>
@@ -73,26 +68,17 @@
               </a>
             </td>
             <td class="text-center">
-              <input type="file" #file id="comprovante" placeholder="Browse..." ng2FileSelect [uploader]="uploader" (change)="uploadComprovante(i)"
-                hidden/>
-
-              <a href="javascript:void(0)" (click)="file.click()" *ngIf="true">
-                <i class="fa fa-upload" aria-hidden="true"></i>
-              </a>
-
-              <i class="fa fa-check green" *ngIf="true"></i>
-            </td>
-            <td class="text-center">
-              <a href="javascript:void(0)" (click)="baixarComprovante(resgate)" [class.not-active]="true">
-                <i class="fa fa-download" aria-hidden="true"></i>
-              </a>
+              <input type="text" [(ngModel)]="hashTED">
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" (click)="liquidar()" [disabled]="resgatesParaLiquidar.length === 0">
+    <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" (click)="liquidar()" [disabled]="hashTED">
       <i class="fa fa-money" aria-hidden="true"></i> Liquidar
     </button>
+    <button type="button" class="btn btn-danger btn-cabecalho" placement="bottom" (click)="glosar()" [disabled]="hashTED">
+      <i class="fa fa-money" aria-hidden="true"></i> Glosar
+    </button>    
   <!--</div>-->

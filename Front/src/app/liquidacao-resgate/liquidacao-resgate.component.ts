@@ -30,6 +30,8 @@ export class LiquidacaoResgateComponent implements OnInit {
   order: string = ''
   reverse: boolean = false
 
+  hashTED: string = ''
+
   checkTitleActive: boolean = false
   isActive: boolean[] = []
 
@@ -162,6 +164,12 @@ export class LiquidacaoResgateComponent implements OnInit {
     return itemB - itemA
   }
 
+  check(hashID) {
+    console.log( "Check: " + hashID)
+    this.resgatesParaLiquidar.pop()
+    this.resgatesParaLiquidar.push(hashID)
+  }
+/*
   check(position, hashID) {
     console.log("Check")
     if (this.isActive[position]) {
@@ -190,7 +198,7 @@ export class LiquidacaoResgateComponent implements OnInit {
     }
     this.ref.detectChanges()
   }
-
+*/
   comprovanteLiquidacaoIsEmpty() {
 
     console.log("Testando comprovante em branco")
@@ -207,10 +215,14 @@ export class LiquidacaoResgateComponent implements OnInit {
     return false
   }
 
-  liquidar() {
-    console.log("Liquidando os resgates..")
+  glosar() {
+    console.log("Glosando o resgate..")
+    this.web3LiquidaResgate(false)
+  }
 
-    let self = this;
+  liquidar() {
+    console.log("Liquidando o resgate..")
+    this.web3LiquidaResgate(true)
 /*
     if (this.recuperaContaSelecionada() != this.web3Service.getAddressOwnerCacheble()) {
       this.zone.run(() => {
@@ -226,6 +238,9 @@ export class LiquidacaoResgateComponent implements OnInit {
       })
     } else {
 */
+
+/***** 
+
       for (var i = 0; i < self.resgatesParaLiquidar.length; i++) {
         let hashIdResgate = self.resgatesParaLiquidar[i]
 
@@ -263,7 +278,23 @@ export class LiquidacaoResgateComponent implements OnInit {
           console.log("Erro ao Liquidar o resgate");
         })
       }
+
+
+      *****/
+
   //  }
+  }
+
+  web3LiquidaResgate(isOk) {
+    let hashResgate     = this.resgatesParaLiquidar.pop()
+    let hashComprovante = this.hashTED
+    this.web3Service.liquidaResgate(hashResgate, hashComprovante, isOk,
+      function (success) {
+          console.log("success: " + success)
+      },
+      function (error) {
+          console.log("error: " + error)
+      })
   }
 
   removerDaListaDeExibicao(hashID: string) {
