@@ -209,11 +209,6 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
         emit InvalidacaoCadastroConta(_addr);
     }
 
-    function isContaValidada(address _addr) view public returns (bool) {
-
-        return pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA;
-    }
-
     function isFornecedor(address _addr) view public returns (bool) {
 
         if (_addr == owner())
@@ -256,20 +251,37 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
     function getEstadoContaAsString(address _addr) view public returns (string memory) {
 
-        if ( pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA ) {
+        if ( isBNDES(_addr) ) {
+            return "Conta Reservada - BNDES";
+        } else if ( isResponsibleForSettlement(_addr)) {
+            return "Conta Reservada - Liquidante do contrato";
+        } else if ( isContaValidada(_addr) ) {
             return "Validada"; 
         } else if ( pjsInfo[_addr].estado == EstadoContaBlockchain.INVALIDADA_CADASTRO ) {
             return "Conta invalidada no Cadastro";
         } else if ( pjsInfo[_addr].estado == EstadoContaBlockchain.INVALIDADA_TROCA ) {
             return "Conta invalidada por Troca de Conta";
-        } else if ( pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO ) {
+        } else if ( isContaAguardandoValidacao(_addr) ) {
             return "Aguardando validação do Cadastro";
-        } else if ( pjsInfo[_addr].cnpj == 0 && pjsInfo[_addr].estado == EstadoContaBlockchain.DISPONIVEL) {
+        } else if (isContaDisponivel (_addr)) {
             return "Disponível";
         } else {
             return "Erro";
         }
 
+    }
+
+
+    function isContaDisponivel(address _addr) view public returns (bool) {
+        return pjsInfo[_addr].cnpj == 0 && pjsInfo[_addr].estado == EstadoContaBlockchain.DISPONIVEL;
+    }
+
+    function isContaAguardandoValidacao(address _addr) view public returns (bool) {
+        return pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO;
+    }
+
+    function isContaValidada(address _addr) view public returns (bool) {
+        return pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA;
     }
 
 

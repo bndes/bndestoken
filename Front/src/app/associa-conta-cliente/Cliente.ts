@@ -1,6 +1,7 @@
 export class Cliente {
   id: number;
   cnpj: string;
+  cnpjWithMask: string;  
   dadosCadastrais: {
     cidade: string;
     razaoSocial: string;

@@ -1,5 +1,15 @@
 export class Utils {
 
+    static getMaskCnpj() {
+      return [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/];
+    }
+
+    static removeSpecialCharacters(str) {
+      //TODO: Today it is used only to CNPJ. If necessary, expand to remove other characters
+      return str.replace(/-/g, '').replace(/\./g, '').replace('/', '').replace(/_/g, '')
+    }  
+
+    
     static completarCnpjComZero(cnpj){
         return ("00000000000000" + cnpj).slice(-14)
      }

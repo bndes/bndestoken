@@ -466,6 +466,32 @@ export class Web3Service {
         });
     }
 
+    isContaDisponivel(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isContaDisponivel(address, 
+            (error, result) => {
+                if(error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
+    isContaAguardandoValidacao(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isContaAguardandoValidacao(address, 
+            (error, result) => {
+                if(error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
+    isContaValidada(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isContaValidada(address, 
+            (error, result) => {
+                if(error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
+     
+
     async validarCadastro(address: string, hashTentativa: string, fSuccess: any, fError: any) {
         
         let contaBlockchain = await this.getCurrentAccountSync();    
