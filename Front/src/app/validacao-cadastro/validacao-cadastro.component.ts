@@ -196,13 +196,11 @@ export class ValidacaoCadastroComponent implements OnInit {
         ,(error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 
                                  "Erro ao validar cadastro na blockchain", 
-                                 error, 
-                                 undefined )  
+                                 error )  
         }
       );
       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação.",
-                                    undefined )         
+                                    "Confirme a operação no metamask e aguarde a confirmação." )         
   }
 
   invalidarCadastro() {

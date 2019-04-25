@@ -7,11 +7,13 @@ export class Cliente {
     razaoSocial: string;
     CNAE: string;
   };
-  subcreditos: [{
+  subcreditos: Subcredito[] 
+}
+
+export class Subcredito {
     numero: number;
     nome: string;
-    contaBlockchain: string,
-    isActive: Boolean,
-		papel: String
-  }] 
+    contaBlockchain: string;
+    isActive: Boolean;
+		papel: String;  
 }

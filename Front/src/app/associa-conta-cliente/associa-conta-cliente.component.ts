@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BnAlertsService } from 'bndes-ux4';
 
 
-import { Cliente } from './Cliente';
+import { Cliente, Subcredito } from './Cliente';
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
 import { Web3Service } from './../Web3Service';
 import { Utils } from '../shared/utils';
@@ -18,15 +18,9 @@ import { Utils } from '../shared/utils';
 export class AssociaContaClienteComponent implements OnInit {
 
   cliente: Cliente;
-  statusHabilitacaoForm: boolean;
   subcreditoSelecionado: number;
   hashdeclaracao: string;
   salic: number;
-
-  file: any = null;
-
-  declaracao: string
-  declaracaoAssinada: string
 
   contaEstaValida: string;
   selectedAccount: any;
@@ -44,14 +38,14 @@ export class AssociaContaClienteComponent implements OnInit {
 
   ngOnInit() {
     this.maskCnpj = Utils.getMaskCnpj(); 
-    this.mudaStatusHabilitacaoForm(true);
     this.cliente = new Cliente();
+    this.cliente.subcreditos = new Array<Subcredito>();
   }
 
   inicializaDadosDerivadosPessoaJuridica() {
     this.cliente.id = 0
-    this.cliente.dadosCadastrais = undefined
-    this.cliente.subcreditos = undefined;
+    this.cliente.dadosCadastrais = undefined;
+    this.cliente.subcreditos = new Array<Subcredito>();
   }
 
   changeCnpj() {
@@ -68,12 +62,9 @@ export class AssociaContaClienteComponent implements OnInit {
     }  
   }
 
-  cancelar() {
+  cancelar() { 
     this.cliente = new Cliente();
-  }
-
-  mudaStatusHabilitacaoForm(statusForm: boolean) {
-    this.statusHabilitacaoForm = statusForm;
+    this.inicializaDadosDerivadosPessoaJuridica();
   }
 
   async recuperaContaSelecionada() {
@@ -82,7 +73,7 @@ export class AssociaContaClienteComponent implements OnInit {
     
     let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
 
-    if (newSelectedAccount !== self.selectedAccount && newSelectedAccount) {
+    if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
 
       this.selectedAccount = newSelectedAccount;
       console.log("selectedAccount=" + this.selectedAccount);
@@ -99,6 +90,7 @@ export class AssociaContaClienteComponent implements OnInit {
     if (contaBlockchainSelecionada) {
 
         this.web3Service.getEstadoContaAsString(contaBlockchainSelecionada,
+
           result => {
 
             self.contaEstaValida = result
@@ -119,7 +111,10 @@ export class AssociaContaClienteComponent implements OnInit {
   }
 
   recuperaClientePorCNPJ(cnpj) {
+
     console.log("RECUPERA CLIENTE com CNPJ = " + cnpj);
+
+    let self = this;
 
     this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
       empresa => {
@@ -127,26 +122,31 @@ export class AssociaContaClienteComponent implements OnInit {
           console.log("empresa encontrada - ");
           console.log(empresa);
 
-          let subcreditos = new Array()
+          self.cliente.id = empresa["_id"];
+          self.cliente.dadosCadastrais = empresa["dadosCadastrais"];
 
           for (var i = 0; i < empresa["subcreditos"].length; i++) {
-            var teste1 = empresa["subcreditos"][i].papel === "cliente";
-            var teste2 = empresa["subcreditos"][i].isActive;
+           
+            let subStr = JSON.parse(JSON.stringify(empresa["subcreditos"][i]));
 
-            if (teste1 && teste2) {
-              subcreditos.push(empresa["subcreditos"][i]);
-            }
+            this.web3Service.getContaBlockchain(cnpj, subStr.numero,
+              
+              (contaBlockchain) => {
+
+                console.log("contaBlockchain");
+                console.log(contaBlockchain);
+
+                if (contaBlockchain==0x0) { //If there is no association in the blockchain yet
+                    self.includeIfNotExists(self.cliente.subcreditos, subStr);
+                    self.subcreditoSelecionado = self.cliente.subcreditos[0].numero;
+                }
+
+              },
+              (error) => {
+                console.log("Erro ao verificar se subcredito estah associado na blockhain");
+              })
           }
 
-          this.cliente.id = empresa["_id"];
-          this.cliente.dadosCadastrais = empresa["dadosCadastrais"];
-          this.cliente.subcreditos = JSON.parse(JSON.stringify(subcreditos));
-
-          if (this.cliente.subcreditos && this.cliente.subcreditos.length>0) {            
-            this.subcreditoSelecionado = this.cliente.subcreditos[0].numero;
-          }
-
-          this.declaracao = "Declaro que sou a empresa de Razão Social " + this.cliente.dadosCadastrais.razaoSocial + " com o CNPJ " + this.cliente.cnpj
         }
         else {
           //Do no clean fields to better UX
@@ -161,51 +161,54 @@ export class AssociaContaClienteComponent implements OnInit {
   }
 
 
+  includeIfNotExists(subcreditos, subStr) {
+
+    let include = true;
+    for(var i=0; i < subcreditos.length; i++) { 
+      if (subcreditos[i].numero==subStr.numero) {
+        include=false;
+      }
+    }  
+    if (include) subcreditos.push(subStr);
+  }
 
 
 
   associarContaCliente() {
 
     let self = this;
-//TODO: descobrir porque nao esta funcionando
 
-/*
-
-    console.log("hashdeclaracao=" + this.hashdeclaracao);
-
-    console.log("salic=" + this.salic);
-
-    let contaBlockchain = this.selectedAccount;
-    console.log("contaBlockchain=" + contaBlockchain);
-
-    let subcreditoSelecionado = this.subcreditoSelecionado;
-    console.log("subcreditoSelecionado=" + subcreditoSelecionado);
-
-    if (subcreditoSelecionado === undefined) {
+    if (this.subcreditoSelecionado === undefined) {
       let s = "O Subcrédito é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return
     }
 
+    if (this.hashdeclaracao === undefined) {
+      let s = "O Hash da declaração é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return
+    }  
+    
+    if (this.salic === undefined) {
+      let s = "O SALIC é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return
+    }     
 
     this.web3Service.isContaDisponivel(this.selectedAccount, 
     
       (result) => {
 
-        console.log("RESULT=" + result);
-
         if (!result) {
           
-          Utils.criarAlertaErro( self.bnAlertsService, 
-            "Conta não disponível", 
-            "A conta "+ this.selectedAccount +" não está disponível para associação", 
-            self.mudaStatusHabilitacaoForm )  
-
+          let msg = "A conta "+ this.selectedAccount +" não está disponível para associação"; 
+          Utils.criarAlertaErro( self.bnAlertsService, "Conta não   disponível para associação", msg);  
         }
 
         else {
 
-          this.web3Service.cadastra(parseInt(self.cliente.cnpj), subcreditoSelecionado, this.salic, this.hashdeclaracao,
+          this.web3Service.cadastra(parseInt(self.cliente.cnpj), self.subcreditoSelecionado, self.salic, self.hashdeclaracao,
 
             (txHash) => {
   
@@ -219,27 +222,23 @@ export class AssociaContaClienteComponent implements OnInit {
           ,(error) => {
             Utils.criarAlertaErro( self.bnAlertsService, 
                                     "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
-                                    error, 
-                                    self.mudaStatusHabilitacaoForm )  
+                                    error)  
           });
           Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                      "Confirme a operação no metamask e aguarde a confirmação da associação da conta.",
-                                      self.mudaStatusHabilitacaoForm )
+                                      "Confirme a operação no metamask e aguarde a confirmação da associação da conta.")
          
-        }
+
+        } 
 
       }, (error) => {
         Utils.criarAlertaErro( self.bnAlertsService, 
           "Erro ao verificar se conta está disponível", 
-          error, 
-          self.mudaStatusHabilitacaoForm )  
-      }
-      
-    );
-*/
+          error);
+
+      });
+
 
   }
-
 
 
 

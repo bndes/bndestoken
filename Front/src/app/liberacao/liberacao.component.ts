@@ -255,14 +255,13 @@ export class LiberacaoComponent implements OnInit {
         ,(error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 
                                  "Erro ao liberar na blockchain. Uma possibilidade é a conta selecionada não ser a do BNDES", 
-                                 error, 
-                                 self.mudaStatusHabilitacaoForm )  
+                                 error )  
+          self.statusHabilitacaoForm = false;  
         }
       );
       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação da liberação.",                                  
-                                    self.mudaStatusHabilitacaoForm )
-
+                                    "Confirme a operação no metamask e aguarde a confirmação da liberação." )
+      self.statusHabilitacaoForm = false;  
     }
 
   }

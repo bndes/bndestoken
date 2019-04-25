@@ -59,12 +59,12 @@
         <div class="form-group col-md-4 col-sm-4 offset-md-1">
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Subcrédito:</label>
-            <select name="subcreditoSelecionado" class="form-control form-control-sm" [disabled]="cliente.subcreditos === undefined"
+            <select name="subcreditoSelecionado" class="form-control form-control-sm" [disabled]="subcreditoSelecionado === undefined"
               [(ngModel)]="subcreditoSelecionado" required>
               <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
             </select>
           </app-input-validation>
-          <div *ngIf="cliente.subcreditos === undefined" class="red">Não existem subcréditos para serem associados.</div>
+          <div *ngIf="subcreditoSelecionado === undefined" class="red">Não existem subcréditos para serem associados.</div>
         </div>
       </div>
 
@@ -94,7 +94,6 @@
 
   </div>
   <!--</form>-->
-
 
 
 <!--</div>-->

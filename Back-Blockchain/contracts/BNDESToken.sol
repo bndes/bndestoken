@@ -29,6 +29,8 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
     } 
 
     mapping(address => PJInfo) public pjsInfo;
+
+    //_cnpj => (_idSubcredito => endereco)
     mapping(uint => mapping(uint => address)) cnpjSubEndereco; 
 
     event CadastroConta(address endereco, uint cnpj, uint idSubcredito, uint salic, string hashdeclaracao);
@@ -273,6 +275,13 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
 
     function isContaDisponivel(address _addr) view public returns (bool) {
+        
+        if ( isBNDES(_addr) ) {
+            return false;
+        } else if ( isResponsibleForSettlement(_addr)) {
+            return false;
+        }
+
         return pjsInfo[_addr].cnpj == 0 && pjsInfo[_addr].estado == EstadoContaBlockchain.DISPONIVEL;
     }
 

@@ -16,7 +16,6 @@ import { Utils } from '../shared/utils';
 export class RecuperaAcessoClienteComponent implements OnInit {
 
   cliente: Cliente;
-  statusHabilitacaoForm: boolean;
   subcreditoSelecionado: number;
   contaBlockchainAssociada: string;
   contaSelecionada: any;
@@ -33,7 +32,6 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     private web3Service: Web3Service, private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) { }
 
   ngOnInit() {
-    this.mudaStatusHabilitacaoForm(true);
     this.inicializaPessoaJuridica();
     this.recuperaContaSelecionada();    
   }
@@ -78,10 +76,6 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
   cancelar() {
     this.cliente.dadosCadastrais = undefined
-  }
-
-  mudaStatusHabilitacaoForm(statusForm: boolean) {
-    this.statusHabilitacaoForm = statusForm;
   }
 
   async recuperaContaSelecionada() {
@@ -209,13 +203,11 @@ export class RecuperaAcessoClienteComponent implements OnInit {
         ,(error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 
                                  "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
-                                 error, 
-                                 self.mudaStatusHabilitacaoForm )  
+                                 error)  
         }
       );
       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação da associação da conta.",
-                                    self.mudaStatusHabilitacaoForm )       
+                                    "Confirme a operação no metamask e aguarde a confirmação da associação da conta." )       
     }
   }
 }

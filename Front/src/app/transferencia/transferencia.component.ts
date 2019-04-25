@@ -288,14 +288,13 @@ export class TransferenciaComponent implements OnInit {
         ,(error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 
                                  "Erro ao transferir na blockchain", 
-                                 error, 
-                                 self.mudaStatusHabilitacaoForm )  
+                                 error)  
+          self.statusHabilitacaoForm = false;                                                       
         }
       );
       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação da transferência.",
-                                    self.mudaStatusHabilitacaoForm )  
-           
+                                    "Confirme a operação no metamask e aguarde a confirmação da transferência." )  
+      self.statusHabilitacaoForm = false;                                                                  
     }
   }
 

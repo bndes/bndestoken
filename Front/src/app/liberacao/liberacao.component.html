@@ -90,7 +90,8 @@
     </div>
 
     <div class="form-group">
-      <button (click)="liberar()" type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Liberar" [disabled]="liberacao.numeroSubcreditoSelecionado === undefined || liberacao.valor <= 0 || liberacao.contaBlockchainCNPJ == '' ">
+      <button (click)="liberar()" type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Liberar" 
+      [disabled]="liberacao.numeroSubcreditoSelecionado === undefined || liberacao.valor <= 0 || liberacao.contaBlockchainCNPJ == '' ">
         <i class="fa fa-floppy-o" aria-hidden="true"></i> Liberar
       </button>
     </div>

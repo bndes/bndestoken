@@ -31,19 +31,15 @@ export class Utils {
           });
      }
 
-     static criarAlertaErro( bnAlertsService, errorMsg, error, mudaStatusHabilitacaoForm ) {
+     static criarAlertaErro( bnAlertsService, errorMsg, error) {
          bnAlertsService.criarAlerta("error", "Erro", errorMsg, 5);
          console.log(errorMsg);
          console.log(error);
-         if ( mudaStatusHabilitacaoForm != undefined )
-            mudaStatusHabilitacaoForm(true);
      }
 
-     static criarAlertaAcaoUsuario( bnAlertsService, userMsg, mudaStatusHabilitacaoForm ) {
+     static criarAlertaAcaoUsuario( bnAlertsService, userMsg ) {
         bnAlertsService.criarAlerta("info", "", userMsg, 5);
         console.log(userMsg);
-        if ( mudaStatusHabilitacaoForm != undefined )
-            mudaStatusHabilitacaoForm(false);
      }
       
 }
