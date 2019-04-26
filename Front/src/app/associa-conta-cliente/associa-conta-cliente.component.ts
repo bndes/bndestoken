@@ -203,7 +203,7 @@ export class AssociaContaClienteComponent implements OnInit {
         if (!result) {
           
           let msg = "A conta "+ this.selectedAccount +" não está disponível para associação"; 
-          Utils.criarAlertaErro( self.bnAlertsService, "Conta não   disponível para associação", msg);  
+          Utils.criarAlertaErro( self.bnAlertsService, "Conta não disponível para associação", msg);  
         }
 
         else {
@@ -217,7 +217,9 @@ export class AssociaContaClienteComponent implements OnInit {
                                                 self.bnAlertsService, 
                                                 "Associação do cnpj " + self.cliente.cnpj + " enviada. Aguarde a confirmação.", 
                                                 "A associação foi confirmada na blockchain.", 
-                                                self.zone)       
+                                                self.zone) 
+            self.router.navigate(['sociedade/dash-empresas']);
+            
             }        
           ,(error) => {
             Utils.criarAlertaErro( self.bnAlertsService, 

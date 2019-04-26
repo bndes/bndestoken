@@ -1,6 +1,7 @@
 export class Fornecedor {
   id: number;
   cnpj: string;
+  cnpjWithMask: string;  
   dadosCadastrais: {
     cidade: string;
     razaoSocial: string;

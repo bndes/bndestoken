@@ -19,90 +19,83 @@ export class AssociaContaFornecedorComponent implements OnInit {
 
   hashdeclaracao: string;
 
-  file: any = null
-
-  declaracao: string
-  declaracaoAssinada: string
-
   contaEstaValida: boolean;
-  contaSelecionada: any;
+  selectedAccount: any;
+
+  maskCnpj: any;
 
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService,
-    private web3Service: Web3Service, private router: Router, private zone: NgZone, private ref: ChangeDetectorRef) { }
+    private web3Service: Web3Service, private router: Router, private zone: NgZone, private ref: ChangeDetectorRef) { 
+
+      let self = this;
+      setInterval(function () {
+        self.recuperaContaSelecionada(), 1000});
+
+    }
 
   ngOnInit() {
-//    this.mudaStatusHabilitacaoForm(true)
-    this.inicializaPessoaJuridica();
+    this.fornecedor = new Fornecedor()
+ //    this.mudaStatusHabilitacaoForm(true)
+    this.maskCnpj = Utils.getMaskCnpj(); 
+    this.inicializaDadosDerivadosPessoaJuridica();
     this.recuperaContaSelecionada();
   }
 
 
-  inicializaPessoaJuridica() {
-    this.fornecedor = new Fornecedor()
+  inicializaDadosDerivadosPessoaJuridica() {
     this.fornecedor.id = 0
     this.fornecedor.cnpj = ""
     this.fornecedor.dadosCadastrais = undefined
-    this.fornecedor.contasFornecedor = undefined
   }
 
   refreshContaBlockchainSelecionada() {
     this.recuperaContaSelecionada()
   }
 
-  uploadArquivo(idElemento: string) {
-    this.file = (<HTMLInputElement>document.getElementById(idElemento)).files[0]
 
-    var fileReader = new FileReader()
-    fileReader.readAsText(this.file, "UTF-8")
+  changeCnpj() { 
+    this.fornecedor.cnpj = Utils.removeSpecialCharacters(this.fornecedor.cnpjWithMask);
+    let cnpj = this.fornecedor.cnpj;
 
-    return fileReader
-  }
-
-  onKeyCNPJFornecedor(cnpj : string) { 
     if ( cnpj.length == 14 ) {
       console.log (" Buscando o CNPJ do fornecedor (14 digitos fornecidos)...  " + cnpj)
-      this.fornecedor.cnpj = cnpj;
       this.recuperaFornecedorPorCNPJ(cnpj);
     }   
+    else {
+      this.inicializaDadosDerivadosPessoaJuridica();
+    }  
   }
 
-  carregaCertificadoDigital($event): void {
-    let self = this
-
-    var fileReader = this.uploadArquivo("certificado")
-
-    fileReader.onload = function (e) {
-      self.fornecedor.cnpj = fileReader.result
-      self.recuperaFornecedorPorCNPJ(self.fornecedor.cnpj.trim())
-    }
-  }
-
-  receberDeclaracaoAssinada(declaracaoAssinadaRecebida) {
-
-    this.declaracaoAssinada = declaracaoAssinadaRecebida
-  }
 
   cancelar() {
-    this.fornecedor.dadosCadastrais = undefined
+    this.fornecedor = new Fornecedor();
+    this.inicializaDadosDerivadosPessoaJuridica();    
   }
 
   async recuperaContaSelecionada() {
     
-    this.contaSelecionada = await this.web3Service.getCurrentAccountSync();
-    console.log("contaSelecionada=" + this.contaSelecionada);      
-    this.verificaContaBlockchainSelecionada(this.contaSelecionada); 
+    let self = this;
+    
+    let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
 
+    if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
+
+      this.selectedAccount = newSelectedAccount;
+      console.log("selectedAccount=" + this.selectedAccount);
+      this.verificaEstadoContaBlockchainSelecionada(this.selectedAccount); 
+    }
   }
 
-  verificaContaBlockchainSelecionada(contaBlockchainSelecionada) {
+  verificaEstadoContaBlockchainSelecionada(contaBlockchainSelecionada) {
 
+    let self = this;    
     if (contaBlockchainSelecionada) {
 
         this.web3Service.getEstadoContaAsString(contaBlockchainSelecionada,
           result => {
 
-            this.contaEstaValida = result
+            self.contaEstaValida = result
             
             setTimeout(() => {
               this.ref.detectChanges()
@@ -128,13 +121,6 @@ export class AssociaContaFornecedorComponent implements OnInit {
           this.fornecedor.id = empresa["_id"]
           this.fornecedor.dadosCadastrais = empresa["dadosCadastrais"]
 
-          //Simplificacao para front tratar apenas uma conta do fornecedor
-          this.fornecedor.contasFornecedor = empresa["contasFornecedor"]
-
-          this.declaracao = "Declaro que sou a empresa de Razão Social " + this.fornecedor.dadosCadastrais.razaoSocial + " com o CNPJ " + this.fornecedor.cnpj
-
-          console.log("conta fornecedor - ")
-          console.log(this.fornecedor.contasFornecedor)
         }
         else {
           console.log("nenhuma empresa encontrada")
@@ -142,63 +128,66 @@ export class AssociaContaFornecedorComponent implements OnInit {
       },
       error => {
         console.log("Erro ao buscar dados da empresa")
-        this.inicializaPessoaJuridica()
+        this.inicializaDadosDerivadosPessoaJuridica()
       })
-  }
-
-  adicionaContaFornecedor(): Fornecedor {
-    this.fornecedor.contasFornecedor.push({
-      numero: 0,
-      nome: "Principal",
-      contaBlockchain: this.contaSelecionada,
-      isActive: true
-    })
-
-    return this.fornecedor
   }
 
   associaContaFornecedor() {
 
     let self = this
 
-    /*
-    let erro = this.validaDadosBancarios()
-
-    if (erro[0]) {
-      this.bnAlertsService.criarAlerta("error", "Erro", erro[1], 2)
+    if (this.hashdeclaracao === undefined) {
+      let s = "O Hash da declaração é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return
-    }*/
+    }  
 
-    let contaBlockchain = this.recuperaContaSelecionada()
-    let fornecedor = this.adicionaContaFornecedor()
-
-    console.log("Fornecedor - ")
-    console.log(fornecedor)
-    console.log("contaBlockchain = " + contaBlockchain)
-    console.log("CNPJ do Fornecedor = " + self.fornecedor.cnpj)
-
-    //this.hashdeclaracao = this.pessoaJuridicaService.geraHash( this.hashdeclaracao );
     console.log("this.hashdeclaracao = " + this.hashdeclaracao );
 
-    this.web3Service.cadastra(parseInt(fornecedor.cnpj), 0, 0, this.hashdeclaracao,
 
-         (txHash) => {
 
-          Utils.criarAlertasAvisoConfirmacao( txHash, 
-                                              self.web3Service, 
-                                              self.bnAlertsService, 
-                                              "Associação do cnpj " + fornecedor.cnpj + "  enviada. Aguarde a confirmação.", 
-                                              "A associação de conta foi confirmada na blockchain.", 
-                                              self.zone)       
-          }        
-        ,(error) => {
-          Utils.criarAlertaErro( self.bnAlertsService, 
-                                 "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
-                                 error )  
-        }
-      );
-      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação da associação da conta." )
+    this.web3Service.isContaDisponivel(this.selectedAccount, 
     
+      (result) => {
+
+        if (!result) {
+          
+          let msg = "A conta "+ this.selectedAccount +" não está disponível para associação"; 
+          Utils.criarAlertaErro( self.bnAlertsService, "Conta não disponível para associação", msg);  
+        }
+
+        else {
+
+          this.web3Service.cadastra(parseInt(this.fornecedor.cnpj), 0, 0, this.hashdeclaracao,
+
+          (txHash) => {
+ 
+           Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                               self.web3Service, 
+                                               self.bnAlertsService, 
+                                               "Associação do cnpj " + self.fornecedor.cnpj + "  enviada. Aguarde a confirmação.", 
+                                               "A associação de conta foi confirmada na blockchain.", 
+                                               self.zone)    
+            self.router.navigate(['sociedade/dash-empresas']);
+           }        
+         ,(error) => {
+           Utils.criarAlertaErro( self.bnAlertsService, 
+                                  "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
+                                  error )  
+          });
+          Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                      "Confirme a operação no metamask e aguarde a confirmação da associação da conta." )         
+
+        } 
+
+      }, (error) => {
+        Utils.criarAlertaErro( self.bnAlertsService, 
+          "Erro ao verificar se conta está disponível", 
+          error);
+
+      });
   }
+
+
+
 }

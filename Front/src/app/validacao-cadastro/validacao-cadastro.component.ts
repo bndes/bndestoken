@@ -19,11 +19,15 @@ export class ValidacaoCadastroComponent implements OnInit {
   pj: PessoaJuridica;
   isHashInvalido: boolean = false;
   hashDeclaracaoDigitado: string;
-  contaSelecionada: any;
+  selectedAccount: any;
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
       private router: Router, private ref: ChangeDetectorRef, private zone: NgZone) {
 
+        let self = this;
+        setInterval(function () {
+          self.recuperaContaSelecionada(), 1000});
+  
   }
 
   ngOnInit() {   
@@ -35,11 +39,7 @@ export class ValidacaoCadastroComponent implements OnInit {
       salic: "",
       contaBlockchain: "",
       hashDeclaracao: "",
-      dadosBancarios: {
-        banco: 0,
-        agencia: 0,
-        contaCorrente: ""
-      },
+      dadosBancarios: undefined,
       status: status
   };
   this.recuperaContaSelecionada();  
@@ -109,10 +109,7 @@ export class ValidacaoCadastroComponent implements OnInit {
   }
 
   isHashDigitadoIgualAHashDeclaracao() {
-    console.log(this.pj.hashDeclaracao);
-    
     if (this.pj && this.pj.hashDeclaracao == this.hashDeclaracaoDigitado) {
-      this.recuperaContaSelecionada()            
       return true;
     }
     else {
@@ -143,17 +140,22 @@ export class ValidacaoCadastroComponent implements OnInit {
   }
 
   async recuperaContaSelecionada() {
-    if ( this.contaSelecionada === undefined ) {    
-      this.contaSelecionada = await this.web3Service.getCurrentAccountSync();
-      console.log("recuperaContaSelecionada() - carregando");     
-    }
-    console.log("contaSelecionada=" + this.contaSelecionada);      
+    
+    let self = this;
+    
+    let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
 
-  }  
+    if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
+
+      this.selectedAccount = newSelectedAccount;
+      console.log("selectedAccount=" + this.selectedAccount);
+
+    }
+  }
+
+
 
   validarCadastro() {
-
-    this.recuperaContaSelecionada()
 
     if (this.pj.contaBlockchain === undefined) {
       let s = "A conta blockchain é um Campo Obrigatório";
@@ -167,12 +169,12 @@ export class ValidacaoCadastroComponent implements OnInit {
       return;
     }
 
-    if (this.contaSelecionada != this.web3Service.getAddressOwnerCacheble()) 
+    if (this.selectedAccount != this.web3Service.getAddressOwnerCacheble()) 
     {
         let s = "A validação exige que a conta do BNDES seja a selecionada no Metamask.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
         console.log(s);
-        console.log("this.contaSelecionada = " + this.contaSelecionada);
+        console.log("this.contaSelecionada = " + this.selectedAccount);
         console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
         return;
     }
@@ -205,11 +207,7 @@ export class ValidacaoCadastroComponent implements OnInit {
 
   invalidarCadastro() {
 
-    this.recuperaContaSelecionada()
-
     let self = this;
-    console.log("invalidarConta(): ");
-    console.log(self.pj.contaBlockchain);
 
     if (this.pj.contaBlockchain === undefined) {
       let s = "A conta blockchain é um Campo Obrigatório";
@@ -217,12 +215,11 @@ export class ValidacaoCadastroComponent implements OnInit {
       return;
     }
 
-    if (this.contaSelecionada != this.web3Service.getAddressOwnerCacheble()) 
+    if (this.selectedAccount != this.web3Service.getAddressOwnerCacheble()) 
     {
         let s = "A invalidação exige que a conta do BNDES seja a selecionada no Metamask.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
         console.log(s);
-        console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
         return;
     }    
 
