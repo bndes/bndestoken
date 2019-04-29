@@ -17,7 +17,7 @@
       <div class="row contaBlockchain">
         <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain do BNDES:</label>
-          <input type="text" class="form-control form-control-sm" [ngModel]="contaSelecionada" readonly disabled size="45">
+          <input type="text" class="form-control form-control-sm" [ngModel]="selectedAccount" readonly disabled size="45">
         </div>
 
         <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
@@ -36,7 +36,7 @@
       <div class="row">
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ a liberar:</label>
-          <input [(ngModel)]="liberacao.cnpj" class="form-control form-control-sm" (ngModelChange)="recuperaInformacoesDerivadasCNPJ()"
+          <input [(ngModel)]="liberacao.cnpjWithMask" class="form-control form-control-sm" (ngModelChange)="recuperaInformacoesDerivadasCNPJ()"
             [disabled]="!statusHabilitacaoForm" [textMask]="{mask: maskCnpj}" />
         </div>
 
@@ -48,8 +48,8 @@
         <div class="form-group col-md-4 col-sm-4">
           <label>Subcrédito Operacional:</label>
           <select name="numertoSubcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="liberacao.numeroSubcreditoSelecionado"
-            (ngModelChange)="atualizaInfoPorMudancaSubcredito()" [disabled]="liberacao.todosSubcreditos === undefined">
-            <option *ngFor="let subcredito of liberacao.todosSubcreditos | orderBy: 'nome'" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
+            (ngModelChange)="atualizaInfoPorMudancaSubcredito()" [disabled]="liberacao.subcreditos === undefined || liberacao.subcreditos.leght==0">
+            <option *ngFor="let subcredito of liberacao.subcreditos | orderBy: 'nome'" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
           </select>
         </div>
       </div>
@@ -57,7 +57,11 @@
       <div class="row">
         <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain associada ao subcrédito:</label>
-          <input name="contaBlockchain" type="text" class="form-control form-control-sm" [ngModel]="liberacao.contaBlockchainCNPJ" readonly required disabled>
+          <input name="contaBlockchain" type="text" class="form-control form-control-sm" [ngModel]="liberacao.contaBlockchainCNPJ" readonly 
+          required disabled size="45">
+          <div class="msg-conta-invalida" >
+            {{accountState}}
+          </div>
         </div>
 
         <div class="form-group col-md-4 col-sm-4">

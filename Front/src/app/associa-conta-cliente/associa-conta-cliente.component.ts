@@ -128,23 +128,8 @@ export class AssociaContaClienteComponent implements OnInit {
           for (var i = 0; i < empresa["subcreditos"].length; i++) {
            
             let subStr = JSON.parse(JSON.stringify(empresa["subcreditos"][i]));
+            self.includeAccountIfNoAssociated(self, cnpj, subStr);
 
-            this.web3Service.getContaBlockchain(cnpj, subStr.numero,
-              
-              (contaBlockchain) => {
-
-                console.log("contaBlockchain");
-                console.log(contaBlockchain);
-
-                if (contaBlockchain==0x0) { //If there is no association in the blockchain yet
-                    self.includeIfNotExists(self.cliente.subcreditos, subStr);
-                    self.subcreditoSelecionado = self.cliente.subcreditos[0].numero;
-                }
-
-              },
-              (error) => {
-                console.log("Erro ao verificar se subcredito estah associado na blockhain");
-              })
           }
 
         }
@@ -160,16 +145,34 @@ export class AssociaContaClienteComponent implements OnInit {
 
   }
 
+  includeAccountIfNoAssociated (self, cnpj, sub) {
 
-  includeIfNotExists(subcreditos, subStr) {
+    self.web3Service.getContaBlockchain(cnpj, sub.numero,
+              
+      (contaBlockchain) => {
+  
+        if (contaBlockchain==0x0) { //If there is no association in the blockchain yet
+            self.includeIfNotExists(self.cliente.subcreditos, sub);
+            self.subcreditoSelecionado = self.cliente.subcreditos[0].numero;
+        }
+  
+      },
+      (error) => {
+        console.log("Erro ao verificar se subcredito estah associado na blockhain");
+      })
+  
+  }
+
+
+  includeIfNotExists(subcreditos, sub) {
 
     let include = true;
     for(var i=0; i < subcreditos.length; i++) { 
-      if (subcreditos[i].numero==subStr.numero) {
+      if (subcreditos[i].numero==sub.numero) {
         include=false;
       }
     }  
-    if (include) subcreditos.push(subStr);
+    if (include) subcreditos.push(sub);
   }
 
 

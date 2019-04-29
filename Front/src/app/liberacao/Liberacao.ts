@@ -1,11 +1,20 @@
 export class Liberacao {
   contaBlockchainBNDES: string;
   cnpj: string;
-  todosSubcreditos: [any];
+  cnpjWithMask: string;  
+  subcreditos: Subcredito[];
   numeroSubcreditoSelecionado: number;
   razaoSocial: string;
   valor: number;
   saldoCNPJ: number;
   contaBlockchainCNPJ: string;
   hashID: string;
+}
+
+export class Subcredito {
+  numero: number;
+  nome: string;
+  contaBlockchain: string;
+  isActive: Boolean;
+  papel: String;  
 }

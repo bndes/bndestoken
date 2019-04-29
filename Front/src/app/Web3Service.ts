@@ -467,6 +467,12 @@ export class Web3Service {
         });
     }
 
+
+    async isSelectedAccountOwner() {
+        let contaSelecionada = await this.getCurrentAccountSync();    
+        return contaSelecionada == this.addressOwner;
+    }
+
     isContaDisponivel(address: string, fSuccess: any, fError: any): boolean {
         return this.bndesTokenContract.isContaDisponivel(address, 
             (error, result) => {
