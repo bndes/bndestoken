@@ -22,12 +22,14 @@ export class TransferenciaComponent implements OnInit {
   transferencia: Transferencia;
   statusHabilitacaoForm: boolean;
 
-  papel: string // R - Repassador C - Cliente
-
   maskCnpj = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]  
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
     private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) {
+
+      let self = this;
+      setInterval(function () {
+        self.recuperaContaSelecionada(), 1000});
 
   }
 
@@ -58,50 +60,26 @@ export class TransferenciaComponent implements OnInit {
     this.inicializaTransferencia();
   }
 
-
-
   async recuperaContaSelecionada() {
-    console.log("recuperaContaSelecionada =");
-    console.log(this.transferencia.contaBlockchainOrigem);
-
-    let contaSelecionada = await this.web3Service.getCurrentAccountSync();
-    
-    this.transferencia.contaBlockchainOrigem = contaSelecionada + "";
-    this.recuperaSaldoOrigem(this.transferencia.contaBlockchainOrigem);
-    this.recuperaEmpresaOrigemPorContaBlockchain(this.transferencia.contaBlockchainOrigem);
-    this.ref.detectChanges();
-  }
-
-  recuperaSaldoOrigem(contaBlockchain) {
 
     let self = this;
+    
+    let selectedAccount = this.transferencia.contaBlockchainOrigem;
+    let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
+  
+    if ( !selectedAccount || (newSelectedAccount !== selectedAccount && newSelectedAccount)) {
+  
+      selectedAccount = newSelectedAccount+"";
+      console.log("selectedAccount=" + selectedAccount);
 
-    this.web3Service.getBalanceOf(contaBlockchain,
-
-      function (result) {
-        console.log("Saldo do endereco " + contaBlockchain + " eh " + result);
-        self.transferencia.saldoOrigem = result;
-        self.ref.detectChanges();
-      },
-      function (error) {
-        console.log("Erro ao ler o saldo do endereco " + contaBlockchain);
-        console.log(error);
-        self.transferencia.saldoOrigem = 0;
-      });
-  }
-
-  recuperaInformacoesDerivadasConta() {
-
-    if (this.transferencia.contaBlockchainDestino != "") {
-      this.recuperaEmpresaDestinoPorContaBlockchain(this.transferencia.contaBlockchainDestino.toLowerCase());
-    } else {
-      this.transferencia.razaoSocialDestino = "";
-      this.transferencia.papelEmpresaDestino = "";
-      this.transferencia.cnpjDestino = "";
-      this.transferencia.msgEmpresaDestino = ""
+      this.transferencia.contaBlockchainOrigem = selectedAccount;
+      this.recuperaEmpresaOrigemPorContaBlockchain(this.transferencia.contaBlockchainOrigem);
+      this.ref.detectChanges();
+        
     }
-  }
-
+  
+  }  
+  
   recuperaEmpresaOrigemPorContaBlockchain(contaBlockchain) {
 
     let self = this;
@@ -136,22 +114,45 @@ export class TransferenciaComponent implements OnInit {
             console.warn("Erro ao buscar dados da conta na blockchain")
           })
 
-      this.web3Service.getBalanceOf(contaBlockchain,
+      this.recuperaSaldoOrigem(contaBlockchain);        
 
-          (result) => {
-
-              console.log(result);
-
-           },
-          (error) => {
-            self.apagaCamposDaEstrutura();
-            console.warn("Erro ao buscar dados de saldo da conta na blockchain")
-          })          
     } 
     else {
         self.apagaCamposDaEstrutura();      
     }
 }
+
+
+  recuperaSaldoOrigem(contaBlockchain) {
+
+    let self = this;
+
+    this.web3Service.getBalanceOf(contaBlockchain,
+
+      function (result) {
+        console.log("Saldo do endereco " + contaBlockchain + " eh " + result);
+        self.transferencia.saldoOrigem = result;
+        self.ref.detectChanges();
+      },
+      function (error) {
+        console.log("Erro ao ler o saldo do endereco " + contaBlockchain);
+        console.log(error);
+        self.transferencia.saldoOrigem = 0;
+      });
+  }
+
+  recuperaInformacoesDerivadasConta() {
+
+    if (this.transferencia.contaBlockchainDestino != "") {
+      this.recuperaEmpresaDestinoPorContaBlockchain(this.transferencia.contaBlockchainDestino.toLowerCase());
+    } else {
+      this.transferencia.razaoSocialDestino = "";
+      this.transferencia.papelEmpresaDestino = "";
+      this.transferencia.cnpjDestino = "";
+      this.transferencia.msgEmpresaDestino = ""
+    }
+  }
+
 
   recuperaEmpresaDestinoPorContaBlockchain(contaBlockchain) {
 
@@ -247,19 +248,8 @@ export class TransferenciaComponent implements OnInit {
     console.log("VALOR TRANSFERENCIA")
     console.log(this.transferencia.valorTransferencia);
 
-    if (this.transferencia.papelEmpresaOrigem != "R" && this.transferencia.papelEmpresaOrigem != "C") {
-      let s = "A transferëncia deve ter como origem a conta de um Cliente ou Repasador.";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-      console.log(s);
-
-    }
-    else if (this.transferencia.papelEmpresaDestino != "R" && this.transferencia.papelEmpresaDestino != "F") {
-      let s = "A transferëncia deve ter como destino a conta de um Repassador ou Fornecedor.";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-      console.log(s);
-    }
     //Multipliquei por 1 para a comparacao ser do valor (e nao da string)
-    else if ((this.transferencia.valorTransferencia * 1) > (this.transferencia.saldoOrigem * 1)) {
+    if ((this.transferencia.valorTransferencia * 1) > (this.transferencia.saldoOrigem * 1)) {
 
       console.log("saldoOrigem=" + this.transferencia.saldoOrigem);
       console.log("valorTransferencia=" + this.transferencia.valorTransferencia);
@@ -283,7 +273,9 @@ export class TransferenciaComponent implements OnInit {
                                               self.bnAlertsService, 
                                               "Transferência para cnpj " + self.transferencia.cnpjDestino + "  enviada. Aguarde a confirmação.", 
                                               "A Transferência foi confirmada na blockchain.", 
-                                              self.zone)       
+                                              self.zone);       
+          self.router.navigate(['sociedade/dash-transf']);
+          
           }        
         ,(error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 

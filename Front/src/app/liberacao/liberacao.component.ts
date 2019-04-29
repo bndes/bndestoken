@@ -60,11 +60,6 @@ export class LiberacaoComponent implements OnInit {
     this.statusHabilitacaoForm = statusForm;
   }
 
-  refreshContaBlockchainSelecionada() {
-    this.recuperaContaSelecionada();
-  }
-
-
  async recuperaContaSelecionada() {
 
   let self = this;
@@ -253,7 +248,8 @@ export class LiberacaoComponent implements OnInit {
                                                     self.bnAlertsService, 
                                                     "A liberação está sendo enviada para a blockchain.", 
                                                     "A liberação foi confirmada na blockchain.", 
-                                                    self.zone)       
+                                                    self.zone) 
+                self.router.navigate(['sociedade/dash-transf']);                                                          
                 }        
               ,(error) => {
                 Utils.criarAlertaErro( self.bnAlertsService, 
