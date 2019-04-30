@@ -17,12 +17,10 @@ import { Utils } from '../shared/utils';
 })
 export class TransferenciaComponent implements OnInit {
 
-  ultimaContaBlockchainDestino: string;
-
   transferencia: Transferencia;
   statusHabilitacaoForm: boolean;
 
-  maskCnpj = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]  
+  maskCnpj: any;
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
     private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) {
@@ -34,31 +32,31 @@ export class TransferenciaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.maskCnpj = Utils.getMaskCnpj();      
     this.mudaStatusHabilitacaoForm(true);
-    this.inicializaTransferencia();
-    this.recuperaContaSelecionada();
+    this.transferencia = new Transferencia();
+    this.inicializaDadosDestino();
+
   }
 
-  inicializaTransferencia() {
-    this.ultimaContaBlockchainDestino = "";
 
-    this.transferencia = new Transferencia();
-    this.recuperaContaSelecionada();
-    this.transferencia.cnpjDestino = "";
-    this.transferencia.contaBlockchainDestino = "";
-    this.transferencia.razaoSocialDestino = "";
-    this.transferencia.valorTransferencia = null;
+  inicializaDadosOrigem() {
     this.transferencia.subcredito = "";
-    this.transferencia.msgEmpresaDestino = ""
+    this.transferencia.saldoOrigem = undefined;    
+  }
+
+
+  inicializaDadosDestino() {
+
+    this.transferencia.cnpjDestino = "";
+    this.transferencia.razaoSocialDestino = "";
+    this.transferencia.msgEmpresaDestino = "";
   }
 
   mudaStatusHabilitacaoForm(statusForm: boolean) {
     this.statusHabilitacaoForm = statusForm;
   }
 
-  refreshContaBlockchainSelecionada() {
-    this.inicializaTransferencia();
-  }
 
   async recuperaContaSelecionada() {
 
@@ -73,6 +71,7 @@ export class TransferenciaComponent implements OnInit {
       console.log("selectedAccount=" + selectedAccount);
 
       this.transferencia.contaBlockchainOrigem = selectedAccount;
+
       this.recuperaEmpresaOrigemPorContaBlockchain(this.transferencia.contaBlockchainOrigem);
       this.ref.detectChanges();
         
@@ -96,21 +95,18 @@ export class TransferenciaComponent implements OnInit {
 
               console.log(result);
               self.transferencia.subcredito = result.idSubcredito;
-              if (self.transferencia.subcredito != "") {
-                self.transferencia.papelEmpresaOrigem = "C";
-              }
               self.ref.detectChanges();
 
            } //fecha if de PJ valida
 
            else {
-             self.apagaCamposDaEstrutura();
+             self.inicializaDadosOrigem();
              console.log("Não encontrou PJ valida para a conta blockchain");
            }
            
           },
           (error) => {
-            self.apagaCamposDaEstrutura();
+            self.inicializaDadosOrigem();
             console.warn("Erro ao buscar dados da conta na blockchain")
           })
 
@@ -118,7 +114,7 @@ export class TransferenciaComponent implements OnInit {
 
     } 
     else {
-        self.apagaCamposDaEstrutura();      
+        self.inicializaDadosOrigem();      
     }
 }
 
@@ -143,20 +139,9 @@ export class TransferenciaComponent implements OnInit {
 
   recuperaInformacoesDerivadasConta() {
 
-    if (this.transferencia.contaBlockchainDestino != "") {
-      this.recuperaEmpresaDestinoPorContaBlockchain(this.transferencia.contaBlockchainDestino.toLowerCase());
-    } else {
-      this.transferencia.razaoSocialDestino = "";
-      this.transferencia.papelEmpresaDestino = "";
-      this.transferencia.cnpjDestino = "";
-      this.transferencia.msgEmpresaDestino = ""
-    }
-  }
-
-
-  recuperaEmpresaDestinoPorContaBlockchain(contaBlockchain) {
-
     let self = this;
+
+    let contaBlockchain = this.transferencia.contaBlockchainDestino.toLowerCase();
 
     console.log("ContaBlockchain" + contaBlockchain);
 
@@ -181,18 +166,13 @@ export class TransferenciaComponent implements OnInit {
                 }
                 else {
                     console.log("nenhuma empresa encontrada");
-                    this.transferencia.razaoSocialDestino = "";
-                    this.transferencia.papelEmpresaDestino = "";
-                    this.transferencia.cnpjDestino = ""
+                    this.inicializaDadosDestino();
                     this.transferencia.msgEmpresaDestino = "Conta Inválida"
                 }
               },
               error => {
                   console.log("Erro ao buscar dados da empresa");
-                  this.transferencia.razaoSocialDestino = "";
-                  this.transferencia.papelEmpresaDestino = "";
-                  this.transferencia.cnpjDestino = "";
-                  this.transferencia.msgEmpresaDestino = ""
+                  this.inicializaDadosDestino();
               });              
 
               self.ref.detectChanges();
@@ -200,20 +180,20 @@ export class TransferenciaComponent implements OnInit {
            } //fecha if de PJ valida
 
            else {
-             self.apagaCamposDaEstrutura();
+             this.inicializaDadosDestino();
              console.log("Não encontrou PJ valida para a conta blockchain");
            }
            
           },
           (error) => {
-            self.apagaCamposDaEstrutura();
+            this.inicializaDadosDestino();
             console.warn("Erro ao buscar dados da conta na blockchain")
           })
 
                  
     } 
     else {
-        self.apagaCamposDaEstrutura();      
+        this.inicializaDadosDestino();
     }
 }
 
@@ -224,11 +204,9 @@ export class TransferenciaComponent implements OnInit {
       (result) => {
         if (result) {
           self.transferencia.msgEmpresaDestino = "Fornecedor"
-          self.transferencia.papelEmpresaDestino = "F";
         } else {
           console.log("Conta Invalida")
           self.transferencia.msgEmpresaDestino = "Conta Inválida"
-          self.transferencia.papelEmpresaDestino = "";
         }
         self.ref.detectChanges()
       },
@@ -239,15 +217,38 @@ export class TransferenciaComponent implements OnInit {
   }
 
 
-  transferir() {
+  async transferir() {
 
     let self = this;
 
-    this.recuperaContaSelecionada();
+    let bClienteOrigem = await this.web3Service.isClienteSync(this.transferencia.contaBlockchainOrigem);
+    if (!bClienteOrigem) {
+      let s = "Conta de Origem não é de um cliente";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
 
-    console.log("VALOR TRANSFERENCIA")
-    console.log(this.transferencia.valorTransferencia);
+    let bFornecedorDestino = await this.web3Service.isFornecedorSync(this.transferencia.contaBlockchainDestino);
+    if (!bFornecedorDestino) {
+      let s = "Conta de Destino não é de um fornecedor";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
 
+    let bValidadaOrigem = await this.web3Service.isContaValidadaSync(this.transferencia.contaBlockchainOrigem);
+    if (!bValidadaOrigem) {
+      let s = "Conta de Origem não validada";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
+    let bValidadaDestino = await this.web3Service.isContaValidadaSync(this.transferencia.contaBlockchainDestino);
+    if (!bValidadaDestino) {
+      let s = "Conta de Destino não validada";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
+
+      
     //Multipliquei por 1 para a comparacao ser do valor (e nao da string)
     if ((this.transferencia.valorTransferencia * 1) > (this.transferencia.saldoOrigem * 1)) {
 
@@ -256,51 +257,35 @@ export class TransferenciaComponent implements OnInit {
 
       let s = "Não é possível transferir mais do que o valor do saldo de origem.";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-      console.log(s);
+      return;
     }
-    else {
 
-      console.log("TRANSFERIR")
-      console.log(this.transferencia.contaBlockchainDestino)
-      console.log(this.transferencia.valorTransferencia)
 
-      this.web3Service.transfer(this.transferencia.contaBlockchainDestino, this.transferencia.valorTransferencia,
+    this.web3Service.transfer(this.transferencia.contaBlockchainDestino, this.transferencia.valorTransferencia,
 
-         (txHash) => {
-          self.transferencia.hashOperacao = txHash;
-          Utils.criarAlertasAvisoConfirmacao( txHash, 
-                                              self.web3Service, 
-                                              self.bnAlertsService, 
-                                              "Transferência para cnpj " + self.transferencia.cnpjDestino + "  enviada. Aguarde a confirmação.", 
-                                              "A Transferência foi confirmada na blockchain.", 
-                                              self.zone);       
-          self.router.navigate(['sociedade/dash-transf']);
-          
-          }        
-        ,(error) => {
-          Utils.criarAlertaErro( self.bnAlertsService, 
-                                 "Erro ao transferir na blockchain", 
-                                 error)  
-          self.statusHabilitacaoForm = false;                                                       
-        }
-      );
-      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação da transferência." )  
-      self.statusHabilitacaoForm = false;                                                                  
+        (txHash) => {
+        self.transferencia.hashOperacao = txHash;
+        Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                            self.web3Service, 
+                                            self.bnAlertsService, 
+                                            "Transferência para cnpj " + self.transferencia.cnpjDestino + "  enviada. Aguarde a confirmação.", 
+                                            "A Transferência foi confirmada na blockchain.", 
+                                            self.zone);       
+        self.router.navigate(['sociedade/dash-transf']);
+        
+        }        
+      ,(error) => {
+        Utils.criarAlertaErro( self.bnAlertsService, 
+                                "Erro ao transferir na blockchain", 
+                                error)  
+        self.statusHabilitacaoForm = false;                                                       
+      }
+    );
+    Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                  "Confirme a operação no metamask e aguarde a confirmação da transferência." )  
+    self.statusHabilitacaoForm = false;                                                                  
     }
-  }
 
-  apagaCamposDaEstrutura() {
-
-    let self = this;
-    //self.pj.cnpj = "";
-    //self.pj.razaoSocial = "";
-    self.transferencia.subcredito = "";
-    //self.pj.salic = "";
-    //self.pj.status = "";
-    //self.pj.hashDeclaracao = "";
-    //self.hashDeclaracaoDigitado = "";
-  }  
 
 
 }

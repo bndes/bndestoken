@@ -22,9 +22,6 @@
             size="45">
 
         </div>
-        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
-          <i class="fa fa-refresh" aria-hidden="true"></i>
-        </a>
       </div>
 
       <div class="row">
@@ -68,7 +65,7 @@
         </div>
       </div>
 
-      <div class="msg red" *ngIf="transferencia.msgEmpresaDestino" [class.green]="transferencia.msgEmpresaDestino == 'Repassador do Subcrédito' || transferencia.msgEmpresaDestino == 'Fornecedor'">
+      <div class="msg red" *ngIf="transferencia.msgEmpresaDestino" [class.green]="transferencia.msgEmpresaDestino == 'Fornecedor'">
         Transferência para um(a) {{transferencia.msgEmpresaDestino}}
       </div>
 

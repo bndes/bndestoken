@@ -443,6 +443,30 @@ export class Web3Service {
 
     }
 
+
+    isCliente(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isCliente(address,
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
+    isClienteSync(address: string) {
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isCliente(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO IS CLIENTE SYNC");
+                reject(false);
+            });
+        })
+    }
+        
+
+
     isFornecedor(address: string, fSuccess: any, fError: any): boolean {
         return this.bndesTokenContract.isFornecedor(address,
             (error, result) => {
@@ -450,6 +474,22 @@ export class Web3Service {
                 else fSuccess(result);
             });
     }
+
+
+    isFornecedorSync(address: string) {
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isFornecedor(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO IS FORNECEDOR SYNC");
+                reject(false);
+            });
+        })
+    }
+        
+
 
     accountIsActive(address: string, fSuccess: any, fError: any): boolean {
         return this.bndesTokenContract.isContaValidada(address, 
@@ -497,6 +537,19 @@ export class Web3Service {
             });
     }
 
+    public isContaValidadaSync(address: string) {
+        
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isContaValidada(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO IS CONTA VALIDADA SYNC");
+                reject(false);
+            });
+        })
+    }
      
 
     async validarCadastro(address: string, hashTentativa: string, fSuccess: any, fError: any) {
