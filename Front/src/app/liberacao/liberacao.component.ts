@@ -138,7 +138,7 @@ export class LiberacaoComponent implements OnInit {
 
         console.log(contaBlockchain);        
   
-        if (contaBlockchain!=0x0) { //If there is association in the blockchain yet
+        if (contaBlockchain!=0x0) { //If there is association in the blockchain
             self.includeIfNotExists(self.liberacao.subcreditos, sub);
             self.liberacao.numeroSubcreditoSelecionado = self.liberacao.subcreditos[0].numero;
             self.recuperaContaBlockchainCliente();

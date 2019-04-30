@@ -195,9 +195,9 @@ export class DashboardResgatesLiquidacoesComponent implements OnInit {
               console.log("Algum resgate foi encontrado.")
               resgate.cnpjOrigem = data.cnpjOrigem
               resgate.razaoSocialOrigem = data.razaoSocialOrigem
-              resgate.bancoOrigem = data.bancoOrigem
-              resgate.agenciaOrigem = data.agenciaOrigem
-              resgate.contaCorrenteOrigem = data.contaCorrenteOrigem
+//              resgate.bancoOrigem = data.bancoOrigem
+//              resgate.agenciaOrigem = data.agenciaOrigem
+//              resgate.contaCorrenteOrigem = data.contaCorrenteOrigem
               resgate.contaBlockchainOrigem = data.contaBlockchainOrigem
               resgate.valor = self.web3Service.converteInteiroParaDecimal(parseInt(event.args.valor))
               resgate.hashID = data.hashOperacao

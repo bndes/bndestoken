@@ -7,4 +7,8 @@ export class Resgate {
   
   valor: number;
 
+
+  hashID: string;
+  isLiquidado: string;  
+
 }

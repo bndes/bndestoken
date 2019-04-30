@@ -16,62 +16,36 @@ import { Utils } from '../shared/utils';
 export class RecuperaAcessoFornecedorComponent implements OnInit {
 
   fornecedor: Fornecedor;
-
-  file: any = null;
-
   contaBlockchainAntiga: string
-
-  declaracao: string
-  declaracaoAssinada: string
-
   contaEstaValida: boolean;
-  contaBlockchainSelecionada: any;
+  selectedAccount: any;
+  maskCnpj: any;
   
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService,
-    private web3Service: Web3Service, private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) { }
+    private web3Service: Web3Service, private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) { 
+
+      let self = this;
+      setInterval(function () {
+        self.recuperaContaSelecionada(), 1000});
+
+    }
 
   ngOnInit() {
+    this.maskCnpj = Utils.getMaskCnpj(); 
+    this.fornecedor = new Fornecedor();
     this.inicializaPessoaJuridica();
   }
 
   inicializaPessoaJuridica() {
-    this.fornecedor = new Fornecedor();
     this.fornecedor.id = 0;
     this.fornecedor.cnpj = "";
     this.fornecedor.dadosCadastrais = undefined;
     this.fornecedor.contasFornecedor = undefined;
   }
 
-  refreshContaBlockchainSelecionada() {
-    this.recuperaContaSelecionada()
-  }
+  
 
-  uploadArquivo(idElemento: string) {
-    this.file = (<HTMLInputElement>document.getElementById(idElemento)).files[0]
-
-    var fileReader = new FileReader()
-    fileReader.readAsText(this.file, "UTF-8")
-
-    return fileReader
-  }
-
-  carregaCertificadoDigital($event): void {
-    let self = this
-
-    var fileReader = this.uploadArquivo("certificado")
-
-    fileReader.onload = function (e) {
-      self.fornecedor.cnpj = fileReader.result
-      self.recuperaFornecedorPorCNPJ(self.fornecedor.cnpj.trim())
-    }
-  }
-
-  receberDeclaracaoAssinada(declaracaoAssinadaRecebida) {
-    console.log(declaracaoAssinadaRecebida)
-
-    this.declaracaoAssinada = declaracaoAssinadaRecebida
-  }
 
   cancelar() {
     this.fornecedor.dadosCadastrais = undefined
@@ -79,8 +53,16 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
 
 
   async recuperaContaSelecionada() {
-    this.contaBlockchainSelecionada = (await this.web3Service.getCurrentAccountSync()) + "";
-    this.verificaContaBlockchainSelecionada(this.contaBlockchainSelecionada);
+
+    let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
+
+    if ( !this.selectedAccount || (newSelectedAccount !== this.selectedAccount && newSelectedAccount)) {
+
+      this.selectedAccount = newSelectedAccount;
+      console.log("selectedAccount=" + this.selectedAccount);
+      this.verificaContaBlockchainSelecionada(this.selectedAccount); 
+    }
+
   }
 
 
@@ -123,7 +105,6 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
           this.fornecedor.id = empresa["_id"];
           this.fornecedor.dadosCadastrais = empresa["dadosCadastrais"];
           this.fornecedor.contasFornecedor = JSON.parse(JSON.stringify(contasFornecedor));
-          this.declaracao = "Declaro que sou a empresa de Razão Social " + this.fornecedor.dadosCadastrais.razaoSocial + " com o CNPJ " + this.fornecedor.cnpj
 
           console.log("DadosCadastrais = " + this.fornecedor.dadosCadastrais.cidade);
           console.log("ContasFornecedor = " + this.fornecedor.contasFornecedor);
@@ -144,14 +125,13 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
 
     let self = this
     let subcredito = 0
-    let contaBlockchain = this.contaBlockchainSelecionada;
 
-    if (this.contaBlockchainAntiga === undefined) {
+    if (!this.contaBlockchainAntiga) {
       let s = "O campo Conta Blockchain Atual é Obrigatório"
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
-      return
+      return;
     }
-
+/*
     this.web3Service.cancelarAssociacaoDeConta(parseInt(self.fornecedor.cnpj), subcredito, 0,
     
          (txHash) => {
@@ -161,7 +141,9 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
                                               self.bnAlertsService, 
                                               "Troca de conta do cnpj " + self.fornecedor.cnpj + "  enviada. Aguarde a confirmação.", 
                                               "A troca foi confirmada na blockchain.", 
-                                              self.zone)       
+                                              self.zone) 
+          self.router.navigate(['sociedade/dash-empresas']);
+
           }        
         ,(error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 
@@ -171,7 +153,7 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       );
       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
                                     "Confirme a operação no metamask e aguarde a confirmação da associação da conta." )      
-
+*/
   }
 
 }

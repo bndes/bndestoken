@@ -403,16 +403,20 @@ export class Web3Service {
             });
     }
 
-    cancelarAssociacaoDeConta(cnpj: number, subcredito: number, cnpjOrigemRepasse: number, fSuccess: any, fError: any) {
-        console.log("Web3Service - Cancelar Associacao")
-        console.log("CNPJ: " + cnpj + ", Subcredito: " + subcredito + ", cnpjOrigemRepasse: " + cnpjOrigemRepasse)
+    async trocaAssociacaoDeConta(cnpj: number, idSubcredito: number, salic: number, hashdeclaracao: string,
+        fSuccess: any, fError: any) {
+        
+        console.log("Web3Service - Troca Associacao")
+        console.log("CNPJ: " + cnpj + ", Subcredito: " + idSubcredito + ", cnpj: " + cnpj)
+        let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.troca(cnpj, subcredito, { gas: 500000 },
+        this.bndesTokenContract.troca(cnpj, idSubcredito, { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
             });
     }
+
 
     async setBalanceOf(address: string, valor: number, fSuccess: any, fError: any) 
     {

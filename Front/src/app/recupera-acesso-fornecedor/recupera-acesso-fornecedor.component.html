@@ -1,45 +1,36 @@
 <app-metamsg></app-metamsg>
 <!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
 
-
-  <form (ngSubmit)="cancelaAssociacaoContaFornecedor()" #registerForm="ngForm">
-
     <div class="form-group">
       <h2>Trocar conta blockchain do e-CNPJ</h2>
     </div>
 
-    <div class="form-group" *ngIf="!fornecedor.dadosCadastrais">
-      <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Selecionar arquivo" (click)="certificado.click()">
-        <i class="fa fa-id-card" aria-hidden="true"></i> Selecionar arquivo
-      </button>
-      <input id="certificado" name="certificado" type="file" #certificado (change)="carregaCertificadoDigital($event)" hidden/>
-    </div>
-
-    <div class="conteudo form-group" *ngIf="fornecedor.dadosCadastrais">
+    <div class="conteudo form-group" >
 
       <div class="row">
-        <div class="form-group col-md-12 col-sm-12">
-          <h6>Dados Cadastrais:</h6>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="form-group col-md-4 col-sm-4">
-          <label>Razão Social:</label>
-          <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly
-            disabled/>
-        </div>
+        <div class="col-md-12 col-sm-12">
+          <p>Dados Cadastrais</p>
+        </div>        
 
-        <div class="form-group col-md-4 col-sm-4">
-          <label>CNPJ do Fornecedor:</label>
-          <input name="cnpj" class="form-control form-control-sm" [ngModel]="fornecedor.cnpj | cnpjMask" [disabled]="fornecedor.cnpj"
-            required/>
-        </div>
+        <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
+          <div class="form-group col-md-4 col-sm-4">
+            <label>Razão Social:</label>
+            <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly
+              disabled/>
+          </div>
+        </div>  
 
-        <div class="form-group col-md-4 col-sm-4">
-          <label>Cidade:</label>
-          <input name="cidade" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.cidade" readonly disabled/>
-        </div>
+          <div class="form-group col-md-4 col-sm-4">
+            <label>CNPJ do Fornecedor:</label>
+            <input name="cnpjWithMask" [(ngModel)]="fornecedor.cnpjWithMask" class="form-control form-control-sm"  (input)="changeCnpj()" 
+            [textMask]="{mask: maskCnpj}"  required/>
+          </div>
+
+          <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
+            <label>Cidade:</label>
+            <input name="cidade" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.cidade" readonly disabled/>
+          </div>
 
       </div>
     </div>
@@ -68,16 +59,12 @@
 
         <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain Nova:</label>
-          <input name="contaBlockchainNova" class="form-control form-control-sm" type="text" [ngModel]="recuperaContaSelecionada()"
+          <input name="selectedAccount" class="form-control form-control-sm" type="text" [ngModel]="recuperaContaSelecionada()"
             readonly disabled>
           <div class="msg-conta-invalida" *ngIf="!contaEstaValida">
             Conta Blockchain Inválida.
           </div>
         </div>
-
-        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
-          <i class="fa fa-refresh" aria-hidden="true"></i>
-        </a>
       </div>
 
     </div>
@@ -93,5 +80,8 @@
         Cancelar
       </button>
     </div>
+
+    <form (ngSubmit)="cancelaAssociacaoContaFornecedor()" #registerForm="ngForm">
+
   </form>
 <!--</div>-->

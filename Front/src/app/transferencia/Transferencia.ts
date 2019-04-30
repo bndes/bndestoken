@@ -13,5 +13,5 @@ export class Transferencia {
   hashOperacao: string;
 
 //  numeroSubcredito: number;
-//  dataHora: Date;
+  dataHora: Date;
 }

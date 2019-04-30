@@ -34,7 +34,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
     mapping(uint => mapping(uint => address)) cnpjSubEndereco; 
 
     event CadastroConta(address endereco, uint cnpj, uint idSubcredito, uint salic, string hashdeclaracao);
-    event TrocaConta(address endereco, uint cnpj, uint idSubcredito, uint salic);//TODO: rever troca. Deveria seguir os mesmos parametros do Cadastro?
+    event TrocaConta(address endereco, uint cnpj, uint idSubcredito, uint salic, string hashdeclaracao);
     event ValidacaoConta(address endereco);
     event InvalidacaoCadastroConta(address endereco);
 
@@ -78,7 +78,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
     /**
     Reassocia um cnpj/subcrédito a um novo endereço da blockchain (o sender)
     */
-    function troca(uint _cnpj, uint _idSubcredito) public {
+    function troca(uint _cnpj, uint _idSubcredito, uint _salic, string memory _hashdeclaracao) public {
 
         address enderecoNovo = msg.sender;
 
@@ -92,20 +92,23 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
         require(enderecoNovo != enderecoAntigo, "O endereço novo deve ser diferente do antigo");
 
+        require(pjsInfo[enderecoAntigo].cnpj==_cnpj && pjsInfo[enderecoAntigo].idSubcredito ==_idSubcredito, "Dados inconsistentes de cnpj ou subcrédito");
+
         // Se há saldo no enderecoAntigo, precisa transferir
         if (balanceOf(enderecoAntigo) > 0) {
             _transfer(enderecoAntigo, enderecoNovo, balanceOf(enderecoAntigo));
         }
 
-        // Aponta o novo endereço para o registro existente no mapping
-        pjsInfo[enderecoNovo] = pjsInfo[enderecoAntigo];
+        // Aponta o novo endereço para o novo PJInfo
+        pjsInfo[enderecoNovo] = PJInfo(_cnpj, _idSubcredito, _salic, _hashdeclaracao, EstadoContaBlockchain.AGUARDANDO_VALIDACAO);
+
         // Apaga o mapping do endereço antigo
         pjsInfo[enderecoAntigo] = PJInfo(0, 0, 0, "", EstadoContaBlockchain.INVALIDADA_TROCA);
+
         // Aponta mapping CNPJ e Subcredito para enderecoNovo
-        pjsInfo[enderecoNovo].estado = EstadoContaBlockchain.AGUARDANDO_VALIDACAO;
         cnpjSubEndereco[_cnpj][_idSubcredito] = enderecoNovo;
 
-        emit TrocaConta(enderecoNovo, _cnpj, _idSubcredito, 0); //TODO: refatorar para incluir salic no metodo troca 
+        emit TrocaConta(enderecoNovo, _cnpj, _idSubcredito, _salic, _hashdeclaracao); 
     }
 
     function getVersao() view public returns (uint) {

@@ -1,6 +1,4 @@
 <app-metamsg></app-metamsg>
-<!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
-  <form (ngSubmit)="cancelaAssociacaoContaCliente()" #registerForm="ngForm">
 
     <div class="form-group">
       <h2>Trocar conta blockchain do e-CNPJ</h2>
@@ -21,8 +19,9 @@
 
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ do Cliente:</label>
-          <input #cnpj name="cnpj" (keyup)="onKey(cnpj.value)" class="form-control form-control-sm" [ngModel]="cliente.cnpj | cnpjMask"  required/>
-        </div>
+          <input name="cnpjWithMask" [(ngModel)]="cliente.cnpjWithMask"  class="form-control form-control-sm" (input)="changeCnpj()" 
+          [textMask]="{mask: maskCnpj}" required/>
+        </div>        
 
         <div class="form-group col-md-4 col-sm-4" *ngIf="cliente.dadosCadastrais">
           <label>Cidade:</label>
@@ -33,7 +32,7 @@
 
     </div>
 
-    <div class="conteudo form-group" *ngIf="cliente.subcreditos">
+    <div class="conteudo form-group" *ngIf="cliente.dadosCadastrais">
      
       <div class="row">
 
@@ -44,17 +43,16 @@
         <div class="form-group col-md-4 col-sm-4">
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Subcrédito:</label>
-            <select name="subcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="subcreditoSelecionado" (ngModelChange)="recuperaContaBlockchainCliente()" 
-              required>
+            <select name="numeroSubcreditoSelecionado" class="form-control form-control-sm" [disabled]="numeroSubcreditoSelecionado === undefined"
+            [(ngModel)]="numeroSubcreditoSelecionado" (ngModelChange)="recuperaContaBlockchainCliente()" required>
               <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
             </select>
-
           </app-input-validation>
         </div>
 
       </div>
 
-      <div class="row" *ngIf="subcreditoSelecionado">
+      <div class="row" >
 
         <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain Associada:</label>
@@ -68,17 +66,13 @@
 
         <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain Nova:</label>
-          <input name="contaBlockchain" class="form-control form-control-sm" type="text" [ngModel]="contaSelecionada" readonly
+          <input name="contaBlockchain" class="form-control form-control-sm" type="text" [ngModel]="selectedAccount" readonly
             disabled size="45">
           <div class="msg-conta-invalida" >
             {{contaEstaValida}}
           </div>
 
         </div>  
-
-        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
-          <i class="fa fa-refresh" aria-hidden="true"></i>
-        </a>                    
 
       </div>  
 
@@ -101,6 +95,7 @@
         Cancelar
       </button>
     </div>    
-
+    
+    <form (ngSubmit)="cancelaAssociacaoContaCliente()" #registerForm="ngForm">
   </form>
 <!--</div>-->
