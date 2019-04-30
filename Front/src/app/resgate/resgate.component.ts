@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Resgate } from './Resgate';
 
@@ -18,73 +19,109 @@ export class ResgateComponent implements OnInit {
 
   resgate: Resgate = new Resgate();
 
-  ultimoCNPJ: string;
-
-  statusHabilitacaoForm: boolean;
+  maskCnpj: any;  
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
-    private ref: ChangeDetectorRef, private zone: NgZone) {
+    private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) {
+
+      let self = this;
+      setInterval(function () {
+        self.recuperaContaSelecionada(), 1000});
   }
 
   ngOnInit() {
+    this.maskCnpj = Utils.getMaskCnpj();     
 
-    setTimeout(() => {
-      this.mudaStatusHabilitacaoForm(true);
-      this.inicializaResgate();
-      this.recuperaContaSelecionada();
-    }, 1000)
   }
 
   inicializaResgate() {
-    console.log("Init resgate");
-    this.ultimoCNPJ = "";
-
-    this.recuperaContaSelecionada();
-    this.recuperaCNPJ(this.resgate.contaBlockchainOrigem);
-    this.recuperaSaldoOrigem(this.resgate.contaBlockchainOrigem);
-    this.recuperaAddrCarteiraBNDES();
+    this.resgate.razaoSocialOrigem = "";
+    this.resgate.cnpjOrigem = "";
+    this.resgate.saldoOrigem = undefined;
+  
     this.resgate.valor = 0;
-  }
 
-  refreshContaBlockchainSelecionada() {
-    this.inicializaResgate();
-  }
-
-  mudaStatusHabilitacaoForm(statusForm: boolean) {
-    this.statusHabilitacaoForm = statusForm;
   }
 
   async recuperaContaSelecionada() {
 
     let self = this;
-    
-    this.resgate.contaBlockchainOrigem = (await this.web3Service.getCurrentAccountSync()) + "";
-    console.log("contaSelecionada=" + this.resgate.contaBlockchainOrigem);      
 
-  }
+    let selectedAccount = this.resgate.contaBlockchainOrigem;    
+    let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
+  
+    if ( !selectedAccount || (newSelectedAccount !== selectedAccount && newSelectedAccount)) {
+  
+      selectedAccount = newSelectedAccount+"";
+      this.resgate.contaBlockchainOrigem = selectedAccount;
+      this.recuperaInformacoesDerivadasConta();
+
+      console.log("selectedAccount=" + selectedAccount);
+      
+    }
+  } 
 
 
-  recuperaCNPJ(contaBlockchain) {
+  recuperaInformacoesDerivadasConta() {
 
     let self = this;
 
-    if (contaBlockchain != "") {
+    let contaBlockchain = this.resgate.contaBlockchainOrigem.toLowerCase();
 
-      this.web3Service.getCNPJ(contaBlockchain,
-        function (result) {
-          console.log("cnpj abaixo");
-          console.log(result.c[0]);
-          self.resgate.cnpjOrigem = result.c[0];
-          self.recuperaEmpresa();
-          self.ref.detectChanges();
-        },
-        function (error) {
-          console.log("erro na recuperacao do cnpj");
-          console.log(error);
-        }
-      );
+    console.log("ContaBlockchain" + contaBlockchain);
+
+    if ( contaBlockchain != undefined && contaBlockchain != "" && contaBlockchain.length == 42 ) {
+
+      this.web3Service.getPJInfo(contaBlockchain,
+
+          (result) => {
+
+            if ( result.cnpj != 0 ) { //encontrou uma PJ valida  
+
+              console.log(result);
+              self.resgate.cnpjOrigem = result.cnpj;
+
+              this.pessoaJuridicaService.recuperaEmpresaPorCnpj(self.resgate.cnpjOrigem).subscribe(
+                data => {
+                    if (data) {
+                    console.log("RECUPERA EMPRESA ORIGEM")
+                    console.log(data)
+                    self.resgate.razaoSocialOrigem = data.dadosCadastrais.razaoSocial;
+
+                    self.recuperaSaldoOrigem(contaBlockchain);
+                }
+                else {
+                    console.log("nenhuma empresa encontrada");
+                    this.inicializaResgate();
+                }
+              },
+              error => {
+                  console.log("Erro ao buscar dados da empresa");
+                  this.inicializaResgate();
+              });              
+
+              self.ref.detectChanges();
+
+           } //fecha if de PJ valida
+
+           else {
+             this.inicializaResgate();
+             console.log("Não encontrou PJ valida para a conta blockchain");
+           }
+           
+          },
+          (error) => {
+            this.inicializaResgate();
+            console.warn("Erro ao buscar dados da conta na blockchain")
+          })
+
+                 
+    } 
+    else {
+        this.inicializaResgate();
     }
-  }
+}
+
 
   recuperaSaldoOrigem(contaBlockchain) {
 
@@ -104,109 +141,54 @@ export class ResgateComponent implements OnInit {
   }
 
 
-  recuperaEmpresa() {
-
-    let self = this;    
-
-    let cnpj = this.resgate.cnpjOrigem;
-
-    console.log("Recupera Razao social para - " + cnpj);
-
-    this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
-      data => {
-        if (data) {
-          console.log(data)
-
-          console.log("Razao social de empresa encontrada - " + data.dadosCadastrais.razaoSocial);
-          this.resgate.razaoSocialOrigem = data.dadosCadastrais.razaoSocial;
-
-          if (data.contasFornecedor) {
-            this.resgate.ehFornecedor = true;
-          }
-          else {
-            this.resgate.ehFornecedor = false;
-          }
-          self.ref.detectChanges();
-
-        }
-        else {
-          console.log("nenhuma razao social encontrada");
-          this.resgate.razaoSocialOrigem = "";
-          this.resgate.ehFornecedor = false;
-        }
-      },
-      error => {
-        console.log("Erro ao buscar razao social da empresa");
-        this.resgate.razaoSocialOrigem = "";
-        this.resgate.ehFornecedor = false;
-
-      });
-  }
-
-
-  recuperaAddrCarteiraBNDES() {
+  async resgatar() {
 
     let self = this;
 
-    this.web3Service.getAddressOwner(
-      function (result) {
-        self.resgate.contaBlockchainBNDES = result;
-        self.ref.detectChanges();
-        console.log("owner abaixo");
-        console.log(result);
-      },
-      function (error) {
-        console.log("erro na recuperacao do owner");
-        console.log(error);
-      }
-    );
-
-  }
-
-
-  resgatar() {
-
-    let self = this;
-
-//    this.recuperaContaSelecionada();
-
-    if (!this.resgate.ehFornecedor) {
-
+    let bFornecedor = await this.web3Service.isFornecedorSync(this.resgate.contaBlockchainOrigem);
+    if (!bFornecedor) {
       let s = "O resgate deve ser realizado para a conta de um fornecedor.";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-      console.log(s);
-
+      return;
     }
-    else if ((this.resgate.valor * 1) > (Number(this.resgate.saldoOrigem) * 1)) {
+
+    let bValidadaOrigem = await this.web3Service.isContaValidadaSync(this.resgate.contaBlockchainOrigem);
+    if (!bValidadaOrigem) {
+      let s = "Conta do fornecedor não validada";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
+
+    if ((this.resgate.valor * 1) > (Number(this.resgate.saldoOrigem) * 1)) {
       let s = "Não é possível resgatar mais do que o valor do saldo de origem.";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
       console.log(s);
-
+      return;
     }
-    else {
 
+    this.web3Service.resgata(this.resgate.valor,
 
-      this.web3Service.resgata(this.resgate.valor,
+        (txHash) => {
 
-         (txHash) => {
+        Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                            self.web3Service, 
+                                            self.bnAlertsService, 
+                                            "Resgate para cnpj " + self.resgate.cnpjOrigem + "  enviado. Aguarde a confirmação.", 
+                                            "O Resgate foi confirmado na blockchain.", 
+                                            self.zone)       
+        self.router.navigate(['sociedade/dash-transf']);
 
-          Utils.criarAlertasAvisoConfirmacao( txHash, 
-                                              self.web3Service, 
-                                              self.bnAlertsService, 
-                                              "Resgate para cnpj " + self.resgate.cnpjOrigem + "  enviado. Aguarde a confirmação.", 
-                                              "O Resgate foi confirmado na blockchain.", 
-                                              self.zone)       
-          }        
-        ,(error) => {
-          Utils.criarAlertaErro( self.bnAlertsService, 
-                                 "Erro ao resgatar na blockchain", 
-                                 error )
-          self.statusHabilitacaoForm = false;                      
-        }
-      );
-      Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
-                                    "Confirme a operação no metamask e aguarde a confirmação do resgate." )         
-      self.statusHabilitacaoForm = false;                                                          
-    }
+        }        
+      ,(error) => {
+        Utils.criarAlertaErro( self.bnAlertsService, 
+                                "Erro ao resgatar na blockchain", 
+                                error )
+
+      }
+    );
+    Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                  "Confirme a operação no metamask e aguarde a confirmação do resgate." )         
+
   }
+
 }
