@@ -59,9 +59,9 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
     function cadastra(uint _cnpj, uint _idSubcredito, uint _salic, string memory hashdeclaracao) public { 
 
         address endereco = msg.sender;
-        
+
         // Endereço não pode ter sido cadastrado anteriormente
-        require(pjsInfo[endereco].cnpj == 0, "Endereço não pode ter sido cadastrado anteriormente");
+        require (isContaDisponivel(endereco), "Endereço não pode ter sido cadastrado anteriormente");
 
         pjsInfo[endereco] = PJInfo(_cnpj, _idSubcredito, _salic, hashdeclaracao, EstadoContaBlockchain.AGUARDANDO_VALIDACAO);
         
@@ -81,9 +81,8 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
     function troca(uint _cnpj, uint _idSubcredito, uint _salic, string memory _hashdeclaracao) public {
 
         address enderecoNovo = msg.sender;
-
-        // O endereço novo não pode estar sendo utilizado
-        require(pjsInfo[enderecoNovo].cnpj == 0, "Endereço novo já está sendo utilizado");
+     
+        require (isContaDisponivel(enderecoNovo), "Novo endereço não pode ter sido cadastrado anteriormente");
 
         // Tem que haver um endereço associado a esse cnpj/subcrédito
         require(cnpjSubEndereco[_cnpj][_idSubcredito] != address(0x0), "Tem que haver um endereço associado a esse cnpj/subcrédito");
@@ -214,9 +213,17 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
         emit InvalidacaoCadastroConta(_addr);
     }
 
+    function isContaReservada(address _addr) view public returns (bool) {
+
+        if (isBNDES(_addr) || isResponsibleForSettlement(_addr))
+            return true;
+
+        return false;
+    }
+
     function isFornecedor(address _addr) view public returns (bool) {
 
-        if (_addr == owner())
+        if (isContaReservada(_addr))
             return false;
 
         return pjsInfo[_addr].idSubcredito == 0;
@@ -229,7 +236,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
     function isCliente (address _addr) view public returns (bool) {
 
-        if (_addr == owner())
+        if (isContaReservada(_addr))
             return false;
 
         return pjsInfo[_addr].idSubcredito != 0;
@@ -279,11 +286,9 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
     function isContaDisponivel(address _addr) view public returns (bool) {
         
-        if ( isBNDES(_addr) ) {
+        if ( isContaReservada(_addr) ) {
             return false;
-        } else if ( isResponsibleForSettlement(_addr)) {
-            return false;
-        }
+        } 
 
         return pjsInfo[_addr].cnpj == 0 && pjsInfo[_addr].estado == EstadoContaBlockchain.DISPONIVEL;
     }

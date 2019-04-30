@@ -21,6 +21,8 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   contaEstaValida: boolean
   selectedAccount: any;
   maskCnpj: any;
+  hashdeclaracao: string;
+  salic: number;
 
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService,
@@ -43,6 +45,8 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     this.cliente.dadosCadastrais = undefined;
     this.cliente.subcreditos = new Array<Subcredito>();
     this.contaBlockchainAssociada = undefined;    
+    this.hashdeclaracao = "";
+    this.salic = undefined;
   }
 
   changeCnpj() {
@@ -200,20 +204,51 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
   }  
 
-  cancelaAssociacaoContaCliente() {
+  async trocaAssociacaoConta() {
 
     let self = this;
 
-    if (!this.contaBlockchainAssociada) {
-      console.log("O subcrédito selecionado não possui conta blockchain associada")
+    if (this.numeroSubcreditoSelecionado === undefined) {
+      let s = "O Subcrédito é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }
 
+    if (this.hashdeclaracao === undefined) {
+      let s = "O Hash da declaração é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }  
+    
+    if (this.salic === undefined) {
+      let s = "O SALIC é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }     
+
+    if (!this.contaBlockchainAssociada) {
       let msg = "O subcrédito selecionado não possui conta blockchain associada"
+      console.log(msg);
       self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
       return;
     }
 
-/*
-    self.web3Service.trocaAssociacaoDeConta(parseInt(self.cliente.cnpj), self.numeroSubcreditoSelecionado, 0,
+    if (!this.contaBlockchainAssociada == this.selectedAccount) {
+      let msg = "A nova conta não pode ser igual á conta anterior"
+      console.log(msg);
+      self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
+      return;
+    } 
+
+    let bCliente = await this.web3Service.isClienteSync(this.selectedAccount);
+    if (!bCliente) {
+      let s = "Conta não é de um cliente";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }    
+
+    self.web3Service.trocaAssociacaoDeConta(parseInt(self.cliente.cnpj), 
+       self.numeroSubcreditoSelecionado, this.salic, this.hashdeclaracao,
     
         (txHash) => {
 
@@ -234,7 +269,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
                                   "Confirme a operação no metamask e aguarde a confirmação da associação da conta." )       
 
-*/
+
 
   }
 
