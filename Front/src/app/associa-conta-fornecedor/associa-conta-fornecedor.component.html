@@ -44,7 +44,7 @@
         <div class="form-group col-md-3 col-sm-3">
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Banco:</label>
-            <input name="banco" class="form-control form-control-sm" [(ngModel)]="banco" [disabled]="!statusHabilitacaoForm" minlength="3"
+            <input name="banco" class="form-control form-control-sm" [(ngModel)]="banco" minlength="3"
               maxlength="4" required/>
           </app-input-validation>
         </div>
@@ -52,7 +52,7 @@
         <div class="form-group col-md-3 col-sm-3 offset-md-1">
           <app-input-validation errorMessage="Campo Obrigatório e Somente números">
             <label class="required">Agência:</label>
-            <input name="agencia" class="form-control form-control-sm" [(ngModel)]="agencia" [disabled]="!statusHabilitacaoForm" minlength="4"
+            <input name="agencia" class="form-control form-control-sm" [(ngModel)]="agencia" minlength="4"
               maxlength="4" pattern="^[0-9]*$" required/>
           </app-input-validation>
         </div>
@@ -61,10 +61,9 @@
           <label class="required">Conta Corrente:</label>
           <app-input-validation errorMessage="Campo Obrigatório">
             <div class="input-group">
-              <input name="contaCorrente" class="form-control form-control-sm col-md-10 col-sm-10" [(ngModel)]="contaCorrente" [disabled]="!statusHabilitacaoForm"
-                maxlength="11" pattern="^[0-9]*$" required/> -
+              <input name="contaCorrente" class="form-control form-control-sm col-md-10 col-sm-10" [(ngModel)]="contaCorrente"                 maxlength="11" pattern="^[0-9]*$" required/> -
               <input name="digitoContaCorrente" class="form-control form-control-sm col-md-2 col-sm-2" [(ngModel)]="digitoContaCorrente"
-                [disabled]="!statusHabilitacaoForm" maxlength="2" required/>
+                maxlength="2" required/>
             </div>
           </app-input-validation>
         </div>
@@ -90,9 +89,6 @@
             </div>
         </div>
 
-        <a href="javascript:void(0)" class="refreshContaBlockchain" (click)="refreshContaBlockchainSelecionada()">
-          <i class="fa fa-refresh" aria-hidden="true"></i>
-        </a>
       </div>
 
       <div class="row">
