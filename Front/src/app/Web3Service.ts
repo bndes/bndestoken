@@ -458,7 +458,7 @@ export class Web3Service {
                 else fSuccess(result);
             });
     }
-
+  
     isClienteSync(address: string) {
         let self = this;
 
@@ -496,7 +496,28 @@ export class Web3Service {
         })
     }
         
+    isResponsibleForSettlement(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isResponsibleForSettlement(address,
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
+    }
 
+    isResponsibleForSettlementSync(address: string) {
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isResponsibleForSettlement(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO IS responsible for Settlement  SYNC");
+                reject(false);
+            });
+        })
+    }
+
+    
 
     accountIsActive(address: string, fSuccess: any, fError: any): boolean {
         return this.bndesTokenContract.isContaValidada(address, 

@@ -12,10 +12,6 @@
   </div>
 
   <div class="row" *ngIf="estadoLista === 'cheia'">
-    <p>Antes de liquidar o resgate, salvar o arquivo de comprovação.</p>
-  </div>
-
-  <div class="row" *ngIf="estadoLista === 'cheia'">
     <input class="form-control barra-filtro" type="text" name="search" [(ngModel)]="filter" placeholder="Filtro">
 
     <div class="table-responsive-md">
@@ -24,43 +20,32 @@
         <thead *ngIf="resgates.length > 0">
 
           <tr>
-            <th rowspan="2" scope="col" class="seletor-table">
-              <div class="form-check">
-                <label class="form-check-label">
-                  <!-- <input class="form-check-input" type="checkbox" [(ngModel)]="checkTitleActive" (click)="checkAll()"> -->
-                </label>
-              </div>
-            </th>
-            <th rowspan="2" class="cnpj-table-cell" [class.active]="order === 'deCnpj'" (click)="setOrder('deCnpj')" scope="col">CNPJ
+            <th [class.active]="order === 'deConta'" (click)="setOrder('deConta')" scope="col">Razão Social
+                <i [hidden]="reverse" class="fa fa-caret-down"></i>
+                <i [hidden]="!reverse" class="fa fa-caret-up"></i>
+              </th>
+            <th class="cnpj-table-cell" [class.active]="order === 'deCnpj'" (click)="setOrder('deCnpj')" scope="col">CNPJ
               <i [hidden]="reverse" class="fa fa-caret-down"></i>
               <i [hidden]="!reverse" class="fa fa-caret-up"></i>
             </th>
-            <th rowspan="2" [class.active]="order === 'deConta'" (click)="setOrder('deConta')" scope="col">Razão Social
+            <th [class.active]="order === 'tipo'" (click)="setOrder('tipo')" scope="col">Valor
               <i [hidden]="reverse" class="fa fa-caret-down"></i>
               <i [hidden]="!reverse" class="fa fa-caret-up"></i>
             </th>
-            <th rowspan="2" [class.active]="order === 'tipo'" (click)="setOrder('tipo')" scope="col">Valor
-              <i [hidden]="reverse" class="fa fa-caret-down"></i>
-              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
-            </th>
-            <th rowspan="2" scope="col">HashID</th>
-            <th colspan="2" scope="col">Hash da TED</th>
+            <th scope="col">HashID</th>
+            <th scope="col">Hash da Comprovação Financeira</th>
+            <th scope="col"></th>
           </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let resgate of resgates | orderBy: order :reverse : caseInsensitive :customComparator | filter:filter; let i = index"
+
+          <tr *ngFor="let resgate of resgates | orderBy: order :reverse : caseInsensitive :customComparator 
+          | filter:filter; let i = index"
             [class.table-active]="isActive[i]">
 
-            <td class="seletor-table">
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input name="selecionarResgate" class="form-check-input" type="radio" (click)="check(resgate.hashID)">
-                </label>
-              </div>
-            </td>
-            <td>{{resgate.cnpj}}</td>
             <td>{{resgate.razaoSocial}}</td>
+            <td>{{resgate.cnpj}}</td>            
             <td>{{resgate.valorResgate | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
             <td class="text-center">
               <a href="https://rinkeby.etherscan.io/tx/{{resgate.hashID}}">
@@ -68,17 +53,17 @@
               </a>
             </td>
             <td class="text-center">
-              <input type="text" [(ngModel)]="hashTED">
+              <input type="text" [(ngModel)]="resgate.hashComprovacao" size="30">
             </td>
+            <td><button type="button" class="btn btn-success btn-cabecalho" placement="bottom" (click)="liquidar(resgate)" [disabled]="hashTED">
+                    <i class="fa fa-money" aria-hidden="true"></i> Liquidar
+                  </button>
+            </td>            
           </tr>
+
         </tbody>
       </table>
     </div>
 
-    <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" (click)="liquidar()" [disabled]="hashTED">
-      <i class="fa fa-money" aria-hidden="true"></i> Liquidar
-    </button>
-    <button type="button" class="btn btn-danger btn-cabecalho" placement="bottom" (click)="glosar()" [disabled]="hashTED">
-      <i class="fa fa-money" aria-hidden="true"></i> Glosar
-    </button>    
+    
   <!--</div>-->

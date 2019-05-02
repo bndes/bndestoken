@@ -41,8 +41,7 @@ export class ValidacaoCadastroComponent implements OnInit {
       hashDeclaracao: "",
       dadosBancarios: undefined,
       status: status
-  };
-  this.recuperaContaSelecionada();  
+   };
   }
 
   recuperaClientePorContaBlockchain(conta) {
