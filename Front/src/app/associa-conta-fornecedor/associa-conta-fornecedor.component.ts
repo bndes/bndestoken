@@ -15,7 +15,6 @@ import { Utils } from '../shared/utils';
 export class AssociaContaFornecedorComponent implements OnInit {
 
   fornecedor: Fornecedor
-//  statusHabilitacaoForm: boolean
 
   hashdeclaracao: string;
 
@@ -36,8 +35,7 @@ export class AssociaContaFornecedorComponent implements OnInit {
 
   ngOnInit() {
     this.fornecedor = new Fornecedor()
- //    this.mudaStatusHabilitacaoForm(true)
-    this.maskCnpj = Utils.getMaskCnpj(); 
+     this.maskCnpj = Utils.getMaskCnpj(); 
     this.inicializaDadosDerivadosPessoaJuridica();
     this.recuperaContaSelecionada();
   }
@@ -48,11 +46,6 @@ export class AssociaContaFornecedorComponent implements OnInit {
     this.fornecedor.cnpj = ""
     this.fornecedor.dadosCadastrais = undefined
   }
-
-  refreshContaBlockchainSelecionada() {
-    this.recuperaContaSelecionada()
-  }
-
 
   changeCnpj() { 
     this.fornecedor.cnpj = Utils.removeSpecialCharacters(this.fornecedor.cnpjWithMask);

@@ -230,7 +230,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;
     }  
-    
+   
 
     if (!this.contaBlockchainAssociada) {
       let msg = "O subcrédito selecionado não possui conta blockchain associada"

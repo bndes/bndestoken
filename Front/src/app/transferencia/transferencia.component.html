@@ -60,7 +60,7 @@
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Conta Blockchain:</label>
             <input type="text" class="form-control form-control-sm" [(ngModel)]="transferencia.contaBlockchainDestino" (ngModelChange)="recuperaInformacoesDerivadasConta()"
-              [disabled]="!statusHabilitacaoForm" required>
+              required>
           </app-input-validation>
         </div>
       </div>
@@ -83,7 +83,7 @@
         <div class="form-group col-md-4 col-sm-4">
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Descrição:</label>
-            <input [(ngModel)]="transferencia.descricao" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm" required/>
+            <input [(ngModel)]="transferencia.descricao" class="form-control form-control-sm" required/>
           </app-input-validation>
         </div>
       </div>
@@ -91,9 +91,8 @@
       <div class="row">
         <div class="form-group col-md-4 col-sm-4">
           <label>Documentos de Suporte:</label>
-          <input [(ngModel)]="transferencia.documentoDeSuporte" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm"
-          />
-          <input #upload name="arquivos[]" type="file" multiple [disabled]="!statusHabilitacaoForm" hidden>
+          <input [(ngModel)]="transferencia.documentoDeSuporte" class="form-control form-control-sm"           />
+          <input #upload name="arquivos[]" type="file" multiple hidden>
         </div>
         <a class="btn btn-success btnUpload" (click)="upload.click()">
           <i class="fa fa-upload" aria-hidden="true" style="color:white"></i>
@@ -115,14 +114,14 @@
         <div class="form-group col-md-4 col-sm-4">
           <app-input-validation errorMessage="Campo Obrigatório">
             <label class="required">Valor a transferir (em BNDESTokens):</label>
-            <input currencyMask [(ngModel)]="transferencia.valorTransferencia" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm"
+            <input currencyMask [(ngModel)]="transferencia.valorTransferencia" class="form-control form-control-sm" 
               required />
           </app-input-validation>
         </div>
 
         <div class="form-group col-md-4 col-sm-4">
           <label>Equivalente em R$:</label>
-          <input currencyMask [(ngModel)]="transferencia.valorTransferencia" class="form-control form-control-sm" [disabled]="!statusHabilitacaoForm"
+          <input currencyMask [(ngModel)]="transferencia.valorTransferencia" class="form-control form-control-sm" 
             [options]="{ prefix: 'R$ '}" readonly disabled />
         </div>
       </div>

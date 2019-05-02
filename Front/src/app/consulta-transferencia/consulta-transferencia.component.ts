@@ -46,10 +46,6 @@ export class ConsultaTransferenciaComponent implements OnInit {
     this.recuperaEmpresa(this.consultaTransferencia.contaBlockchain);
   }
 
-  // refreshContaBlockchainSelecionada() {
-  //   this.inicializaConsultaTransferencia();
-  // }
-
   async recuperaContaSelecionada() {
     this.consultaTransferencia.contaBlockchain = (await this.web3Service.getCurrentAccountSync()) + "";
   }

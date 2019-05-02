@@ -18,7 +18,6 @@ import { Utils } from '../shared/utils';
 export class TransferenciaComponent implements OnInit {
 
   transferencia: Transferencia;
-  statusHabilitacaoForm: boolean;
 
   maskCnpj: any;
 
@@ -33,7 +32,6 @@ export class TransferenciaComponent implements OnInit {
 
   ngOnInit() {
     this.maskCnpj = Utils.getMaskCnpj();      
-    this.mudaStatusHabilitacaoForm(true);
     this.transferencia = new Transferencia();
     this.inicializaDadosDestino();
 
@@ -52,11 +50,6 @@ export class TransferenciaComponent implements OnInit {
     this.transferencia.razaoSocialDestino = "";
     this.transferencia.msgEmpresaDestino = "";
   }
-
-  mudaStatusHabilitacaoForm(statusForm: boolean) {
-    this.statusHabilitacaoForm = statusForm;
-  }
-
 
   async recuperaContaSelecionada() {
 
@@ -278,12 +271,10 @@ export class TransferenciaComponent implements OnInit {
         Utils.criarAlertaErro( self.bnAlertsService, 
                                 "Erro ao transferir na blockchain", 
                                 error)  
-        self.statusHabilitacaoForm = false;                                                       
       }
     );
     Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
                                   "Confirme a operação no metamask e aguarde a confirmação da transferência." )  
-    self.statusHabilitacaoForm = false;                                                                  
     }
 
 

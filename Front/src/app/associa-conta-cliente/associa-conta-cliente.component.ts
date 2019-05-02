@@ -245,9 +245,4 @@ export class AssociaContaClienteComponent implements OnInit {
 
   }
 
-
-
-  refreshContaBlockchainSelecionada() {
-    this.recuperaContaSelecionada();
-  }  
 }

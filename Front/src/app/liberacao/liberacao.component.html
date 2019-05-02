@@ -33,7 +33,7 @@
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ a liberar:</label>
           <input [(ngModel)]="liberacao.cnpjWithMask" class="form-control form-control-sm" (ngModelChange)="recuperaInformacoesDerivadasCNPJ()"
-            [disabled]="!statusHabilitacaoForm" [textMask]="{mask: maskCnpj}" />
+            [textMask]="{mask: maskCnpj}" />
         </div>
 
         <div class="form-group col-md-4 col-sm-4">
@@ -77,13 +77,12 @@
       <div class="row">
         <div class="form-group col-md-4 col-sm-4">
           <label>Valor a liberar (em BNDESTokens):</label>
-          <input currencyMask type="text" class="form-control form-control-sm" [(ngModel)]="liberacao.valor" [disabled]="!statusHabilitacaoForm"
-          />
+          <input currencyMask type="text" class="form-control form-control-sm" [(ngModel)]="liberacao.valor" />
         </div>
         <div class="form-group col-md-4 col-sm-4">
           <label>Valor a liberar (em R$):</label>
           <input currencyMask [options]="{ prefix: 'R$ '}" type="text" class="form-control form-control-sm" [(ngModel)]="liberacao.valor"
-            [disabled]="!statusHabilitacaoForm" readonly disabled/>
+            readonly disabled/>
         </div>
 
       </div>

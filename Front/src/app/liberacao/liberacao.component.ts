@@ -24,8 +24,6 @@ export class LiberacaoComponent implements OnInit {
 
   ultimoCNPJ: string;
 
-  statusHabilitacaoForm: boolean;
-
   maskCnpj: any;
 
   selectedAccount: any;
@@ -42,7 +40,6 @@ export class LiberacaoComponent implements OnInit {
 
   ngOnInit() {
     this.maskCnpj = Utils.getMaskCnpj();     
-    this.mudaStatusHabilitacaoForm(true);
     this.liberacao = new Liberacao();
     this.ultimoCNPJ = "";
     this.inicializaLiberacao();
@@ -54,10 +51,6 @@ export class LiberacaoComponent implements OnInit {
     this.liberacao.valor = null;
     this.liberacao.saldoCNPJ = null;
     this.liberacao.contaBlockchainCNPJ = null;
-  }
-
-  mudaStatusHabilitacaoForm(statusForm: boolean) {
-    this.statusHabilitacaoForm = statusForm;
   }
 
  async recuperaContaSelecionada() {
@@ -255,13 +248,10 @@ export class LiberacaoComponent implements OnInit {
                 Utils.criarAlertaErro( self.bnAlertsService, 
                                         "Erro ao liberar na blockchain. Uma possibilidade é a conta selecionada não ser a do BNDES", 
                                         error )  
-                self.statusHabilitacaoForm = false;  
               }
             );
             Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
                                           "Confirme a operação no metamask e aguarde a confirmação da liberação." )
-            self.statusHabilitacaoForm = false;  
-
           }
         }, (error) => {
           Utils.criarAlertaErro( self.bnAlertsService, 
