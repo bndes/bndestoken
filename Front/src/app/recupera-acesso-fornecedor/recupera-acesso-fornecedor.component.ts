@@ -16,10 +16,11 @@ import { Utils } from '../shared/utils';
 export class RecuperaAcessoFornecedorComponent implements OnInit {
 
   fornecedor: Fornecedor;
-  contaBlockchainAntiga: string
+  contaBlockchainAssociada: string
   contaEstaValida: boolean;
   selectedAccount: any;
   maskCnpj: any;
+  hashdeclaracao: string;
   
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService,
@@ -34,21 +35,38 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
   ngOnInit() {
     this.maskCnpj = Utils.getMaskCnpj(); 
     this.fornecedor = new Fornecedor();
-    this.inicializaPessoaJuridica();
+    this.inicializaDadosTroca();
   }
 
-  inicializaPessoaJuridica() {
+  inicializaDadosTroca() {
     this.fornecedor.id = 0;
     this.fornecedor.cnpj = "";
     this.fornecedor.dadosCadastrais = undefined;
-    this.fornecedor.contasFornecedor = undefined;
+    this.hashdeclaracao = "";    
   }
 
   
+  changeCnpj() {
+
+    console.log("Entrou no changelog");
+    
+    this.fornecedor.cnpj = Utils.removeSpecialCharacters(this.fornecedor.cnpjWithMask);
+    let cnpj = this.fornecedor.cnpj;
+
+    if ( cnpj.length == 14 ) { 
+      console.log (" Buscando o CNPJ do cliente (14 digitos fornecidos)...  " + cnpj)
+      this.recuperaFornecedorPorCNPJ(cnpj);
+    } 
+    else {
+      this.inicializaDadosTroca();
+    } 
+
+  }
 
 
   cancelar() {
-    this.fornecedor.dadosCadastrais = undefined
+    this.fornecedor = new Fornecedor();    
+    this.inicializaDadosTroca();
   }
 
 
@@ -67,23 +85,26 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
 
 
   verificaContaBlockchainSelecionada(contaBlockchainSelecionada) {
-    this.web3Service.accountIsActive(contaBlockchainSelecionada,
-      result => {
+    
+    if (contaBlockchainSelecionada) {
 
-        if (result) {
-          this.contaEstaValida = false
-        } else {
-          this.contaEstaValida = true
-        }
-        setTimeout(() => {
-          this.ref.detectChanges()
-        }, 1000)
+        this.web3Service.getEstadoContaAsString(contaBlockchainSelecionada,
+          result => {
 
-      },
-      error => {
-        console.error("Erro ao verificar o estado da conta")
-      }
-    )
+            this.contaEstaValida = result
+                  
+            setTimeout(() => {
+              this.ref.detectChanges()
+            }, 1000)
+
+          },
+          error => {
+            console.error("Erro ao verificar o estado da conta")
+          }
+        )
+
+    }
+
   }
 
   recuperaFornecedorPorCNPJ(cnpj) {
@@ -95,19 +116,8 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
           console.log("Empresa encontrada - ");
           console.log(empresa);
 
-          let contasFornecedor = new Array();
-
-          for (var i = 0; i < empresa["contasFornecedor"].length; i++) {
-            if (empresa["contasFornecedor"][i].isActive)
-              contasFornecedor.push(empresa["contasFornecedor"][i])
-          }
-
-          this.fornecedor.id = empresa["_id"];
           this.fornecedor.dadosCadastrais = empresa["dadosCadastrais"];
-          this.fornecedor.contasFornecedor = JSON.parse(JSON.stringify(contasFornecedor));
-
-          console.log("DadosCadastrais = " + this.fornecedor.dadosCadastrais.cidade);
-          console.log("ContasFornecedor = " + this.fornecedor.contasFornecedor);
+          this.recuperaContaBlockchainFornecedor();
 
         }
         else {
@@ -116,23 +126,55 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       },
       error => {
         console.log("Erro ao buscar dados da empresa");
-        this.inicializaPessoaJuridica();
+        this.inicializaDadosTroca();
       });
-
+      
   }
 
-  cancelaAssociacaoContaFornecedor() {
 
-    let self = this
+  recuperaContaBlockchainFornecedor() {
+
+    let self = this;
+
+    this.web3Service.getContaBlockchain(this.fornecedor.cnpj, 0,
+      function (result) {
+        console.log("Conta blockchain associada a " + self.fornecedor.cnpj +  " é " + result);
+        self.contaBlockchainAssociada = result;
+        self.ref.detectChanges();
+      },
+      function (error) {
+        console.log("Erro ao ler o conta blockchain " + self.contaBlockchainAssociada);
+        console.log(error);
+      });  
+
+  }   
+
+
+  async trocaAssociacaoConta() {
+
+    let self = this;
     let subcredito = 0
 
-    if (!this.contaBlockchainAntiga) {
+    let bFornc = await this.web3Service.isFornecedorSync(this.contaBlockchainAssociada);
+    if (!bFornc) {
+      let s = "Conta não é de um fornecedor";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
+
+    if (!this.contaBlockchainAssociada) {
       let s = "O campo Conta Blockchain Atual é Obrigatório"
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;
     }
-/*
-    this.web3Service.cancelarAssociacaoDeConta(parseInt(self.fornecedor.cnpj), subcredito, 0,
+    if (!this.hashdeclaracao) {
+      let s = "O Hash da declaração é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }  
+
+
+    this.web3Service.trocaAssociacaoDeConta(parseInt(this.fornecedor.cnpj), 0, 0,this.hashdeclaracao,
     
          (txHash) => {
 
@@ -153,7 +195,7 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       );
       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
                                     "Confirme a operação no metamask e aguarde a confirmação da associação da conta." )      
-*/
+
   }
 
 }

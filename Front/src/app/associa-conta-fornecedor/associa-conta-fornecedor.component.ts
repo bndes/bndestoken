@@ -118,8 +118,8 @@ export class AssociaContaFornecedorComponent implements OnInit {
           console.log("empresa encontrada - ")
           console.log(empresa)
 
-          this.fornecedor.id = empresa["_id"]
-          this.fornecedor.dadosCadastrais = empresa["dadosCadastrais"]
+          this.fornecedor.id = empresa["_id"];
+          this.fornecedor.dadosCadastrais = empresa["dadosCadastrais"];
 
         }
         else {

@@ -14,12 +14,10 @@
         </div>        
 
         <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
-          <div class="form-group col-md-4 col-sm-4">
             <label>Razão Social:</label>
-            <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly
-              disabled/>
-          </div>
-        </div>  
+            <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly  
+            disabled/>
+          </div>        
 
           <div class="form-group col-md-4 col-sm-4">
             <label>CNPJ do Fornecedor:</label>
@@ -35,7 +33,7 @@
       </div>
     </div>
 
-    <div class="conteudo form-group" *ngIf="fornecedor.contasFornecedor">
+    <div class="conteudo form-group" *ngIf="fornecedor.dadosCadastrais">
 
       <div class="row">
         <div class="form-group col-md-12 col-sm-12">
@@ -44,44 +42,50 @@
       </div>
 
       <div class="row">
+
         <div class="form-group col-md-5 col-sm-5">
-          <app-input-validation errorMessage="Campo Obrigatório">
-            <label>Conta Blockchain Atual:</label>
-            <select name="contaBlockchainAntiga" class="form-control form-control-sm" [(ngModel)]="contaBlockchainAntiga" required>
-              <option *ngFor="let conta of fornecedor.contasFornecedor" [attr.value]="conta.contaBlockchain">{{conta.contaBlockchain}}</option>
-            </select>
-          </app-input-validation>
+            <label>Conta Blockchain Associada:</label>
+            <input name="contaBlockchainAssociada" class="form-control form-control-sm" type="text" [(ngModel)]="contaBlockchainAssociada" readonly
+              disabled size="45" required>
         </div>
 
         <div>
           <img src="assets/img/seta.png" />
         </div>
 
+    
         <div class="form-group col-md-5 col-sm-5">
           <label>Conta Blockchain Nova:</label>
-          <input name="selectedAccount" class="form-control form-control-sm" type="text" [ngModel]="recuperaContaSelecionada()"
-            readonly disabled>
-          <div class="msg-conta-invalida" *ngIf="!contaEstaValida">
-            Conta Blockchain Inválida.
-          </div>
+          <input name="contaBlockchain" class="form-control form-control-sm" type="text" 
+          [ngModel]="selectedAccount" readonly 
+            disabled size="45">
+            <div class="msg-conta-invalida" >
+                {{contaEstaValida}}
+            </div>
         </div>
+      </div>
+
+      <div class="row">
+          <div class="form-group col-md-6 col-sm-6 ">
+              <label>Hash da Declaração:</label>
+              <input  name="hashdeclaracao" [(ngModel)]="hashdeclaracao" class="form-control form-control-sm" required/>
+          </div>          
       </div>
 
     </div>
 
-    <app-assinador *ngIf="fornecedor.dadosCadastrais" [msgDeclaracao]="declaracao" (declaracaoAssinada)="receberDeclaracaoAssinada($event)"></app-assinador>
+    
 
     <div class="form-group" *ngIf="fornecedor.dadosCadastrais">
-      <button type="submit" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Salvar" [disabled]="declaracaoAssinada === undefined || !registerForm.valid || !contaEstaValida">
-        <i class="fa fa-floppy-o" aria-hidden="true"></i> Enviar
-      </button>
+
+      <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Salvar" 
+        (click)="trocaAssociacaoConta()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i> Enviar
+        </button>
+
 
       <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="cancelar" (click)="cancelar()">
         Cancelar
       </button>
     </div>
-
-    <form (ngSubmit)="cancelaAssociacaoContaFornecedor()" #registerForm="ngForm">
-
-  </form>
-<!--</div>-->
+  

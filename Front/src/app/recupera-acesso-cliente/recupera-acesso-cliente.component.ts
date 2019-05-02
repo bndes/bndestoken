@@ -189,16 +189,15 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   recuperaContaBlockchainCliente() {
 
     let self = this;
-    
 
     this.web3Service.getContaBlockchain(this.cliente.cnpj, this.numeroSubcreditoSelecionado,
       function (result) {
-        console.log("Saldo do cnpj " + self.contaBlockchainAssociada + " eh " + result);
+        console.log("Conta blockchain associada a " + self.cliente.cnpj +  " é " + result);
         self.contaBlockchainAssociada = result;
         self.ref.detectChanges();
       },
       function (error) {
-        console.log("Erro ao ler o saldo do endereco " + self.contaBlockchainAssociada);
+        console.log("Erro ao ler o conta blockchain " + self.contaBlockchainAssociada);
         console.log(error);
       });  
 
@@ -208,23 +207,30 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
     let self = this;
 
-    if (this.numeroSubcreditoSelecionado === undefined) {
+    let bCliente = await this.web3Service.isClienteSync(this.contaBlockchainAssociada);
+    if (!bCliente) {
+      let s = "Conta não é de um cliente";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
+    if (!this.numeroSubcreditoSelecionado) {
       let s = "O Subcrédito é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;
     }
 
-    if (this.hashdeclaracao === undefined) {
+    if (!this.salic) {
+      let s = "O SALIC é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }     
+
+    if (!this.hashdeclaracao) {
       let s = "O Hash da declaração é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;
     }  
     
-    if (this.salic === undefined) {
-      let s = "O SALIC é um Campo Obrigatório";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
-      return;
-    }     
 
     if (!this.contaBlockchainAssociada) {
       let msg = "O subcrédito selecionado não possui conta blockchain associada"
@@ -240,12 +246,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
       return;
     } 
 
-    let bCliente = await this.web3Service.isClienteSync(this.selectedAccount);
-    if (!bCliente) {
-      let s = "Conta não é de um cliente";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-      return;
-    }    
+
 
     self.web3Service.trocaAssociacaoDeConta(parseInt(self.cliente.cnpj), 
        self.numeroSubcreditoSelecionado, this.salic, this.hashdeclaracao,
