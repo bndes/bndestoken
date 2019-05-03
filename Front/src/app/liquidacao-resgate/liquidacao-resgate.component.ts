@@ -9,7 +9,7 @@ import { BnAlertsService } from 'bndes-ux4'
 
 import { LiquidacaoResgate } from './liquidacao-resgate'
 import { UploadService } from '../shared/upload.service';
-import { ConstantesService } from '../ConstantesService';
+import { Utils } from '../shared/utils';
 
 @Component({
   selector: 'app-liquidacao-resgate',
@@ -20,13 +20,10 @@ export class LiquidacaoResgateComponent implements OnInit {
 
   liquidacaoResgate: LiquidacaoResgate;
 
-  estadoLista: string = "undefined";
-
-  order: string = ''
-  reverse: boolean = false;
   selectedAccount: any;
 
   solicitacaoResgateId: string;
+  maskCnpj: any;  
 
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService,
@@ -37,6 +34,8 @@ export class LiquidacaoResgateComponent implements OnInit {
     private zone: NgZone, private router: Router, private route: ActivatedRoute, ) { }
 
   ngOnInit() {
+
+    this.maskCnpj = Utils.getMaskCnpj();      
 
     let self = this;
     setInterval(function () {
@@ -83,15 +82,15 @@ export class LiquidacaoResgateComponent implements OnInit {
             data => {
   
               self.liquidacaoResgate.razaoSocial = data.dadosCadastrais.razaoSocial;
+              self.liquidacaoResgate.cidadeResgate = data.dadosCadastrais.cidade;
               self.liquidacaoResgate.cnpj = eventoResgate.args.cnpj;
               self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.valor)),
           
               self.web3Service.getBlockTimestamp(eventoResgate.blockHash,
                 function (error, result) {
                   if (!error) {
-                    self.liquidacaoResgate.dataHora = new Date(result.timestamp * 1000);
-  //                  self.ref.detectChanges();
-                  }
+                    self.liquidacaoResgate.dataHoraResgate = new Date(result.timestamp * 1000);
+                   }
                   else {
                     console.log("Erro ao recuperar data e hora do bloco");
                     console.error(error);
@@ -127,6 +126,20 @@ export class LiquidacaoResgateComponent implements OnInit {
             self.liquidacaoResgate.hashID       = event.transactionHash;
             self.liquidacaoResgate.hashComprovacao = event.args.hashComprovante;
             self.liquidacaoResgate.isLiquidado = true;
+
+            self.web3Service.getBlockTimestamp(event.blockHash,
+              function (error, result) {
+                if (!error) {
+                  self.liquidacaoResgate.dataHoraLiquidacao = new Date(result.timestamp * 1000);
+                 }
+                else {
+                  console.log("Erro ao recuperar data e hora do bloco");
+                  console.error(error);
+                }
+              });
+
+
+
           }
 
       } else {
@@ -136,8 +149,6 @@ export class LiquidacaoResgateComponent implements OnInit {
       }
     })
   }
-
-
 
 
   async liquidar() {

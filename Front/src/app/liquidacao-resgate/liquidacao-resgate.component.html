@@ -1,52 +1,115 @@
 <app-metamsg></app-metamsg>
 <!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
-  <br>
 
-  <div class="title-loading row">
-    <h2 class="page-header">Liquidação dos Resgate</h2>
-  </div>
 
-  <div class="row">
+  <div *ngIf="liquidacaoResgate">
 
-    <div class="table-responsive-md">
-      <table class="table table-striped table-bordered table-sm" *ngIf="liquidacaoResgate">
 
-        <thead>
-
-          <tr>
-            <th>Razão Social             
-              </th>
-            <th>CNPJ
-            </th>
-            <th>Valor
-            </th>
-            <th>HashID</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          <tr>
-            <td>{{liquidacaoResgate.razaoSocial}}</td>
-            <td>{{liquidacaoResgate.cnpj}}</td>            
-            <td>{{liquidacaoResgate.valorResgate | currency:'BND':'symbol':'1.2-2':'pt'}}</td>
-            <td class="text-center">
-              <a href="https://rinkeby.etherscan.io/tx/{{liquidacaoResgate.hashID}}">
-                <i class="fa fa-link" aria-hidden="true"></i>
-              </a>
-            </td>
-            <td class="text-center">
-              <input type="text" [(ngModel)]="liquidacaoResgate.hashComprovacao" size="30" [disabled]="liquidacaoResgate.isLiquidado">
-            </td>
-            <td><button type="button" class="btn btn-success btn-cabecalho" placement="bottom" (click)="liquidar()" *ngIf="!liquidacaoResgate.isLiquidado">
-                    <i class="fa fa-money" aria-hidden="true"></i> Liquidar
-                  </button>
-            </td>            
-          </tr>
-
-        </tbody>
-      </table>
-    </div>
-
+        <div class="form-group">
+          <h2>Liquidação do Resgate</h2>
+        </div>
     
-  <!--</div>-->
+        <div class="conteudo form-group" >
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                  <p>Identificação do Fornecedor</p>
+                </div>
+              </div>          
+
+            <div class="row">
+
+            <div class="form-group col-md-4 col-sm-4" >
+              <label>Razão Social:</label>
+              <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="liquidacaoResgate.razaoSocial" readonly  disabled/>
+            </div>
+    
+            <div class="form-group col-md-4 col-sm-4">
+              <label>CNPJ do Cliente:</label>
+              <input name="cnpjWithMask" [(ngModel)]="liquidacaoResgate.cnpj"  class="form-control form-control-sm" readonly  disabled 
+              [textMask]="{mask: maskCnpj}" required/>
+            </div>
+    
+            <div class="form-group col-md-4 col-sm-4">
+              <label>Cidade:</label>
+              <input name="cidade" class="form-control form-control-sm" [(ngModel)]="liquidacaoResgate.cidadeResgate" readonly disabled/>
+            </div>
+    
+            </div>
+          </div>
+        </div>
+    
+        <div class="conteudo form-group" *ngIf="liquidacaoResgate" >
+    
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <p>Dados do Evento do Resgate</p>
+            </div>
+          </div>
+    
+ 
+          <div class="row">
+
+              <div class="form-group col-md-6 col-sm-6 ">
+                  <label>Valor:</label>
+                  <input  name="valor" [(ngModel)]="liquidacaoResgate.valorResgate" class="form-control form-control-sm" required readonly/>
+              </div>          
+
+              <div class="form-group col-md-6 col-sm-6 ">
+                  <label>Data e hora:</label>
+                  <input  name="dataHora" [(ngModel)]="liquidacaoResgate.dataHoraResgate" class="form-control form-control-sm" required readonly/>
+              </div>          
+          </div>
+
+        </div>
+
+        
+
+        <div class="conteudo form-group" >
+    
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <p>Dados do Evento do Liquidação</p>
+              </div>
+            </div>
+      
+   
+            <div class="row">
+  
+                <div class="form-group col-md-6 col-sm-6 ">
+                    <label>Hash da Comprovacao:</label>
+                    <input name="hashComprovacao" [(ngModel)]="liquidacaoResgate.hashComprovacao" class="form-control form-control-sm" required [disabled]="liquidacaoResgate.isLiquidado">
+                </div>          
+  
+                <div class="form-group col-md-6 col-sm-6 " *ngIf="liquidacaoResgate.isLiquidado">
+                    <label>Data e hora:</label>
+                    <input  name="dataHoraLiquidacao" [(ngModel)]="liquidacaoResgate.dataHoraLiquidacao" class="form-control form-control-sm" required readonly />
+                </div>          
+            </div>
+
+
+            <div class="row" *ngIf="liquidacaoResgate.isLiquidado">
+                <div class="form-group col-md-6 col-sm-6 ">
+
+                <a href="https://rinkeby.etherscan.io/tx/{{liquidacaoResgate.hashID}}">
+                  <i class="fa fa-link" aria-hidden="true"></i>
+                </a>  
+
+                </div>
+           </div>            
+
+          </div>
+
+            
+    
+        <div class="form-group" >
+          <button type="button" class="btn btn-success btn-cabecalho" placement="bottom" ngbTooltip="Liquidar" 
+          (click)="liquidar()" *ngIf="!liquidacaoResgate.isLiquidado">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> Liquidar
+          </button>
+        
+        </div>
+    
+  
+    
+

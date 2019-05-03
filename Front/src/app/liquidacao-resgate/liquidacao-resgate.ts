@@ -4,10 +4,16 @@ export class LiquidacaoResgate {
   cnpj: string;
   valorResgate: number;
   hashResgate; string;
+  cidadeResgate: string;  
+  dataHoraResgate: Date;
 
+  dataHoraLiquidacao: Date;
   hashComprovacao: string;
-  dataHora: Date;
   hashID: string;
   isLiquidado: boolean;
+
+
+//apagar?
+  dataHora: Date;
 
 }
