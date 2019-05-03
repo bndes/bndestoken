@@ -1,8 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core'
 import { ChangeDetectorRef } from '@angular/core'
-import { Router } from '@angular/router';
-
-import { FileSelectDirective, FileUploader } from 'ng2-file-upload'
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { Web3Service } from './../Web3Service'
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
@@ -20,7 +18,7 @@ import { ConstantesService } from '../ConstantesService';
 })
 export class LiquidacaoResgateComponent implements OnInit {
 
-  resgates: LiquidacaoResgate[] = [];
+  liquidacaoResgate: LiquidacaoResgate;
 
   estadoLista: string = "undefined";
 
@@ -28,28 +26,29 @@ export class LiquidacaoResgateComponent implements OnInit {
   reverse: boolean = false;
   selectedAccount: any;
 
-  isActive: boolean[] = []
+  solicitacaoResgateId: string;
 
-  resgatesParaLiquidar: string[] = []
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService,
     private bnAlertsService: BnAlertsService,
     private web3Service: Web3Service,
     private uploadService: UploadService,
     private ref: ChangeDetectorRef,
-    private zone: NgZone, private router: Router) { }
+    private zone: NgZone, private router: Router, private route: ActivatedRoute, ) { }
 
   ngOnInit() {
 
     let self = this;
     setInterval(function () {
-      self.recuperaContaSelecionada(), 1000});    
+      self.recuperaContaSelecionada(), 1000});  
+      
+    this.liquidacaoResgate = new LiquidacaoResgate();
+    this.liquidacaoResgate.hashResgate = this.route.snapshot.paramMap.get('solicitacaoResgateId');
 
+    console.log(this.liquidacaoResgate.hashResgate);
 
-    setTimeout(() => {
-      this.registrarExibicaoEventos()
-    }, 500)
-
+    self.recuperaStatusResgate();
+    self.recuperaStatusLiquidacaoResgate();    
 
   }
 
@@ -69,70 +68,84 @@ export class LiquidacaoResgateComponent implements OnInit {
     }
   }  
 
-  registrarExibicaoEventos() {
-    let self = this
-    let resgate: LiquidacaoResgate;
 
+  recuperaStatusResgate() {
 
-/*
-    this.web3Service.getPastResgatesEvents().then(console.log);
+    let self = this;
 
     this.web3Service.registraEventosResgate(function (error, event) {
-      if (!error) {        
+      if (!error) {
+        let eventoResgate = event;
+
+        if (self.liquidacaoResgate.hashResgate == eventoResgate.transactionHash) {
+
+          self.pessoaJuridicaService.recuperaEmpresaPorCnpj(eventoResgate.args.cnpj).subscribe(
+            data => {
+  
+              self.liquidacaoResgate.razaoSocial = data.dadosCadastrais.razaoSocial;
+              self.liquidacaoResgate.cnpj = eventoResgate.args.cnpj;
+              self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.valor)),
+          
+              self.web3Service.getBlockTimestamp(eventoResgate.blockHash,
+                function (error, result) {
+                  if (!error) {
+                    self.liquidacaoResgate.dataHora = new Date(result.timestamp * 1000);
+  //                  self.ref.detectChanges();
+                  }
+                  else {
+                    console.log("Erro ao recuperar data e hora do bloco");
+                    console.error(error);
+                  }
+                });
+            })
+  
+          
+        }
+
+      }
+      else {
+        console.log("Erro no registro de eventos de resgate");
+        console.log(error);
+      }
+
+    });
+  }
+
+
+  recuperaStatusLiquidacaoResgate() {
+    let self = this
+
+    this.web3Service.registraEventosLiquidacaoResgate(function (error, event) {
+
+      if (!error) {   
+
           console.log("Encontrou algum dado")
           console.log(event)
-          self.pessoaJuridicaService.recuperaEmpresaPorCnpj(event.args.cnpj).subscribe(
-              data => {   
-                console.log (data)           
 
-                resgate = new LiquidacaoResgate()
-                resgate.razaoSocial  = data.dadosCadastrais.razaoSocial
+          if (self.liquidacaoResgate.hashResgate == event.args.hashResgate) { //resgate jah foi liquidado
 
-                resgate.hashID       = event.transactionHash
-                resgate.cnpj         = event.args.cnpj
-                resgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(event.args.valor))
-
-                console.log("resgate.razaoSocial"    + resgate.razaoSocial)           
-                console.log("resgate.hashID: "       + resgate.hashID)
-                console.log("resgate.cnpj: "         + resgate.cnpj)
-                console.log("resgate.valorResgate: " + resgate.valorResgate)     
-                
-                self.resgates.push(resgate)
-                self.estadoLista = "cheia"
-                self.ref.detectChanges()
-
-                console.log(self.resgates)
-                self.isActive = new Array(self.resgates.length).fill(false)
-              },
-              error => {
-                console.log ("Erro em self.pessoaJuridicaService.recuperaEmpresaPorCnpj(" + resgate.cnpj + ")")           
-              }
-            )
+            self.liquidacaoResgate.hashID       = event.transactionHash;
+            self.liquidacaoResgate.hashComprovacao = event.args.hashComprovante;
+            self.liquidacaoResgate.isLiquidado = true;
+          }
 
       } else {
-        self.estadoLista = "vazia"
+        console.log("Erro no registro de eventos de liquidacao do resgate");
+        console.log(error);
+
       }
     })
-*/    
-  }
-
-  setOrder(value: string) {
-    if (this.order === value) {
-      this.reverse = !this.reverse
-    }
-    this.order = value
-    this.ref.detectChanges()
-  }
-
-  customComparator(itemA, itemB) {
-    return itemB - itemA
   }
 
 
-  async liquidar(resgate) {
+
+
+  async liquidar() {
     
     console.log("Liquidando o resgate..");
-    console.log(resgate);
+    console.log("hashResgate" + this.liquidacaoResgate.hashResgate);
+    console.log("hashComprovacao" + this.liquidacaoResgate.hashComprovacao);    
+
 
     let bRS = await this.web3Service.isResponsibleForSettlementSync(this.selectedAccount);
     if (!bRS) {
@@ -141,7 +154,7 @@ export class LiquidacaoResgateComponent implements OnInit {
       return;
     }
 
-    if (!resgate.hashComprovacao) {
+    if (!this.liquidacaoResgate.hashComprovacao) {
       let s = "O hash da comprovação é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2);
       return;
@@ -150,7 +163,7 @@ export class LiquidacaoResgateComponent implements OnInit {
     let self= this;
 
 
-    this.web3Service.liquidaResgate(resgate.hashID, resgate.hashComprovacao, true,
+    this.web3Service.liquidaResgate(this.liquidacaoResgate.hashResgate, this.liquidacaoResgate.hashComprovacao, true,
       function (success) {
           console.log("success: " + success)
           self.router.navigate(['sociedade/dash-transf']);          

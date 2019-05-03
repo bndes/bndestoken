@@ -116,28 +116,6 @@ export class ValidacaoCadastroComponent implements OnInit {
     }
   }
 
-  registrarLogSolidity() {
-      let self = this;
-
-      this.web3Service.registraEventosLog(function (error, event) {
-
-          let eventoLog: LogSol;
-
-          if (!error) {
-              eventoLog = {
-                  a: event.args.a,
-                  b: event.args.b
-              }
-
-              console.log(eventoLog.a + eventoLog.b);
-          }
-          else {
-              console.log("Erro no registro de eventos de log solidity");
-              console.log(error);
-          }
-      });
-  }
-
   async recuperaContaSelecionada() {
     
     let self = this;

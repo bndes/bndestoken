@@ -78,7 +78,10 @@
           <td>{{transferencia.paraConta}}</td>
           <td>{{transferencia.valor | currency:'BND':'symbol':'1.2-2':'pt' }}</td>
           <td>{{transferencia.valor | currency:'R$':'symbol':'1.2-2':'pt' }}</td>
-          <td>{{transferencia.tipo}}</td>
+          <td>
+              <button (click)="routeToLiquidacaoResgate(transferencia.hashID)" *ngIf="transferencia.tipo=='Solicitação de Resgate'">{{transferencia.tipo}}</button>
+              <span *ngIf="transferencia.tipo!='Solicitação de Resgate'">{{transferencia.tipo}}</span>              
+         </td>
           <td>{{transferencia.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
           <td class="text-center">
             <a target="_blank" href="https://rinkeby.etherscan.io/tx/{{transferencia.hashID}}">

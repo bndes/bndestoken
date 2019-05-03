@@ -36,7 +36,6 @@ export class DashboardIdEmpresaComponent implements OnInit {
             console.log("Zerou lista de transacoes");
 
             this.registrarExibicaoCadadastro();
-            this.registrarLogSolidity();
         }, 1500)
 
         setTimeout(() => {
@@ -45,27 +44,6 @@ export class DashboardIdEmpresaComponent implements OnInit {
         }, 2300)
     }
 
-    registrarLogSolidity() {
-        let self = this;
-
-        this.web3Service.registraEventosLog(function (error, event) {
-
-            let eventoLog: LogSol;
-
-            if (!error) {
-                eventoLog = {
-                    a: event.args.a,
-                    b: event.args.b
-                }
-
-                console.log(eventoLog.a + eventoLog.b);
-            }
-            else {
-                console.log("Erro no registro de eventos de log solidity");
-                console.log(error);
-            }
-        });
-    }
 
     registrarExibicaoCadadastro() {
 

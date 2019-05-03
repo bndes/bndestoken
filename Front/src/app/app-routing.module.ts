@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'sociedade/home', component: HomeComponent },
   { path: 'bndes/liberacao', component: LiberacaoComponent },
   { path: 'bndes/val-cadastro', component: ValidacaoCadastroComponent},
-  { path: 'bndes/liquidar', component: LiquidacaoResgateComponent},
+  { path: 'bndes/liquidar/:solicitacaoResgateId', component: LiquidacaoResgateComponent},
   { path: 'bndes/balanco', component: BalanceManutencaoComponent},
   { path: 'cliente/transf', component: TransferenciaComponent },
   { path: 'cliente/associa-conta-cliente', component: AssociaContaClienteComponent },

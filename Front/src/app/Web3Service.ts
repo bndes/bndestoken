@@ -25,7 +25,6 @@ export class Web3Service {
     private eventoRepasse: any;
     private eventoResgate: any;
     private eventoLiquidacaoResgate: any;
-    private eventoLog: any[];
 
     private addressOwner: string;
 
@@ -33,7 +32,6 @@ export class Web3Service {
 
     constructor(private http: HttpClient, private constantes: ConstantesService) {
        
-        this.eventoLog = [ {length: 6} ];
         this.vetorTxJaProcessadas = [];
 
         this.serverUrl = ConstantesService.serverUrl;
@@ -158,24 +156,7 @@ export class Web3Service {
         this.eventoLiquidacaoResgate.watch(callback);
     }
 
-    registraEventosLog(callback) {
-        this.eventoLog[0] = this.bndesTokenContract.LogUint({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[1] = this.bndesTokenContract.LogInt({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[2] = this.bndesTokenContract.LogBytes({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[3] = this.bndesTokenContract.LogBytes32({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[4] = this.bndesTokenContract.LogAddress({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoLog[5] = this.bndesTokenContract.LogBool({}, { fromBlock: 0, toBlock: 'latest' });
-        
-        this.eventoLog[0].watch(callback);
-        this.eventoLog[1].watch(callback);
-        this.eventoLog[2].watch(callback);
-        this.eventoLog[3].watch(callback);
-        this.eventoLog[4].watch(callback);
-        this.eventoLog[5].watch(callback);
-    }
-
     registraWatcherEventosLocal(txHashProcurado, callback) {
-//        this.intializeWeb3(); //forca inicializa
         let self = this;
         console.info("Callback ", callback);
         const filtro = { fromBlock: 'latest', toBlock: 'pending' }; 

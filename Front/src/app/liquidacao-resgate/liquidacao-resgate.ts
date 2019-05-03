@@ -1,10 +1,11 @@
 export class LiquidacaoResgate {
-  id: string
-  cnpj: string;
-  razaoSocial: string;
-  valorResgate: number;
-  hashComprovacao: string;
 
+  razaoSocial: string;
+  cnpj: string;
+  valorResgate: number;
+  hashResgate; string;
+
+  hashComprovacao: string;
   dataHora: Date;
   hashID: string;
   isLiquidado: boolean;
