@@ -153,7 +153,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
             if (!error) {
 
-                self.web3Service.accountIsActive(eventoTroca.args.endereco,
+                self.web3Service.getEstadoContaAsString(eventoTroca.args.endereco,
                     (result) => {
 
                         let status

@@ -41,7 +41,6 @@ import { RecuperaAcessoFornecedorComponent } from './recupera-acesso-fornecedor/
 /* Sociedade */
 import { DashboardIdEmpresaComponent } from './dashboard-id-empresa/dashboard-id-empresa.component';
 import { DashboardTransferenciasComponent } from './dashboard-transferencias/dashboard-transferencias.component';
-import { DashboardResgatesLiquidacoesComponent } from './dashboard-resgates-liquidacoes/dashboard-resgates-liquidacoes.component';
 
 /* Services */
 import { Web3Service } from './Web3Service';
@@ -94,7 +93,6 @@ export const optionsMaskCurrencyBND: CurrencyMaskConfig = {
     LiberacaoComponent,
     DashboardIdEmpresaComponent,
     DashboardTransferenciasComponent,
-    DashboardResgatesLiquidacoesComponent,
     HomeComponent,
     LiquidacaoResgateComponent,
     TransferenciaComponent,

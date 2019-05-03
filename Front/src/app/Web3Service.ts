@@ -124,6 +124,10 @@ export class Web3Service {
         return window['Web3'];
     }
 
+    getPastResgatesEvents() {
+        this.bndesTokenContract.getPastLogs('Resgate', { fromBlock: 0, toBlock: 'latest' });
+    }
+
     registraEventosCadastro(callback) {
         this.eventoCadastro = this.bndesTokenContract.CadastroConta({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
@@ -133,7 +137,7 @@ export class Web3Service {
         this.eventoCadastro.watch(callback);
     }
     registraEventosLiberacao(callback) {
-        this.intializeWeb3(); //forca inicializa
+//        this.intializeWeb3(); //forca inicializa
         this.eventoLiberacao = this.bndesTokenContract.Liberacao({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiberacao.watch(callback);
     }
@@ -171,7 +175,7 @@ export class Web3Service {
     }
 
     registraWatcherEventosLocal(txHashProcurado, callback) {
-        this.intializeWeb3(); //forca inicializa
+//        this.intializeWeb3(); //forca inicializa
         let self = this;
         console.info("Callback ", callback);
         const filtro = { fromBlock: 'latest', toBlock: 'pending' }; 

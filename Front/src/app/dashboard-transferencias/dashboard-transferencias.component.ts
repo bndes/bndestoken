@@ -617,10 +617,6 @@ export class DashboardTransferenciasComponent implements OnInit {
             } else {
               console.log("Nenhuma empresa encontrada.")
               resgate.razaoSocial = ""
-              resgate.banco = 0
-              resgate.agencia = 0
-              resgate.contaCorrente = 0
-              resgate.contaBlockchain = ""
               resgate.hashID = ""
             }
 
@@ -630,10 +626,6 @@ export class DashboardTransferenciasComponent implements OnInit {
           error => {
             console.log("Erro ao buscar dados da empresa.")
             resgate.razaoSocial = ""
-            resgate.banco = 0
-            resgate.agencia = 0
-            resgate.contaCorrente = 0
-            resgate.contaBlockchain = ""
           })
 
       }

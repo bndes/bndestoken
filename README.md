@@ -47,9 +47,7 @@ c.	Trocar Conta – Permite que o Fornecedor troque a conta Blockchain associada
 
 a.	Dashboard Cadastro – Permite que a Sociedade acesse as informações das transações de cadastro de contas Blockchain de Clientes, Repassadores e Fornecedores.
 
-b.	Dashboard Transações – Permite que a Sociedade acesse as informações das transações de liberação e transferência entre o BNDES, Clientes, Repassadores e Fornecedores.
-
-c.	Dashboard Resgates e Liquidações – Permite que a Sociedade acesse as informações das transações de resgate e liquidação entre o BNDES e Fornecedores.
+b.	Dashboard Transações – Permite que a Sociedade acesse as informações das transações de liberação, transferência, solicitações de resgate e liquidações de resgate entre o BNDES, Clientes, Repassadores e Fornecedores.
 
 
 # COMPONENTES

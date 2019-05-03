@@ -71,7 +71,11 @@ export class LiquidacaoResgateComponent implements OnInit {
 
   registrarExibicaoEventos() {
     let self = this
-    let resgate: LiquidacaoResgate
+    let resgate: LiquidacaoResgate;
+
+
+/*
+    this.web3Service.getPastResgatesEvents().then(console.log);
 
     this.web3Service.registraEventosResgate(function (error, event) {
       if (!error) {        
@@ -109,6 +113,7 @@ export class LiquidacaoResgateComponent implements OnInit {
         self.estadoLista = "vazia"
       }
     })
+*/    
   }
 
   setOrder(value: string) {

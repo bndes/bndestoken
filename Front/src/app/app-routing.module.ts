@@ -23,7 +23,6 @@ import { RecuperaAcessoFornecedorComponent } from './recupera-acesso-fornecedor/
 /* Sociedade */
 import { DashboardIdEmpresaComponent } from './dashboard-id-empresa/dashboard-id-empresa.component';
 import { DashboardTransferenciasComponent } from './dashboard-transferencias/dashboard-transferencias.component';
-import { DashboardResgatesLiquidacoesComponent } from './dashboard-resgates-liquidacoes/dashboard-resgates-liquidacoes.component';
 
 import { RegistroSaldoContasComponent } from './registro-saldo-contas/registro-saldo-contas.component'
 
@@ -47,7 +46,6 @@ const routes: Routes = [
   { path: 'fornecedor/registro-saldo-contas', component: RegistroSaldoContasComponent},
   { path: 'sociedade/dash-empresas', component: DashboardIdEmpresaComponent },
   { path: 'sociedade/dash-transf', component: DashboardTransferenciasComponent },
-  { path: 'sociedade/dash-resgates', component: DashboardResgatesLiquidacoesComponent},
   { path: '', redirectTo: '/sociedade/home', pathMatch: 'full' },
 ];
 
