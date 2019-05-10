@@ -197,7 +197,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
         require(pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO, "A conta precisa estar no estado Aguardando Validação");
 
-        require(keccak256(abi.encodePacked(pjsInfo[_addr].hashdeclaracao)) == keccak256(abi.encodePacked(_hashdeclaracao)), "");
+        require(keccak256(abi.encodePacked(pjsInfo[_addr].hashdeclaracao)) == keccak256(abi.encodePacked(_hashdeclaracao)), "O hash recebido é diferente do esperado");
 
         pjsInfo[_addr].estado = EstadoContaBlockchain.VALIDADA;
 
