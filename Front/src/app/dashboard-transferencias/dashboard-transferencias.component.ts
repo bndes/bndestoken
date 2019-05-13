@@ -11,9 +11,6 @@ import { GoogleMapsService, Marcador, MarcadorLinha } from '../shared/google-map
 
 import { BnAlertsService } from 'bndes-ux4';
 
-import { LiquidacaoResgate } from '../liquidacao-resgate/liquidacao-resgate'
-
-import { Transferencia } from '../transferencia/Transferencia';
 
 @Component({
   selector: 'app-dashboard-transferencias',
@@ -30,7 +27,8 @@ export class DashboardTransferenciasComponent implements OnInit {
       ['Ordem de pagamento', 0],
       ['Solicitação de Resgate', 0]
     ],
-    options: { 'title': 'Tipos de Transações' },
+    options: { 'title': 'Tipos de Transações', 'pieSliceText': 'value' },
+    
   };
 
   public barChartData: any = {
@@ -40,9 +38,12 @@ export class DashboardTransferenciasComponent implements OnInit {
       ['Tipo', 'Volume'],
       ['Liberação', 0],
       ['Pagamento', 0],
-      ['Solicitação de Resgate', 0]
-    ]
+      ['Solicitação de Resgate', 0]      
+    ],
+
   };
+
+
 
   public contadorLiberacao: number;
   public contadorResgate: number;
@@ -140,9 +141,6 @@ export class DashboardTransferenciasComponent implements OnInit {
 
     // EVENTOS RESGATE
     this.registrarExibicaoEventosResgate()
-
-    // EVENTOS LIQUIDAÇÃO RESGATE
-//    this.registrarExibicaoEventosLiquidacaoResgate()
 
     console.log("antes de atualizar - contador liberacao " + self.contadorLiberacao);
     console.log("antes de atualizar - contador transferencia " + self.contadorTransferencia);
