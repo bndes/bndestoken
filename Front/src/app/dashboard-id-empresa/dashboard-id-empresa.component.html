@@ -58,7 +58,10 @@
           <td>{{transacaoPJ.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
           <td>{{transacaoPJ.contaBlockchain}}</td>
           <td>{{transacaoPJ.status}}</td>
-          <td>{{transacaoPJ.hashDeclaracao}}</td>
+          <td><a target="_blank" href="https://github.com/bndes/bndestoken/tree/master/Docs-Declaracao/{{transacaoPJ.cnpj}}-{{transacaoPJ.hashDeclaracao}}.pdf">
+            {{transacaoPJ.hashDeclaracao}}
+          </a></td>
+
           <!--<td *ngIf="transacaoPJ.status === 'OK'" class="green text-center">OK</td>
           <td *ngIf="transacaoPJ.status === 'Desativada'" class="red text-center">Desativada</td>-->
           <td class="text-center">
