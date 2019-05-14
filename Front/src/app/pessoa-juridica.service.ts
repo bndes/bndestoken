@@ -42,7 +42,7 @@ export class PessoaJuridicaService {
     if (str_cnpj.length < 14) {
       str_cnpj = Utils.completarCnpjComZero(str_cnpj)
     }
-    console.log("CNPJ tratado = " + str_cnpj);
+//    console.log("CNPJ tratado = " + str_cnpj);
 
     return this.http.post<Object>(this.serverUrl + 'pj-por-cnpj', { cnpj: str_cnpj })
       //.do(pessoaJuridica => console.log('empresa retornada :' +  JSON.stringify(pessoaJuridica)))

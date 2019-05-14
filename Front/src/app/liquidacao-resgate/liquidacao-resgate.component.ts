@@ -8,7 +8,6 @@ import { PessoaJuridicaService } from '../pessoa-juridica.service';
 import { BnAlertsService } from 'bndes-ux4'
 
 import { LiquidacaoResgate } from './liquidacao-resgate'
-import { UploadService } from '../shared/upload.service';
 import { Utils } from '../shared/utils';
 
 @Component({
@@ -29,9 +28,8 @@ export class LiquidacaoResgateComponent implements OnInit {
   constructor(private pessoaJuridicaService: PessoaJuridicaService,
     private bnAlertsService: BnAlertsService,
     private web3Service: Web3Service,
-    private uploadService: UploadService,
     private ref: ChangeDetectorRef,
-    private zone: NgZone, private router: Router, private route: ActivatedRoute, ) { }
+    private zone: NgZone, private router: Router, private route: ActivatedRoute ) { }
 
   ngOnInit() {
 
@@ -175,13 +173,24 @@ export class LiquidacaoResgateComponent implements OnInit {
 
 
     this.web3Service.liquidaResgate(this.liquidacaoResgate.hashResgate, this.liquidacaoResgate.hashComprovacao, true,
-      function (success) {
-          console.log("success: " + success)
-          self.router.navigate(['sociedade/dash-transf']);          
-      },
-      function (error) {
-          console.log("error: " + error)
-      })
+
+      (txHash) => {
+ 
+        Utils.criarAlertasAvisoConfirmacao( txHash, 
+                                            self.web3Service, 
+                                            self.bnAlertsService, 
+                                            "Liquidação do resgate foi enviada. Aguarde a confirmação.", 
+                                            "Liquidação do resgate foi confirmada na blockchain.", 
+                                            self.zone)    
+            self.router.navigate(['sociedade/dash-transf']);          
+        }        
+      ,(error) => {
+        Utils.criarAlertaErro( self.bnAlertsService, 
+                               "Erro ao notificar liquidação de resgate.", 
+                               error )  
+       });
+       Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
+                                   "Confirme a operação no metamask e aguarde a liquidação da conta." )
 
 
   }

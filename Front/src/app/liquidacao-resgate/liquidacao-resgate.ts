@@ -13,7 +13,4 @@ export class LiquidacaoResgate {
   isLiquidado: boolean;
 
 
-//apagar?
-  dataHora: Date;
-
 }

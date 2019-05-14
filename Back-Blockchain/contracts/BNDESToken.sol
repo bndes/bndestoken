@@ -206,7 +206,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
 
     function invalidarCadastro(address _addr) onlyOwner public {
 
-        require(pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO, "A conta precisa estar no estado Aguardando Validação");
+//        require(pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO, "A conta precisa estar no estado Aguardando Validação");
 
         pjsInfo[_addr].estado = EstadoContaBlockchain.INVALIDADA_CADASTRO;
 
@@ -260,6 +260,8 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2), ERC
         require (msg.sender==responsibleForSettlement, "A liquidação não pode ser realizada pelo endereço que submeteu a transação"); 
         emit LiquidacaoResgate(redemptionTransactionHash, receiptHash, isOk);
     }
+
+
 
     function getEstadoContaAsString(address _addr) view public returns (string memory) {
 

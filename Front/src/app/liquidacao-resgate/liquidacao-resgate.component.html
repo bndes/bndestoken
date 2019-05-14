@@ -25,11 +25,10 @@
             </div>
     
             <div class="form-group col-md-4 col-sm-4">
-              <label>CNPJ do Cliente:</label>
-              <input name="cnpjWithMask" [ngModel]="liquidacaoResgate.cnpj"  class="form-control form-control-sm" readonly  disabled 
-              [textMask]="{mask: maskCnpj}" required/>
+              <label>CNPJ:</label>
+              <input [ngModel]="liquidacaoResgate.cnpj | cnpjMask" class="form-control form-control-sm" readonly  disabled />
             </div>
-    
+
             <div class="form-group col-md-4 col-sm-4">
               <label>Cidade:</label>
               <input name="cidade" class="form-control form-control-sm" [ngModel]="liquidacaoResgate.cidadeResgate" readonly disabled/>

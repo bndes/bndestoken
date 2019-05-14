@@ -72,7 +72,7 @@
       <div class="row">
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ:</label>
-          <input [textMask]="{mask: maskCnpj}" [(ngModel)]="transferencia.cnpjDestino" class="form-control form-control-sm" readonly disabled />
+          <input [ngModel]="transferencia.cnpjDestino | cnpjMask" class="form-control form-control-sm" readonly disabled />
         </div>
 
         <div class="form-group col-md-4 col-sm-4">
