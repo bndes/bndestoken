@@ -23,7 +23,8 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable,
     }
 
 
-    function transfer (address _to, uint256 _value) public returns (bool) {
+    function transfer (address _to, uint256 _value) 
+        public whenNotPaused returns (bool) {
 
         address from = msg.sender;
 
@@ -36,7 +37,7 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable,
             // A conta de destino é de um cliente
             require(isValidatedClient(_to), "O endereço não pertence a um cliente ou não está validada");
 
-            mint(_to, _value);
+            _mint(_to, _value);
 
             emit Liberacao(getCNPJ(_to), getSubcredito(_to), _value);
 
@@ -71,13 +72,19 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable,
 
 
     function notificaLiquidacaoResgate(string memory redemptionTransactionHash, string memory receiptHash, bool isOk) 
-        public {
+        public whenNotPaused {
         require (isResponsibleForSettlement(msg.sender), "A liquidação só não pode ser realizada pelo endereço que submeteu a transação"); 
         emit LiquidacaoResgate(redemptionTransactionHash, receiptHash, isOk);
     }
 
 
-    function troca(uint _cnpj, uint _idSubcredito, uint _salic, string memory _hashdeclaracao) public {
+    function cadastra(uint _cnpj, uint _idSubcredito, uint _salic, string memory hashdeclaracao) 
+        public whenNotPaused { 
+        super.cadastra( _cnpj,  _idSubcredito,  _salic, hashdeclaracao);
+    }
+
+    function troca(uint _cnpj, uint _idSubcredito, uint _salic, string memory _hashdeclaracao) 
+        public whenNotPaused {
         
         address oldAddr = getContaBlockchain(_cnpj, _idSubcredito);
         address newAddr = msg.sender;
@@ -89,6 +96,31 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable,
             _transfer(oldAddr, newAddr, balanceOf(oldAddr));
         }
 
+    }
+
+    //Unsupported methods
+    function transferFrom(address from, address to, uint256 value) public whenNotPaused returns (bool) {
+        require(false, "Unsupported method - transferFrom");
+    }
+
+    function approve(address spender, uint256 value) public whenNotPaused returns (bool) {
+        require(false, "Unsupported method - approve");
+    }
+
+    function increaseAllowance(address spender, uint addedValue) public whenNotPaused returns (bool success) {
+        require(false, "Unsupported method - increaseAllowance");
+    }
+
+    function decreaseAllowance(address spender, uint subtractedValue) public whenNotPaused returns (bool success) {
+        require(false, "Unsupported method - decreaseAllowance");
+    }
+
+    function mint(address to, uint256 value) public onlyMinter returns (bool) {
+        require(false, "Unsupported method - mint");
+    }
+
+    function burnFrom(address from, uint256 value) public {
+        require(false, "Unsupported method - burnFrom");
     }
 
 
