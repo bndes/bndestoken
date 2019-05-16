@@ -31,7 +31,6 @@ import { LiquidacaoResgateComponent } from './liquidacao-resgate/liquidacao-resg
 import { AssociaContaClienteComponent } from './associa-conta-cliente/associa-conta-cliente.component';
 import { RecuperaAcessoClienteComponent } from './recupera-acesso-cliente/recupera-acesso-cliente.component';
 import { TransferenciaComponent } from './transferencia/transferencia.component';
-import { ConsultaTransferenciaComponent } from './consulta-transferencia/consulta-transferencia.component';
 
 /* Fornecedor */
 import { ResgateComponent } from './resgate/resgate.component';
@@ -49,9 +48,6 @@ import { ConstantesService } from './ConstantesService';
 import { GoogleMapsService } from './shared/google-maps.service';
 import { UploadService } from './shared/upload.service';
 
-import { BalanceManutencaoComponent } from './balance-manutencao/balance-manutencao.component';
-
-import { RegistroSaldoContasComponent } from './registro-saldo-contas/registro-saldo-contas.component';
 import { MetamsgComponent } from './shared/metamsg/metamsg.component';
 import { AssinadorComponent } from './shared/assinador/assinador.component';
 import { InputValidationComponent } from './shared/input-validation/input-validation.component';
@@ -98,14 +94,11 @@ export const optionsMaskCurrencyBND: CurrencyMaskConfig = {
     TransferenciaComponent,
     AssociaContaClienteComponent,
     RecuperaAcessoClienteComponent,
-    ConsultaTransferenciaComponent,
     ResgateComponent,
     HomeComponent,
     AssociaContaFornecedorComponent,
     RecuperaAcessoFornecedorComponent,
     BlocoAnimadoComponent,
-    BalanceManutencaoComponent,
-    RegistroSaldoContasComponent,
     MetamsgComponent,
     AssinadorComponent,
     InputValidationComponent,
