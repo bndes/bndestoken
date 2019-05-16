@@ -1,4 +1,4 @@
-<app-metamsg></app-metamsg>
+<div class="form-group" *ngIf="selectedAccount">
 
     <div class="form-group">
       <h2>Trocar conta blockchain do e-CNPJ</h2>
@@ -103,3 +103,6 @@
       </button>
     </div>    
     
+  </div>
+  <app-metamsg *ngIf="!selectedAccount"></app-metamsg>
+  

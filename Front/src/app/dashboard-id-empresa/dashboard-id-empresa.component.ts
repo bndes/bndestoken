@@ -3,7 +3,6 @@ import { ChangeDetectorRef } from '@angular/core';
 import { DashboardPessoaJuridica } from './DashboardPessoaJuridica';
 import { Web3Service } from './../Web3Service';
 import { PessoaJuridicaService } from '../pessoa-juridica.service';
-import { LogSol } from '../LogSol';
 
 
 import { BnAlertsService } from 'bndes-ux4';
@@ -25,9 +24,17 @@ export class DashboardIdEmpresaComponent implements OnInit {
     order: string = 'dataHora';
     reverse: boolean = false;
 
+    selectedAccount: any;
+
     constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
         private ref: ChangeDetectorRef, private zone: NgZone) {
 
+            let self = this;
+            self.recuperaContaSelecionada();
+                        
+            setInterval(function () {
+              self.recuperaContaSelecionada(), 
+              1000});            
     }
 
     ngOnInit() {
@@ -44,6 +51,19 @@ export class DashboardIdEmpresaComponent implements OnInit {
         }, 2300)
     }
 
+    async recuperaContaSelecionada() {
+
+        let self = this;
+        
+        let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
+    
+        if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
+    
+          this.selectedAccount = newSelectedAccount;
+          console.log("selectedAccount=" + this.selectedAccount);
+        }
+    
+      }    
 
     registrarExibicaoCadadastro() {
 
@@ -78,12 +98,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
                             status: status
                         };
 
-                        console.log ("dash1 t1 - hashDeclaracao:"+ eventoCadastro.args.hashdeclaracao);
-
-
                         self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                             data => {
-                                console.log("Encontrou algum dado");
                                 transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
 
                                 // Colocar dentro da zona do Angular para ter a atualização de forma correta
@@ -150,11 +166,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
                             status: status
                         };
 
-                        console.log ("dash2 - hashDeclaracao:"+ eventoTroca.args.hashdeclaracao);
-
                         self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                             data => {
-                                console.log("Encontrou algum dado");
                                 transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
 
                                 // Colocar dentro da zona do Angular para ter a atualização de forma correta

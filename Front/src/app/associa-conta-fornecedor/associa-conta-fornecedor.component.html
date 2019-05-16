@@ -1,5 +1,4 @@
-<app-metamsg></app-metamsg>
-<!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
+<div class="form-group" *ngIf="selectedAccount">
 
     <div class="form-group">
       <h2>Associar Conta Blockchain ao e-CNPJ</h2>
@@ -115,7 +114,6 @@
 
     </div>
 
-
-  <br>
-
-<!--</div>-->
+  
+</div>
+<app-metamsg *ngIf="!selectedAccount"></app-metamsg>

@@ -18,7 +18,7 @@ import { Utils } from '../shared/utils';
 export class TransferenciaComponent implements OnInit {
 
   transferencia: Transferencia;
-
+  selectedAccount: any;
   maskCnpj: any;
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
@@ -55,15 +55,13 @@ export class TransferenciaComponent implements OnInit {
 
     let self = this;
     
-    let selectedAccount = this.transferencia.contaBlockchainOrigem;
     let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
   
-    if ( !selectedAccount || (newSelectedAccount !== selectedAccount && newSelectedAccount)) {
+    if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
   
-      selectedAccount = newSelectedAccount+"";
-      console.log("selectedAccount=" + selectedAccount);
-
-      this.transferencia.contaBlockchainOrigem = selectedAccount;
+      self.selectedAccount = newSelectedAccount;
+      console.log("selectedAccount=" + this.selectedAccount);
+      this.transferencia.contaBlockchainOrigem = newSelectedAccount+"";
 
       this.recuperaEmpresaOrigemPorContaBlockchain(this.transferencia.contaBlockchainOrigem);
       this.ref.detectChanges();

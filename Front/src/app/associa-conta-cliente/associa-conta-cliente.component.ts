@@ -33,7 +33,8 @@ export class AssociaContaClienteComponent implements OnInit {
 
       let self = this;
       setInterval(function () {
-        self.recuperaContaSelecionada(), 1000});
+        self.recuperaContaSelecionada(), 
+        1000});
     }
 
   ngOnInit() {

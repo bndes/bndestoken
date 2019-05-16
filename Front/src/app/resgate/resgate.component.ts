@@ -20,6 +20,7 @@ export class ResgateComponent implements OnInit {
   resgate: Resgate = new Resgate();
 
   maskCnpj: any;  
+  selectedAccount: any;    
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
     private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) {
@@ -47,16 +48,14 @@ export class ResgateComponent implements OnInit {
 
     let self = this;
 
-    let selectedAccount = this.resgate.contaBlockchainOrigem;    
     let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
   
-    if ( !selectedAccount || (newSelectedAccount !== selectedAccount && newSelectedAccount)) {
+    if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
   
-      selectedAccount = newSelectedAccount+"";
-      this.resgate.contaBlockchainOrigem = selectedAccount;
+      self.selectedAccount = newSelectedAccount;
+      console.log("selectedAccount=" + self.selectedAccount);
+      this.resgate.contaBlockchainOrigem = newSelectedAccount+"";
       this.recuperaInformacoesDerivadasConta();
-
-      console.log("selectedAccount=" + selectedAccount);
       
     }
   } 

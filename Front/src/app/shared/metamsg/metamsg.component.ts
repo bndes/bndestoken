@@ -13,8 +13,4 @@ export class MetamsgComponent implements OnInit {
   ngOnInit() {
   }
 
-  conexaoComBlockchainEstaOK() {
-    return this.web3Service.conexaoComBlockchainEstaOK();
-  }
-
 }

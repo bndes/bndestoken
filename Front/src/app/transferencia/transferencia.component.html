@@ -1,5 +1,4 @@
-<app-metamsg></app-metamsg>
-<!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
+<div class="form-group" *ngIf="selectedAccount">
 
   <div *ngIf="transferencia">
 
@@ -138,4 +137,5 @@
   </div>
 
 
-<!--</div>-->
+</div>
+<app-metamsg *ngIf="!selectedAccount"></app-metamsg>

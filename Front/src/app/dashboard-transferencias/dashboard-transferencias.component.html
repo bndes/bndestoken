@@ -1,6 +1,4 @@
-<app-metamsg></app-metamsg>
-<!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
-
+<div class="form-group" *ngIf="selectedAccount">
 <div class="title-loading">
   <h2 class="page-header">Dashboard Transações</h2>
   <app-bn-loading class="loading" *ngIf="estadoLista === 'undefined'"></app-bn-loading>
@@ -49,10 +47,6 @@
             <i [hidden]="reverse" class="fa fa-caret-down"></i>
             <i [hidden]="!reverse" class="fa fa-caret-up"></i>
           </th>
-          <th [class.active]="order === 'valor'" (click)="setOrder('valor')" scope="col">Valor em R$
-              <i [hidden]="reverse" class="fa fa-caret-down"></i>
-              <i [hidden]="!reverse" class="fa fa-caret-up"></i>
-            </th>
           <th [class.active]="order === 'tipo'" (click)="setOrder('tipo')" scope="col">Tipo
             <i [hidden]="reverse" class="fa fa-caret-down"></i>
             <i [hidden]="!reverse" class="fa fa-caret-up"></i>
@@ -61,6 +55,8 @@
             <i [hidden]="reverse" class="fa fa-caret-down"></i>
             <i [hidden]="!reverse" class="fa fa-caret-up"></i>
           </th>
+          <th scope="col">Liquidação
+            </th>
           <th scope="col">HashId</th>
         </tr>
       </thead>
@@ -77,12 +73,12 @@
           </td>
           <td>{{transferencia.paraConta}}</td>
           <td>{{transferencia.valor | currency:'BND':'symbol':'1.2-2':'pt' }}</td>
-          <td>{{transferencia.valor | currency:'R$':'symbol':'1.2-2':'pt' }}</td>
           <td>
               <button (click)="routeToLiquidacaoResgate(transferencia.hashID)" *ngIf="transferencia.tipo=='Solicitação de Resgate'">{{transferencia.tipo}}</button>
               <span *ngIf="transferencia.tipo!='Solicitação de Resgate'">{{transferencia.tipo}}</span>              
          </td>
           <td>{{transferencia.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
+          <td>{{transferencia.valor | currency:'R$':'symbol':'1.2-2':'pt' }}</td>
           <td class="text-center">
             <a target="_blank" href="https://rinkeby.etherscan.io/tx/{{transferencia.hashID}}">
               <i class="fa fa-link" aria-hidden="true"></i>
@@ -119,3 +115,6 @@
   </div>
 -->
 </div>
+
+</div>
+<app-metamsg *ngIf="!selectedAccount"></app-metamsg>

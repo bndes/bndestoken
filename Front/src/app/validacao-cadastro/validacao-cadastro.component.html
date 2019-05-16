@@ -1,3 +1,5 @@
+<div class="form-group" *ngIf="selectedAccount">
+
 <div class="title-loading">
   <h2 class="page-header">Validação de Cadastro</h2>
 </div>
@@ -59,3 +61,6 @@
 </div>
 
 </form>
+
+</div>
+<app-metamsg *ngIf="!selectedAccount"></app-metamsg>

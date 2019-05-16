@@ -1,6 +1,5 @@
-<app-metamsg></app-metamsg>
-<!--<div class="form-group" *ngIf="web3Service.conexaoComBlockchainEstaOK()">-->
-<div class="title-loading">
+<div class="form-group" *ngIf="selectedAccount">
+  <div class="title-loading">
   <h2 class="page-header">Dashboard Cadastros</h2>
   <app-bn-loading class="loading" *ngIf="estadoLista === 'undefined'"></app-bn-loading>
 </div>
@@ -77,4 +76,7 @@
     <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Próximo" class="paginacao"></pagination-controls>
   </div>
 </div>
-<!--</div>-->
+
+</div>
+<app-metamsg *ngIf="!selectedAccount"></app-metamsg>
+

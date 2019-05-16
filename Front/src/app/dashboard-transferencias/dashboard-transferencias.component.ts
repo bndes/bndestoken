@@ -74,10 +74,19 @@ export class DashboardTransferenciasComponent implements OnInit {
   @ViewChild('barChart') barChart;
 
   razaoSocialBNDES: string = "Banco Nacional De Desenvolvimento Econômico E Social";
+  selectedAccount: any;  
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService,
     private web3Service: Web3Service, private ref: ChangeDetectorRef, private zone: NgZone, 
-    private router: Router, private mapa: GoogleMapsService) { }
+    private router: Router, private mapa: GoogleMapsService) { 
+
+      let self = this;
+      self.recuperaContaSelecionada();
+      setInterval(function () {
+        self.recuperaContaSelecionada(), 
+        1000}); 
+
+    }
 
   ngOnInit() {
 
@@ -103,6 +112,21 @@ export class DashboardTransferenciasComponent implements OnInit {
     }, 2300)
 
   }
+
+  async recuperaContaSelecionada() {
+
+    let self = this;
+    
+    let newSelectedAccount = await this.web3Service.getCurrentAccountSync();
+
+    if ( !self.selectedAccount || (newSelectedAccount !== self.selectedAccount && newSelectedAccount)) {
+
+      this.selectedAccount = newSelectedAccount;
+      console.log("selectedAccount=" + this.selectedAccount);
+    }
+
+  }    
+
 
   routeToLiquidacaoResgate(solicitacaoResgateId) {
     this.router.navigate(['bndes/liquidar/' + solicitacaoResgateId]);

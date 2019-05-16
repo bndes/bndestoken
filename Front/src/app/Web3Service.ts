@@ -420,15 +420,6 @@ export class Web3Service {
     }
     
 
-    conexaoComBlockchainEstaOK() {
-        
-        if ( this.web3 === undefined )
-           return false;
-        else
-            return true;             
-      }
-
-
     getBlockTimestamp(blockHash: number, fResult: any) {
 
         this.web3.eth.getBlock(blockHash, fResult);

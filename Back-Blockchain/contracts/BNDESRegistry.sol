@@ -168,7 +168,6 @@ contract BNDESRegistry is Ownable() {
         return isCliente(_addr) && (pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA);
     }
 
-    //TODO: isBNDES deveria pegar minters tb? Openzepellin abriu a possibilidade de adicionarmos novos minters
     function isBNDES(address _addr) view public returns (bool) {
         return (_addr == owner());
     }
