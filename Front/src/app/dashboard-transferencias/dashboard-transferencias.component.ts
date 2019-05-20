@@ -271,9 +271,8 @@ export class DashboardTransferenciasComponent implements OnInit {
             let subcredito
 
             for (var i = 0; i < data.subcreditos.length; i++) {
-              if (eventoLiberacao.args.idSubcredito == data.subcreditos[i].numero) {
+              if (eventoLiberacao.args.idFinancialSupportAgreement == data.subcreditos[i].numero) {
                 subcredito = data.subcreditos[i].nome + " - " + data.subcreditos[i].numero
-                console.log("subcredito =" + subcredito);
               }
             }
 
@@ -284,7 +283,7 @@ export class DashboardTransferenciasComponent implements OnInit {
               paraRazaoSocial: data.dadosCadastrais.razaoSocial,
               paraCnpj: eventoLiberacao.args.cnpj,
               paraConta: subcredito,
-              valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoLiberacao.args.valor)),
+              valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoLiberacao.args.value)),
               tipo: "Liberação",
               hashID: eventoLiberacao.transactionHash,
               dataHora: null
@@ -297,7 +296,7 @@ export class DashboardTransferenciasComponent implements OnInit {
             });
 
             self.contadorLiberacao++;
-            self.volumeLiberacao += self.web3Service.converteInteiroParaDecimal(parseInt(eventoLiberacao.args.valor));
+            self.volumeLiberacao += self.web3Service.converteInteiroParaDecimal(parseInt(eventoLiberacao.args.value));
 
             self.pieChartData.dataTable[1][1] = self.contadorLiberacao;
             self.barChartData.dataTable[1][1] = self.volumeLiberacao;
@@ -354,7 +353,7 @@ export class DashboardTransferenciasComponent implements OnInit {
             let subcredito
 
             for (var i = 0; i < data.subcreditos.length; i++) {
-              if (eventoTransferencia.args.fromSubcredito == data.subcreditos[i].numero) {
+              if (eventoTransferencia.args.fromIdFinancialSupportAgreement == data.subcreditos[i].numero) {
                 subcredito = data.subcreditos[i].nome + " - " + data.subcreditos[i].numero
               }
             }
@@ -371,7 +370,7 @@ export class DashboardTransferenciasComponent implements OnInit {
                   paraRazaoSocial: toRazaoSocial,
                   paraCnpj: eventoTransferencia.args.toCnpj,
                   paraConta: "-",
-                  valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoTransferencia.args.valor)),
+                  valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoTransferencia.args.value)),
                   tipo: "Ordem de Pagamento",
                   hashID: eventoTransferencia.transactionHash,
                   dataHora: null
@@ -384,7 +383,7 @@ export class DashboardTransferenciasComponent implements OnInit {
                 })
 
                 self.contadorTransferencia++;
-                self.volumeTransferencia += self.web3Service.converteInteiroParaDecimal(parseInt(eventoTransferencia.args.valor));
+                self.volumeTransferencia += self.web3Service.converteInteiroParaDecimal(parseInt(eventoTransferencia.args.value));
 
                 self.pieChartData.dataTable[2][1] = self.contadorTransferencia;
                 self.barChartData.dataTable[2][1] = self.volumeTransferencia;
@@ -439,7 +438,7 @@ export class DashboardTransferenciasComponent implements OnInit {
               paraRazaoSocial: self.razaoSocialBNDES,
               paraCnpj: "BNDES",
               paraConta: "-",
-              valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.valor)),
+              valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.value)),
               tipo: "Solicitação de Resgate",
               hashID: eventoResgate.transactionHash,
               dataHora: null
@@ -452,7 +451,7 @@ export class DashboardTransferenciasComponent implements OnInit {
             });
 
             self.contadorResgate++;
-            self.volumeResgate += self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.valor));
+            self.volumeResgate += self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.value));
 
             self.pieChartData.dataTable[3][1] = self.contadorResgate;
             self.barChartData.dataTable[3][1] = self.volumeResgate;

@@ -94,6 +94,16 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
 
     }
 
+    //These methods may be necessary to solve incidents.
+    function burn(address from, uint256 value) public onlyOwner {
+        _burn(from, value);
+    }
+
+    function mint(address to, uint256 value) public onlyOwner {
+        _mint(to, value);
+    }
+
+
     //Unsupported methods
     function transferFrom(address from, address to, uint256 value) public whenNotPaused returns (bool) {
         require(false, "Unsupported method - transferFrom");

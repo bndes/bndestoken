@@ -82,7 +82,7 @@ export class LiquidacaoResgateComponent implements OnInit {
               self.liquidacaoResgate.razaoSocial = data.dadosCadastrais.razaoSocial;
               self.liquidacaoResgate.cidadeResgate = data.dadosCadastrais.cidade;
               self.liquidacaoResgate.cnpj = eventoResgate.args.cnpj;
-              self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.valor)),
+              self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.value)),
           
               self.web3Service.getBlockTimestamp(eventoResgate.blockHash,
                 function (error, result) {
@@ -119,10 +119,10 @@ export class LiquidacaoResgateComponent implements OnInit {
           console.log("Encontrou algum dado")
           console.log(event)
 
-          if (self.liquidacaoResgate.hashResgate == event.args.hashResgate) { //resgate jah foi liquidado
+          if (self.liquidacaoResgate.hashResgate == event.args.redemptionTransactionHash) { //resgate jah foi liquidado
 
             self.liquidacaoResgate.hashID       = event.transactionHash;
-            self.liquidacaoResgate.hashComprovacao = event.args.hashComprovante;
+            self.liquidacaoResgate.hashComprovacao = event.args.receiptHash;
             self.liquidacaoResgate.isLiquidado = true;
 
             self.web3Service.getBlockTimestamp(event.blockHash,

@@ -385,21 +385,6 @@ export class Web3Service {
             });
     }
 
-/*
-    async setBalanceOf(address: string, valor: number, fSuccess: any, fError: any) 
-    {
-        let contaSelecionada = await this.getCurrentAccountSync();    
-        
-        valor = this.converteDecimalParaInteiro(valor);
-        this.bndesTokenContract.setBalanceOf(address, valor, { from: contaSelecionada, gas: 500000 },
-            (error, result) => {
-                if (error) fError(error);
-                else fSuccess(result);
-            }
-        );                
-    }
-*/    
-
     getBlockTimestamp(blockHash: number, fResult: any) {
 
         this.web3.eth.getBlock(blockHash, fResult);
@@ -474,9 +459,6 @@ export class Web3Service {
     }
 
     isResponsibleForRegistryValidation(address: string, fSuccess: any, fError: any): boolean {
-
-console.log("isResponsibleForRegistryValidation(address: string, fSuccess: any, fError: any): boolean {");
-console.log(address);
 
         return this.bndesTokenContract.isResponsibleForRegistryValidation(address,
             (error, result) => {
@@ -639,7 +621,7 @@ console.log(address);
         }
 
 
-        if (pjInfo.status == 0 || pjInfo.status == 3 || pjInfo.status == 4) {
+        if (pjInfo.status == 0) {
             pjInfo.isAssociavel =  true;
         }
         else {
