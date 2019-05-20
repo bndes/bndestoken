@@ -197,17 +197,18 @@ export class LiberacaoComponent implements OnInit {
   }
 
 
-  liberar() {
+  async liberar() {
 
     let self = this;
 
-    if (this.web3Service.isResponsibleForDisbursementSync(this.selectedAccount)) 
+    let bRD = await this.web3Service.isResponsibleForDisbursementSync(this.selectedAccount);    
+    if (!bRD) 
     {
       let s = "Conta selecionada no Metamask não pode executar Libração.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
         return;
     }
-    else if (this.liberacao.contaBlockchainCNPJ === "" || this.liberacao.contaBlockchainCNPJ === undefined) {
+    else if (!this.liberacao.contaBlockchainCNPJ) {
 
       let s = "O Subcrédito Operacional deve possuir uma Conta Blockchain Associada.";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 5);

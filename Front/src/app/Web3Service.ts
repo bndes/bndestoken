@@ -474,6 +474,10 @@ export class Web3Service {
     }
 
     isResponsibleForRegistryValidation(address: string, fSuccess: any, fError: any): boolean {
+
+console.log("isResponsibleForRegistryValidation(address: string, fSuccess: any, fError: any): boolean {");
+console.log(address);
+
         return this.bndesTokenContract.isResponsibleForRegistryValidation(address,
             (error, result) => {
                 if (error) fError(error);
@@ -627,12 +631,30 @@ export class Web3Service {
 
         pjInfo.statusAsString = this.getEstadoContaAsStringByCodigo(pjInfo.status);
 
-        if (pjInfo.statusAsString == "Validada") {
+        if (pjInfo.status == 2) {
             pjInfo.isValidada =  true;
         }
         else {
             pjInfo.isValidada = false;
         }
+
+
+        if (pjInfo.status == 0 || pjInfo.status == 3 || pjInfo.status == 4) {
+            pjInfo.isAssociavel =  true;
+        }
+        else {
+            pjInfo.isAssociavel = false;
+        }
+
+
+        if (pjInfo.status == 1 || pjInfo.status == 2 || pjInfo.status == 3 || pjInfo.status == 4) {
+            pjInfo.isTrocavel =  true;
+        }
+        else {
+            pjInfo.isTrocavel = false;
+        }
+
+
         return pjInfo;
     }
 
@@ -651,7 +673,7 @@ export class Web3Service {
             return "Validada";
         }    
         else if (result==3) {
-            return "Conta invalidada no Cadastro";
+            return "Conta invalidada pelo Validador";
         }    
         else if (result==4) {
             return "Conta invalidada por Troca de Conta";

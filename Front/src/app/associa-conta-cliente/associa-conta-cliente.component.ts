@@ -148,11 +148,12 @@ export class AssociaContaClienteComponent implements OnInit {
 
   includeAccountIfNoAssociated (self, cnpj, sub) {
 
-    self.web3Service.getContaBlockchain(cnpj, sub.numero,
+    self.web3Service.getPJInfoByCnpj(cnpj, sub.numero,
               
-      (contaBlockchain) => {
+      (pjInfo) => {
   
-        if (contaBlockchain==0x0) { //If there is no association in the blockchain yet
+        if (pjInfo.isAssociavel) { 
+
             self.includeIfNotExists(self.cliente.subcreditos, sub);
             self.subcreditoSelecionado = self.cliente.subcreditos[0].numero;
         }

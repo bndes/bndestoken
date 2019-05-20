@@ -126,7 +126,7 @@ export class ValidacaoCadastroComponent implements OnInit {
 
 
 
-  validarCadastro() {
+  async validarCadastro() {
 
     if (this.pj.contaBlockchain === undefined) {
       let s = "A conta blockchain é um Campo Obrigatório";
@@ -140,7 +140,9 @@ export class ValidacaoCadastroComponent implements OnInit {
       return;
     }
 
-    if (this.web3Service.isResponsibleForRegistryValidationSync(this.selectedAccount)) 
+
+    let bRV = await this.web3Service.isResponsibleForRegistryValidationSync(this.selectedAccount);
+    if (!bRV) 
     {
         let s = "Conta selecionada no Metamask não pode executar uma validação.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
@@ -173,7 +175,7 @@ export class ValidacaoCadastroComponent implements OnInit {
                                     "Confirme a operação no metamask e aguarde a confirmação." )         
   }
 
-  invalidarCadastro() {
+  async invalidarCadastro() {
 
     let self = this;
 
@@ -183,7 +185,8 @@ export class ValidacaoCadastroComponent implements OnInit {
       return;
     }
 
-    if (this.web3Service.isResponsibleForRegistryValidationSync(this.selectedAccount)) 
+    let bRV = await this.web3Service.isResponsibleForRegistryValidationSync(this.selectedAccount);
+    if (!bRV) 
     {
         let s = "Conta selecionada no Metamask não pode executar a ação de invalidar.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);

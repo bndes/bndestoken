@@ -55,7 +55,10 @@ contract BNDESRegistry is Ownable() {
         // Não pode haver outro endereço cadastrado para esse mesmo subcrédito
         if (idFinancialSupportAgreement > 0) {
             address account = getBlockchainAccount(cnpj,idFinancialSupportAgreement);
-            require (isAvailableAccount(account), "Subcredito já está associado a outro endereço");
+            require (isAvailableAccount(account) 
+                    || isInvalidatedByChangeAccount(account) 
+                    || isInvalidatedByValidatorAccount(account)
+            , "Subcredito já está associado a outro endereço válido");
         }
         
         cnpjFSAddr[cnpj][idFinancialSupportAgreement] = addr;

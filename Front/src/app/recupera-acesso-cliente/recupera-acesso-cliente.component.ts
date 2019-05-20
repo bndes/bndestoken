@@ -151,15 +151,15 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
   includeAccountIfAssociated (cnpj, sub) {
 
-    this.web3Service.getContaBlockchain(cnpj, sub.numero,
+    this.web3Service.getPJInfoByCnpj(cnpj, sub.numero,
               
-      (contaBlockchain) => {
+      (pjInfo) => {
 
         console.log("getConta");        
 
-        console.log(contaBlockchain);        
+        console.log(pjInfo);        
   
-        if (contaBlockchain!=0x0) { //If there is association in the blockchain
+        if (pjInfo.isTrocavel) { 
             this.includeIfNotExists(this.cliente.subcreditos, sub);
             this.numeroSubcreditoSelecionado = this.cliente.subcreditos[0].numero;
             this.recuperaContaBlockchainCliente();
