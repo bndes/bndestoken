@@ -1,5 +1,5 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable  } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { ConstantesService } from './ConstantesService';
 import { formattedError } from '@angular/compiler';
 
@@ -127,32 +127,27 @@ export class Web3Service {
     }
 
     registraEventosCadastro(callback) {
-        this.eventoCadastro = this.bndesTokenContract.CadastroConta({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesTokenContract.AccountRegistration({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosTroca(callback) {
-        this.eventoCadastro = this.bndesTokenContract.TrocaConta({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesTokenContract.AccountChange({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosLiberacao(callback) {
-//        this.intializeWeb3(); //forca inicializa
-        this.eventoLiberacao = this.bndesTokenContract.Liberacao({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLiberacao = this.bndesTokenContract.BNDESTokenDisbursement({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiberacao.watch(callback);
     }
     registraEventosTransferencia(callback) {
-        this.eventoTransferencia = this.bndesTokenContract.Transferencia({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoTransferencia = this.bndesTokenContract.BNDESTokenTransfer({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoTransferencia.watch(callback);
     }
-    registraEventosRepasse(callback) {
-        this.eventoRepasse = this.bndesTokenContract.Repasse({}, { fromBlock: 0, toBlock: 'latest' });
-        this.eventoRepasse.watch(callback);
-    }
     registraEventosResgate(callback) {
-        this.eventoResgate = this.bndesTokenContract.Resgate({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoResgate = this.bndesTokenContract.BNDESTokenRedemption({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoResgate.watch(callback);
     }
     registraEventosLiquidacaoResgate(callback) {
-        this.eventoLiquidacaoResgate = this.bndesTokenContract.LiquidacaoResgate({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLiquidacaoResgate = this.bndesTokenContract.BNDESTokenRedemptionSettlement({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiquidacaoResgate.watch(callback);
     }
 
@@ -204,7 +199,7 @@ export class Web3Service {
             ", hashdeclaracao: " + hashdeclaracao
             )
 
-        this.bndesTokenContract.cadastra(cnpj, idSubcredito, salic, 
+        this.bndesTokenContract.registryLegalEntity(cnpj, idSubcredito, salic, 
             hashdeclaracao, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
@@ -217,7 +212,7 @@ export class Web3Service {
     getVersao(fSuccess: any, fError: any): number {
         console.log("vai recuperar a versao. " );
         let self = this;
-        return this.bndesTokenContract.getVersao(
+        return this.bndesTokenContract.getVersion(
             (error, versao) => {
                 if (error) fError(error);
                 else fSuccess(   parseInt ( versao )  );
@@ -255,23 +250,31 @@ export class Web3Service {
     }
 
     getPJInfo(addr: string, fSuccess: any, fError: any): number {
-        return this.bndesTokenContract.getPJInfo(addr,
+        let self = this;
+        return this.bndesTokenContract.getLegalEntityInfo(addr,
             (error, result) => {
                 if (error) fError(error);
                 else {
-                    let pjInfo = {cnpj: String, idSubcredito: String, salic: String, hashDeclaracao: String};
-                    pjInfo.cnpj = result[0].c[0];
-                    pjInfo.idSubcredito = result[1].c[0];
-                    pjInfo.salic = result[2].c[0];
-                    pjInfo.hashDeclaracao = result[3];
+                    let pjInfo = self.montaPJInfo(result);
+                    fSuccess(pjInfo);
+                }
+            });
+    }
 
+    getPJInfoByCnpj(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): number {
+        let self = this;
+        return this.bndesTokenContract.getLegalEntityInfoByCNPJ(cnpj, idSubcredito,
+            (error, result) => {
+                if (error) fError(error);
+                else {
+                    let pjInfo = self.montaPJInfo(result);
                     fSuccess(pjInfo);
                 }
             });
     }
 
     getContaBlockchain(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): string {
-        return this.bndesTokenContract.getContaBlockchain(cnpj, idSubcredito,
+        return this.bndesTokenContract.getBlockchainAccount(cnpj, idSubcredito,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -284,10 +287,6 @@ export class Web3Service {
                 if (error) fError(error);
                 else fSuccess(result);
             });
-    }
-
-    getAddressOwnerCacheble() {
-        return this.addressOwner;
     }
 
     inicializaQtdDecimais() {
@@ -340,39 +339,19 @@ export class Web3Service {
         this.transfer(target, transferAmount, fSuccess, fError);
     }
 
-    // aguardaLiberacao(cnpj: string, subcredito: number, valor: number)
-    // {
-    //     this.intializeWeb3(); //forca inicializa        
-    //     var evento = this.bndesTokenContract.Liberacao({cnpj: cnpj, sucredito: subcredito, valor: valor}, 
-    //         { fromBlock: 'pending', toBlock: 'latest' });
+    async resgata(transferAmount: number, fSuccess: any, fError: any) {
 
-    //     evento.watch(function (erro, result) {
-    //         evento.stopWatching();
-    //         if (!erro) return true;
-    //         else return erro;
-    //     });
-            
-    //     Liberacao(pjsInfo[_to].cnpj, pjsInfo[_to].idSubcredito, _value);                    
-    
-    // }
+        let contaSelecionada = await this.getCurrentAccountSync();    
+        
+        console.log("conta selecionada=" + contaSelecionada);
+        console.log("Web3Service - Redeem");
+        transferAmount = this.converteDecimalParaInteiro(transferAmount);     
 
-    resgata(transferAmount: number, fSuccess: any, fError: any): void {
-
-        console.log("Web3Service - Resgata " + transferAmount);
-        let self = this;
-
-        this.getAddressOwner(
-            function (addrOwner) {
-                self.transfer(addrOwner, transferAmount, fSuccess, fError);
-                console.log("owner abaixo - dentro do resgata");
-                console.log(addrOwner);
-            },
-            function (error) {
-                console.log("erro na recuperacao do owner dentro do metodo resgata");
-                console.log(error);
-            }
-        );
-
+        this.bndesTokenContract.redeem(transferAmount, { from: contaSelecionada, gas: 500000 },
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
     }
 
     liquidaResgate(hashResgate: any, hashComprovante: any, isOk: boolean, fSuccess: any, fError: any) {
@@ -381,7 +360,7 @@ export class Web3Service {
         console.log("HashComprovante - " + hashComprovante)
         console.log("isOk - " + isOk)
 
-        this.bndesTokenContract.notificaLiquidacaoResgate(hashResgate, hashComprovante, isOk,
+        this.bndesTokenContract.notifyRedemptionSettlement(hashResgate, hashComprovante, 
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -398,14 +377,15 @@ export class Web3Service {
 
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.troca(cnpj, idSubcredito, salic, hashdeclaracao, { from: contaBlockchain, gas: 500000 },
+        this.bndesTokenContract.changeAccountLegalEntity(cnpj, idSubcredito, salic, hashdeclaracao, 
+            { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
             });
     }
 
-
+/*
     async setBalanceOf(address: string, valor: number, fSuccess: any, fError: any) 
     {
         let contaSelecionada = await this.getCurrentAccountSync();    
@@ -418,7 +398,7 @@ export class Web3Service {
             }
         );                
     }
-    
+*/    
 
     getBlockTimestamp(blockHash: number, fResult: any) {
 
@@ -428,7 +408,7 @@ export class Web3Service {
 
 
     isCliente(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isCliente(address,
+        return this.bndesTokenContract.isClient(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -451,7 +431,7 @@ export class Web3Service {
 
 
     isFornecedor(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isFornecedor(address,
+        return this.bndesTokenContract.isSupplier(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -493,24 +473,58 @@ export class Web3Service {
         })
     }
 
+    isResponsibleForRegistryValidation(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isResponsibleForRegistryValidation(address,
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
+    isResponsibleForRegistryValidationSync(address: string) {
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isResponsibleForRegistryValidation(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO isResponsibleForRegistryValidation  SYNC");
+                reject(false);
+            });
+        })
+    }    
+
+
+    isResponsibleForDisbursement(address: string, fSuccess: any, fError: any): boolean {
+        return this.bndesTokenContract.isResponsibleForDisbursement(address,
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
+    }
+
+    isResponsibleForDisbursementSync(address: string) {
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isResponsibleForDisbursement(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO isResponsibleForDisbursement  SYNC");
+                reject(false);
+            });
+        })
+    }       
+
     
 
     accountIsActive(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isContaValidada(address, 
+        return this.bndesTokenContract.isValidatedAccount(address, 
         (error, result) => {
             if(error) fError(error);
             else fSuccess(result);
         });
     }
-
-    getEstadoContaAsString(address: string, fSuccess: any, fError: any): string {
-        return this.bndesTokenContract.getEstadoContaAsString(address, 
-        (error, result) => {
-            if(error) fError(error);
-            else fSuccess(result);
-        });
-    }
-
 
     async isSelectedAccountOwner() {
         let contaSelecionada = await this.getCurrentAccountSync();    
@@ -518,7 +532,7 @@ export class Web3Service {
     }
 
     isContaDisponivel(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isContaDisponivel(address, 
+        return this.bndesTokenContract.isAvailableAccount(address, 
             (error, result) => {
                 if(error) fError(error);
                 else fSuccess(result);
@@ -526,7 +540,7 @@ export class Web3Service {
     }
 
     isContaAguardandoValidacao(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isContaAguardandoValidacao(address, 
+        return this.bndesTokenContract.isWaitingValidationAccount(address, 
             (error, result) => {
                 if(error) fError(error);
                 else fSuccess(result);
@@ -534,7 +548,7 @@ export class Web3Service {
     }
 
     isContaValidada(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isContaValidada(address, 
+        return this.bndesTokenContract.isValidatedAccount(address, 
             (error, result) => {
                 if(error) fError(error);
                 else fSuccess(result);
@@ -560,7 +574,7 @@ export class Web3Service {
         
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.validarCadastro(address, hashTentativa, 
+        this.bndesTokenContract.validateRegistryLegalEntity(address, hashTentativa, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if(error) { fError(error); return false; }
@@ -572,7 +586,7 @@ export class Web3Service {
 
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.invalidarCadastro(address, 
+        this.bndesTokenContract.invalidateRegistryLegalEntity(address, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if(error) { fError(error); return false; }
@@ -580,4 +594,71 @@ export class Web3Service {
             });
         return false;
     }
+
+    
+
+    getEstadoContaAsString(address: string, fSuccess: any, fError: any): string {
+        let self = this;
+        return this.bndesTokenContract.getAccountState(address, 
+        (error, result) => {
+            if(error) fError(error);
+            else {
+                let str = self.getEstadoContaAsStringByCodigo (result);
+                fSuccess(str);
+            }   
+        });
+    }
+
+
+
+    //Métodos de tradução back-front
+
+    montaPJInfo(result): any {
+        let pjInfo: any;
+
+        console.log(result);
+        pjInfo  = {};
+        pjInfo.cnpj = result[0].c[0];
+        pjInfo.idSubcredito = result[1].c[0];
+        pjInfo.salic = result[2].c[0];
+        pjInfo.hashDeclaracao = result[3];
+        pjInfo.status = result[4].c[0];
+        pjInfo.address = result[5];
+
+        pjInfo.statusAsString = this.getEstadoContaAsStringByCodigo(pjInfo.status);
+
+        if (pjInfo.statusAsString == "Validada") {
+            pjInfo.isValidada =  true;
+        }
+        else {
+            pjInfo.isValidada = false;
+        }
+        return pjInfo;
+    }
+
+
+    getEstadoContaAsStringByCodigo(result): string {
+        if (result==100) {
+            return "Conta Reservada";
+        }
+        else if (result==0) {
+            return "Disponível";
+        }
+        else if (result==1) {
+            return "Aguardando validação do Cadastro";
+        }                
+        else if (result==2) {
+            return "Validada";
+        }    
+        else if (result==3) {
+            return "Conta invalidada no Cadastro";
+        }    
+        else if (result==4) {
+            return "Conta invalidada por Troca de Conta";
+        }                                                       
+        else {
+            return "N/A";
+        }        
+    }
+
 }

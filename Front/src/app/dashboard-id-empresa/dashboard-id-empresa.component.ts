@@ -79,22 +79,23 @@ export class DashboardIdEmpresaComponent implements OnInit {
                 console.log("Evento Cadastro");
                 console.log(eventoCadastro);
 
-                self.web3Service.getEstadoContaAsString(eventoCadastro.args.endereco,
+                self.web3Service.getEstadoContaAsString(eventoCadastro.args.addr,
                     (result) => {
 
                         let status;
                         status = result;
-                        console.log("result:"+result)
+                        console.log("result:")
+                        console.log(result)
                         
                         transacaoPJ = {
                             cnpj: eventoCadastro.args.cnpj,
                             razaoSocial: "",
-                            contaBlockchain: eventoCadastro.args.endereco,
+                            contaBlockchain: eventoCadastro.args.addr,
                             salic: eventoCadastro.args.salic,
                             hashID: eventoCadastro.transactionHash,
                             dataHora: null,
-                            hashDeclaracao: eventoCadastro.args.hashdeclaracao,
-                            nomeConta: eventoCadastro.args.idSubcredito,
+                            hashDeclaracao: eventoCadastro.args.idProofHash,
+                            nomeConta: eventoCadastro.args.idFinancialSupportAgreement,
                             status: status
                         };
 
@@ -147,7 +148,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
             if (!error) {
 
-                self.web3Service.getEstadoContaAsString(eventoTroca.args.endereco,
+                self.web3Service.getEstadoContaAsString(eventoTroca.args.addr,
                     (result) => {
 
                         let status
@@ -157,12 +158,12 @@ export class DashboardIdEmpresaComponent implements OnInit {
                         transacaoPJ = {
                             cnpj: eventoTroca.args.cnpj,
                             razaoSocial: "",
-                            contaBlockchain: eventoTroca.args.endereco,
+                            contaBlockchain: eventoTroca.args.addr,
                             salic: eventoTroca.args.salic,
                             hashID: eventoTroca.transactionHash,
                             dataHora: null,
-                            hashDeclaracao: eventoTroca.args.hashdeclaracao,
-                            nomeConta: eventoTroca.args.idSubcredito,
+                            hashDeclaracao: eventoTroca.args.idProofHash,
+                            nomeConta: eventoTroca.args.idFinancialSupportAgreement,
                             status: status
                         };
 

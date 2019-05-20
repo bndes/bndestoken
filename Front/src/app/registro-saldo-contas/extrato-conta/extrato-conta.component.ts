@@ -177,7 +177,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
       }
 
     });
-
+/*
     this.web3Service.registraEventosRepasse(function (error, event) {
       if (!error) {
         let valorTransferencia = self.web3Service.converteInteiroParaDecimal(parseInt(event.args.valor))
@@ -231,7 +231,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
       }
 
     });
-
+*/
     this.web3Service.registraEventosResgate(function (error, event) {
       if (!error) {
         let valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(event.args.valor))

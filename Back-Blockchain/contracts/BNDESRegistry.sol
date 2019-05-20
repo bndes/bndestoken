@@ -4,215 +4,253 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract BNDESRegistry is Ownable() {
 
-    //TODO: Vale a pena adicionar o estado de conta SUSPENSA para casos excepcionais?
-    //TODO: Vale a pena adicionar o estado de conta INVALIDADA_INCONFORMIDADE para casos excepcionais?
-    enum EstadoContaBlockchain {DISPONIVEL,AGUARDANDO_VALIDACAO,VALIDADA,INVALIDADA_CADASTRO,INVALIDADA_TROCA} 
-
-    EstadoContaBlockchain estadosPossiveis; //variavel nao utilizada, apenas para definir o enum
+    enum BlockchainAccountState {AVAILABLE,WAITING_VALIDATION,VALIDATED,INVALIDATED_BY_VALIDATOR,INVALIDATED_BY_CHANGE} 
+    BlockchainAccountState blockchainState; //Not used. Defined to create the enum type.
 
     address responsibleForSettlement;
+    address responsibleForRegistryValidation;
+    address responsibleForDisbursement;
+    address redemptionAddress;
 
-    struct PJInfo {
+    struct LegalEntityInfo {
         uint cnpj;
-        uint idSubcredito;
+        uint idFinancialSupportAgreement; //subcredit
         uint salic;
-        string hashdeclaracao;
-        EstadoContaBlockchain estado;
+        string idProofHash;
+        BlockchainAccountState state;
     } 
 
-    mapping(address => PJInfo) public pjsInfo;
+    mapping(address => LegalEntityInfo) public legalEntitiesInfo;
 
-    //_cnpj => (_idSubcredito => endereco)
-    mapping(uint => mapping(uint => address)) cnpjSubEndereco; 
+    //cnpj => (idFinancialSupportAgreement => address)
+    mapping(uint => mapping(uint => address)) cnpjFSAddr; 
 
 
-
-    event CadastroConta(address endereco, uint cnpj, uint idSubcredito, uint salic, string hashdeclaracao);
-    event TrocaConta(address endereco, uint cnpj, uint idSubcredito, uint salic, string hashdeclaracao);
-    event ValidacaoConta(address endereco);
-    event InvalidacaoCadastroConta(address endereco);
+    event AccountRegistration(address addr, uint cnpj, uint idFinancialSupportAgreement, uint salic, string idProofHash);
+    event AccountChange(address addr, uint cnpj, uint idFinancialSupportAgreement, uint salic, string idProofHash);
+    event AccountValidation(address addr);
+    event AccountInvalidation(address addr);
 
 
     constructor () public {
         responsibleForSettlement = msg.sender;
+        responsibleForRegistryValidation = msg.sender;
+        responsibleForDisbursement = msg.sender;
+        redemptionAddress = msg.sender;
     }
 
 
     /**
     Associa um endereço blockchain ao CNPJ
     */
-    function cadastra(uint _cnpj, uint _idSubcredito, uint _salic, string memory hashdeclaracao) public { 
+    function registryLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) public { 
 
-        address endereco = msg.sender;
+        address addr = msg.sender;
 
         // Endereço não pode ter sido cadastrado anteriormente
-        require (isContaDisponivel(endereco), "Endereço não pode ter sido cadastrado anteriormente");
+        require (isAvailableAccount(addr), "Endereço não pode ter sido cadastrado anteriormente");
 
-        pjsInfo[endereco] = PJInfo(_cnpj, _idSubcredito, _salic, hashdeclaracao, EstadoContaBlockchain.AGUARDANDO_VALIDACAO);
+        legalEntitiesInfo[addr] = LegalEntityInfo(cnpj, idFinancialSupportAgreement, salic, idProofHash, BlockchainAccountState.WAITING_VALIDATION);
         
         // Não pode haver outro endereço cadastrado para esse mesmo subcrédito
-        if (_idSubcredito > 0) {
-            require (cnpjSubEndereco[_cnpj][_idSubcredito] == address(0x0), "Subcredito já está associado a outro endereço");
+        if (idFinancialSupportAgreement > 0) {
+            address account = getBlockchainAccount(cnpj,idFinancialSupportAgreement);
+            require (isAvailableAccount(account), "Subcredito já está associado a outro endereço");
         }
         
-        cnpjSubEndereco[_cnpj][_idSubcredito] = endereco;
+        cnpjFSAddr[cnpj][idFinancialSupportAgreement] = addr;
 
-        emit CadastroConta(endereco, _cnpj, _idSubcredito, _salic, hashdeclaracao);
+        emit AccountRegistration(addr, cnpj, idFinancialSupportAgreement, salic, idProofHash);
     }
 
     /**
     Reassocia um cnpj/subcrédito a um novo endereço da blockchain (o sender)
     */
-    function troca(uint _cnpj, uint _idSubcredito, uint _salic, string memory _hashdeclaracao) public {
+    function changeAccountLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) public {
 
-        address enderecoNovo = msg.sender;
-     
-        require (isContaDisponivel(enderecoNovo), "Novo endereço não pode ter sido cadastrado anteriormente");
+        address newAddr = msg.sender;
+        address oldAddr = getBlockchainAccount(cnpj, idFinancialSupportAgreement);
 
         // Tem que haver um endereço associado a esse cnpj/subcrédito
-        require(cnpjSubEndereco[_cnpj][_idSubcredito] != address(0x0), "Tem que haver um endereço associado a esse cnpj/subcrédito");
+        require(!isReservedAccount(oldAddr), "Não pode trocar endereço de conta reservada");
 
-        address enderecoAntigo = cnpjSubEndereco[_cnpj][_idSubcredito];
+        require(!isAvailableAccount(oldAddr), "Tem que haver um endereço associado a esse cnpj/subcrédito");
 
-        require(enderecoNovo != enderecoAntigo, "O endereço novo deve ser diferente do antigo");
+        require(isAvailableAccount(newAddr), "Novo endereço não está disponível");
 
-        require(pjsInfo[enderecoAntigo].cnpj==_cnpj && pjsInfo[enderecoAntigo].idSubcredito ==_idSubcredito, "Dados inconsistentes de cnpj ou subcrédito");
+        require(newAddr != oldAddr, "O endereço novo deve ser diferente do antigo");
 
-        // Aponta o novo endereço para o novo PJInfo
-        pjsInfo[enderecoNovo] = PJInfo(_cnpj, _idSubcredito, _salic, _hashdeclaracao, EstadoContaBlockchain.AGUARDANDO_VALIDACAO);
+        require(legalEntitiesInfo[oldAddr].cnpj==cnpj 
+                    && legalEntitiesInfo[oldAddr].idFinancialSupportAgreement ==idFinancialSupportAgreement, 
+                    "Dados inconsistentes de cnpj ou subcrédito");
+
+        // Aponta o novo endereço para o novo LegalEntityInfo
+        legalEntitiesInfo[newAddr] = LegalEntityInfo(cnpj, idFinancialSupportAgreement, salic, idProofHash, BlockchainAccountState.WAITING_VALIDATION);
 
         // Apaga o mapping do endereço antigo
-        pjsInfo[enderecoAntigo] = PJInfo(0, 0, 0, "", EstadoContaBlockchain.INVALIDADA_TROCA);
+        legalEntitiesInfo[oldAddr] = LegalEntityInfo(0, 0, 0, "", BlockchainAccountState.INVALIDATED_BY_CHANGE);
 
-        // Aponta mapping CNPJ e Subcredito para enderecoNovo
-        cnpjSubEndereco[_cnpj][_idSubcredito] = enderecoNovo;
+        // Aponta mapping CNPJ e Subcredito para newAddr
+        cnpjFSAddr[cnpj][idFinancialSupportAgreement] = newAddr;
 
-        emit TrocaConta(enderecoNovo, _cnpj, _idSubcredito, _salic, _hashdeclaracao); 
+        emit AccountChange(newAddr, cnpj, idFinancialSupportAgreement, salic, idProofHash); 
 
     }
 
 
-    function validarCadastro(address _addr, string memory _hashdeclaracao) onlyOwner public {
+    function validateRegistryLegalEntity(address addr, string memory idProofHash) onlyOwner public {
 
-        require(pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO, "A conta precisa estar no estado Aguardando Validação");
+        require(legalEntitiesInfo[addr].state == BlockchainAccountState.WAITING_VALIDATION, "A conta precisa estar no estado Aguardando Validação");
 
-        require(keccak256(abi.encodePacked(pjsInfo[_addr].hashdeclaracao)) == keccak256(abi.encodePacked(_hashdeclaracao)), "O hash recebido é diferente do esperado");
+        require(keccak256(abi.encodePacked(legalEntitiesInfo[addr].idProofHash)) == keccak256(abi.encodePacked(idProofHash)), "O hash recebido é diferente do esperado");
 
-        pjsInfo[_addr].estado = EstadoContaBlockchain.VALIDADA;
+        legalEntitiesInfo[addr].state = BlockchainAccountState.VALIDATED;
 
-        emit ValidacaoConta(_addr);
+        emit AccountValidation(addr);
     }
 
-    function invalidarCadastro(address _addr) onlyOwner public {
+    function invalidateRegistryLegalEntity(address addr) onlyOwner public {
 
-        pjsInfo[_addr].estado = EstadoContaBlockchain.INVALIDADA_CADASTRO;
-
-        emit InvalidacaoCadastroConta(_addr);
+        legalEntitiesInfo[addr].state = BlockchainAccountState.INVALIDATED_BY_VALIDATOR;
+        
+        emit AccountInvalidation(addr);
     }
 
 
     function setResponsibleForSettlement(address rs) onlyOwner public {
         responsibleForSettlement = rs;
     }
-
-
-    function getCNPJ(address _addr) view public returns (uint) {
-        return pjsInfo[_addr].cnpj;
+    function setResponsibleForRegistryValidation(address rs) onlyOwner public {
+        responsibleForRegistryValidation = rs;
+    }
+    function setResponsibleForDisbursement(address rs) onlyOwner public {
+        responsibleForDisbursement = rs;
+    }
+    function setRedemptionAddress(address rs) onlyOwner public {
+        redemptionAddress = rs;
     }
 
-    function getSubcredito(address _addr) view public returns (uint) {
-        return pjsInfo[_addr].idSubcredito;
+    function isResponsibleForSettlement(address addr) view public returns (bool) {
+        return (addr == responsibleForSettlement);
+    }
+    function isResponsibleForRegistryValidation(address addr) view public returns (bool) {
+        return (addr == responsibleForRegistryValidation);
+    }
+    function isResponsibleForDisbursement(address addr) view public returns (bool) {
+        return (addr == responsibleForDisbursement);
+    }
+    function isRedemptionAddress(address addr) view public returns (bool) {
+        return (addr == redemptionAddress);
     }
 
-    function getPJInfo (address _addr) view public returns (uint, uint, uint, string memory, uint) {
-        return (pjsInfo[_addr].cnpj, pjsInfo[_addr].idSubcredito, pjsInfo[_addr].salic, pjsInfo[_addr].hashdeclaracao, (uint) (pjsInfo[_addr].estado));
-    }
+    function isReservedAccount(address addr) view public returns (bool) {
 
-    function getContaBlockchain(uint256 _cnpj, uint256 _idSubcredito) view public returns (address) {
-        return cnpjSubEndereco[_cnpj][_idSubcredito];
-    }
-
-    function isContaReservada(address _addr) view public returns (bool) {
-
-        if (isBNDES(_addr) || isResponsibleForSettlement(_addr))
+        if (isOwner(addr) || isResponsibleForSettlement(addr) 
+                           || isResponsibleForRegistryValidation(addr)
+                           || isResponsibleForDisbursement(addr)
+                           || isRedemptionAddress(addr) ) {
             return true;
-
+        }
         return false;
     }
+    function isOwner(address addr) view public returns (bool) {
+        return owner()==addr;
+    }
 
-    function isFornecedor(address _addr) view public returns (bool) {
+    function isSupplier(address addr) view public returns (bool) {
 
-        if (isContaReservada(_addr))
+        if (isReservedAccount(addr))
             return false;
 
-        if (isContaDisponivel(_addr))
+        if (isAvailableAccount(addr))
             return false;
 
-        return pjsInfo[_addr].idSubcredito == 0;
+        return legalEntitiesInfo[addr].idFinancialSupportAgreement == 0;
     }
 
-    function isValidatedSupplier (address _addr) view public returns (bool) {
-        return isFornecedor(_addr) && (pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA);
+    function isValidatedSupplier (address addr) view public returns (bool) {
+        return isSupplier(addr) && (legalEntitiesInfo[addr].state == BlockchainAccountState.VALIDATED);
     }
 
-
-    function isCliente (address _addr) view public returns (bool) {
-
-        if (isContaReservada(_addr))
+    function isClient (address addr) view public returns (bool) {
+        if (isReservedAccount(addr)) {
             return false;
-
-        return pjsInfo[_addr].idSubcredito != 0;
+        }
+        return legalEntitiesInfo[addr].idFinancialSupportAgreement != 0;
     }
 
-    function isValidatedClient (address _addr) view public returns (bool) {
-        return isCliente(_addr) && (pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA);
+    function isValidatedClient (address addr) view public returns (bool) {
+        return isClient(addr) && (legalEntitiesInfo[addr].state == BlockchainAccountState.VALIDATED);
     }
 
-    function isBNDES(address _addr) view public returns (bool) {
-        return (_addr == owner());
-    }
-
-    function isResponsibleForSettlement(address _addr) view public returns (bool) {
-        return (_addr == responsibleForSettlement);
-    }    
-
-
-    function isContaDisponivel(address _addr) view public returns (bool) {
-        
-        if ( isContaReservada(_addr) ) {
+    function isAvailableAccount(address addr) view public returns (bool) {
+        if ( isReservedAccount(addr) ) {
             return false;
         } 
-
-        return pjsInfo[_addr].cnpj == 0 && pjsInfo[_addr].estado == EstadoContaBlockchain.DISPONIVEL;
+        return legalEntitiesInfo[addr].state == BlockchainAccountState.AVAILABLE;
     }
 
-    function isContaAguardandoValidacao(address _addr) view public returns (bool) {
-        return pjsInfo[_addr].estado == EstadoContaBlockchain.AGUARDANDO_VALIDACAO;
+    function isWaitingValidationAccount(address addr) view public returns (bool) {
+        return legalEntitiesInfo[addr].state == BlockchainAccountState.WAITING_VALIDATION;
     }
 
-    function isContaValidada(address _addr) view public returns (bool) {
-        return pjsInfo[_addr].estado == EstadoContaBlockchain.VALIDADA;
+    function isValidatedAccount(address addr) view public returns (bool) {
+        return legalEntitiesInfo[addr].state == BlockchainAccountState.VALIDATED;
     }
 
+    function isInvalidatedByValidatorAccount(address addr) view public returns (bool) {
+        return legalEntitiesInfo[addr].state == BlockchainAccountState.INVALIDATED_BY_VALIDATOR;
+    }
 
-    function getEstadoContaAsString(address _addr) view public returns (string memory) {
+    function isInvalidatedByChangeAccount(address addr) view public returns (bool) {
+        return legalEntitiesInfo[addr].state == BlockchainAccountState.INVALIDATED_BY_CHANGE;
+    }
 
-        if ( isBNDES(_addr) ) {
-            return "Conta Reservada - BNDES";
-        } else if ( isResponsibleForSettlement(_addr)) {
-            return "Conta Reservada - Liquidante do contrato";
-        } else if ( isContaValidada(_addr) ) {
-            return "Validada"; 
-        } else if ( pjsInfo[_addr].estado == EstadoContaBlockchain.INVALIDADA_CADASTRO ) {
-            return "Conta invalidada no Cadastro";
-        } else if ( pjsInfo[_addr].estado == EstadoContaBlockchain.INVALIDADA_TROCA ) {
-            return "Conta invalidada por Troca de Conta";
-        } else if ( isContaAguardandoValidacao(_addr) ) {
-            return "Aguardando validação do Cadastro";
-        } else if (isContaDisponivel (_addr)) {
-            return "Disponível";
-        } else {
-            return "Erro";
+    function getResponsibleForSettlement() view public returns (address) {
+        return responsibleForSettlement;
+    }
+    function getResponsibleForRegistryValidation() view public returns (address) {
+        return responsibleForRegistryValidation;
+    }
+    function getResponsibleForDisbursement() view public returns (address) {
+        return responsibleForDisbursement;
+    }
+    function getRedemptionAddress() view public returns (address) {
+        return redemptionAddress;
+    }
+
+    function getCNPJ(address addr) view public returns (uint) {
+        return legalEntitiesInfo[addr].cnpj;
+    }
+
+    function getIdLegalFinancialAgreement(address addr) view public returns (uint) {
+        return legalEntitiesInfo[addr].idFinancialSupportAgreement;
+    }
+
+    function getLegalEntityInfo (address addr) view public returns (uint, uint, uint, string memory, uint, address) {
+        return (legalEntitiesInfo[addr].cnpj, legalEntitiesInfo[addr].idFinancialSupportAgreement, 
+             legalEntitiesInfo[addr].salic, legalEntitiesInfo[addr].idProofHash, (uint) (legalEntitiesInfo[addr].state),
+             addr);
+    }
+
+    function getBlockchainAccount(uint256 cnpj, uint256 idFinancialSupportAgreement) view public returns (address) {
+        return cnpjFSAddr[cnpj][idFinancialSupportAgreement];
+    }
+
+    function getLegalEntityInfoByCNPJ (uint256 cnpj, uint256 idFinancialSupportAgreement) 
+        view public returns (uint, uint, uint, string memory, uint, address) {
+        
+        address addr = getBlockchainAccount(cnpj,idFinancialSupportAgreement);
+        return getLegalEntityInfo (addr);
+    }
+
+    function getAccountState(address addr) view public returns (int) {
+
+        if ( isReservedAccount(addr) ) {
+            return 100;
+        } 
+        else {
+            return ((int) (legalEntitiesInfo[addr].state));
         }
 
     }

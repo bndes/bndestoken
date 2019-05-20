@@ -123,21 +123,22 @@ export class LiberacaoComponent implements OnInit {
 
   includeAccountIfAssociated (self, cnpj, sub) {
 
-    self.web3Service.getContaBlockchain(cnpj, sub.numero,
+    self.web3Service.getPJInfoByCnpj(cnpj, sub.numero,
               
-      (contaBlockchain) => {
+      (pjInfo) => {
 
-        console.log("getConta");        
-
-        console.log(contaBlockchain);        
-  
-        if (contaBlockchain!=0x0) { //If there is association in the blockchain
+        console.log("####### estado da conta");        
+        console.log(pjInfo);   
+        
+        //so pode incluir se estiver validada
+      if (pjInfo.isValidada) { 
             self.includeIfNotExists(self.liberacao.subcreditos, sub);
+
+            //TODO: otimizar para fazer isso apenas uma vez
             self.liberacao.numeroSubcreditoSelecionado = self.liberacao.subcreditos[0].numero;
             self.recuperaContaBlockchainCliente();
 
         }
-  
       },
       (error) => {
         console.log("Erro ao verificar se subcredito estah associado na blockhain");
@@ -200,14 +201,11 @@ export class LiberacaoComponent implements OnInit {
 
     let self = this;
 
-    if (this.selectedAccount != this.web3Service.getAddressOwnerCacheble()) {
-
-      let s = "A liberação deve ser executada selecionando a conta do BNDES no Metamask.";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-      console.log(s);
-      console.log("this.recuperaContaSelecionada()=" + this.recuperaContaSelecionada());
-      console.log("this.web3Service.getAddressOwnerCacheble()=" + this.web3Service.getAddressOwnerCacheble());
-
+    if (this.web3Service.isResponsibleForDisbursementSync(this.selectedAccount)) 
+    {
+      let s = "Conta selecionada no Metamask não pode executar Libração.";
+        this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+        return;
     }
     else if (this.liberacao.contaBlockchainCNPJ === "" || this.liberacao.contaBlockchainCNPJ === undefined) {
 

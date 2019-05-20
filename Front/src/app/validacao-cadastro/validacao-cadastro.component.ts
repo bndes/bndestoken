@@ -49,17 +49,20 @@ export class ValidacaoCadastroComponent implements OnInit {
 
     if ( conta != undefined && conta != "" && conta.length == 42 ) {
 
+      console.log("#### conta a recuperar PJInfo " + conta);      
       self.web3Service.getPJInfo(conta,
           (result) => {
 
             if ( result.cnpj != 0 ) { //encontrou uma PJ valida  
 
+              console.log("#### result da validacao cadastro da conta " + conta);
               console.log(result);
               
               self.pj.cnpj = result.cnpj;
               self.pj.idSubcredito = result.idSubcredito;
               self.pj.salic = result.salic;
               self.pj.hashDeclaracao = result.hashDeclaracao;
+              self.pj.status = self.web3Service.getEstadoContaAsStringByCodigo(result.status);
 
               this.pessoaJuridicaService.recuperaEmpresaPorCnpj(result.cnpj).subscribe(
                 empresa => {
@@ -70,15 +73,6 @@ export class ValidacaoCadastroComponent implements OnInit {
                     console.error("Náo foi encontrada empresa para o CNPJ no banco de dados. CNPJ=" + result.cnpj);
                   }
               }) //fecha busca PJInfo
-
-
-              self.web3Service.getEstadoContaAsString(conta,
-                (result) => {
-                    self.pj.status = result;
-                },
-                (error) => {
-                  console.log("Erro ao verificar se a conta está ativa")
-              })
 
            } //fecha if de PJ valida
 
@@ -146,13 +140,10 @@ export class ValidacaoCadastroComponent implements OnInit {
       return;
     }
 
-    if (this.selectedAccount != this.web3Service.getAddressOwnerCacheble()) 
+    if (this.web3Service.isResponsibleForRegistryValidationSync(this.selectedAccount)) 
     {
-        let s = "A validação exige que a conta do BNDES seja a selecionada no Metamask.";
+        let s = "Conta selecionada no Metamask não pode executar uma validação.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-        console.log(s);
-        console.log("this.contaSelecionada = " + this.selectedAccount);
-        console.log("this.web3Service.getAddressOwnerCacheble() = " + this.web3Service.getAddressOwnerCacheble());
         return;
     }
   
@@ -192,13 +183,12 @@ export class ValidacaoCadastroComponent implements OnInit {
       return;
     }
 
-    if (this.selectedAccount != this.web3Service.getAddressOwnerCacheble()) 
+    if (this.web3Service.isResponsibleForRegistryValidationSync(this.selectedAccount)) 
     {
-        let s = "A invalidação exige que a conta do BNDES seja a selecionada no Metamask.";
+        let s = "Conta selecionada no Metamask não pode executar a ação de invalidar.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
-        console.log(s);
         return;
-    }    
+    }
 
     let booleano = this.web3Service.invalidarCadastro(self.pj.contaBlockchain, 
       (result) => {
