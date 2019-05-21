@@ -134,6 +134,14 @@ export class Web3Service {
         this.eventoCadastro = this.bndesTokenContract.AccountChange({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
+    registraEventosValidacao(callback) {
+        this.eventoCadastro = this.bndesTokenContract.AccountValidation({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro.watch(callback);
+    }
+    registraEventosInvalidacao(callback) {
+        this.eventoCadastro = this.bndesTokenContract.AccountInvalidation({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro.watch(callback);
+    }
     registraEventosLiberacao(callback) {
         this.eventoLiberacao = this.bndesTokenContract.BNDESTokenDisbursement({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiberacao.watch(callback);
