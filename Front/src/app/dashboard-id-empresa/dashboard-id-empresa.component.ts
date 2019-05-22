@@ -18,6 +18,7 @@ import { BnAlertsService } from 'bndes-ux4';
 export class DashboardIdEmpresaComponent implements OnInit {
 
     listaTransacoesPJ: DashboardPessoaJuridica[] = undefined;
+
     estadoLista: string = "undefined";
 
     p: number = 1;
@@ -109,7 +110,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     nomeConta: eventoCadastro.args.idFinancialSupportAgreement,
                     status: "Conta Cadastrada"
                 }
-                self.listaTransacoesPJ.push(transacaoPJ);
+
+                self.includeIfNotExists(transacaoPJ);
 
                 self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                     data => {
@@ -175,7 +177,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     nomeConta: eventoTroca.args.idFinancialSupportAgreement,
                     status: "Conta Associada por Troca"
                 };
-                self.listaTransacoesPJ.push(transacaoPJ);
+                self.includeIfNotExists(transacaoPJ);
+                
 
                 self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                     data => {
@@ -240,7 +243,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     nomeConta: "",
                     status: "Conta Validada"
                 }
-                self.listaTransacoesPJ.push(transacaoPJ);
+                self.includeIfNotExists(transacaoPJ);
+
 
                 self.web3Service.getBlockTimestamp(event.blockHash,
                     function (error, result) {
@@ -290,7 +294,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     nomeConta: "",
                     status: "Conta Invalidada"
                 }
-                self.listaTransacoesPJ.push(transacaoPJ);
+                self.includeIfNotExists(transacaoPJ);
 
                 self.web3Service.getBlockTimestamp(event.blockHash,
                     function (error, result) {
@@ -311,6 +315,11 @@ export class DashboardIdEmpresaComponent implements OnInit {
             }
         });
         
+    }
+
+    includeIfNotExists(transacaoPJ) {
+        let result = this.listaTransacoesPJ.find(tr => tr.hashID == transacaoPJ.hashID);
+        if (!result) this.listaTransacoesPJ.push(transacaoPJ);        
     }
 
 
