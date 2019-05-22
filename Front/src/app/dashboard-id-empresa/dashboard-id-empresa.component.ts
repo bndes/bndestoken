@@ -67,6 +67,10 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
     registrarExibicaoEventos() {
 
+        this.estadoLista = "vazia"
+
+        console.log("*** Executou o metodo de registrar exibicao eventos");
+
         this.registraEventosCadastro();
 
         this.registraEventosTroca();
@@ -75,11 +79,12 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
         this.registraEventosInvalidacao();
         
-        this.estadoLista = "vazia"
     }
 
 
     registraEventosCadastro() {
+
+        console.log("*** Executou o metodo de registrar eventos CADASTRO");
 
         let self = this;        
         this.web3Service.registraEventosCadastro(function (error, event) {
@@ -145,6 +150,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
     registraEventosTroca() {
 
+        console.log("*** Executou o metodo de registrar eventos TROCA");
+
         let self = this;
 
         self.web3Service.registraEventosTroca(function (error, event) {
@@ -209,6 +216,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
     registraEventosValidacao() {
 
+        console.log("*** Executou o metodo de registrar eventos VALIDACAO");        
+
         let self = this;        
         this.web3Service.registraEventosValidacao(function (error, event) {
 
@@ -251,10 +260,13 @@ export class DashboardIdEmpresaComponent implements OnInit {
                 console.log(error);
             }
         });
+        
     }
 
 
     registraEventosInvalidacao() {
+
+        console.log("*** Executou o metodo de registrar eventos INVALIDACAO");                
 
         let self = this;        
         this.web3Service.registraEventosInvalidacao(function (error, event) {
@@ -298,6 +310,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
                 console.log(error);
             }
         });
+        
     }
 
 

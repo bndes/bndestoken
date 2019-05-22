@@ -99,10 +99,10 @@ export class DashboardTransferenciasComponent implements OnInit {
     this.volumeResgate = 0;
     this.volumeTransferencia = 0;
 
+    this.listaTransferencias = [];
+
 
     setTimeout(() => {
-      this.listaTransferencias = [];
-
       this.registrarExibicaoEventos();
     }, 1500)
 
