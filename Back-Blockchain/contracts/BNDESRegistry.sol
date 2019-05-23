@@ -98,7 +98,9 @@ contract BNDESRegistry is Ownable() {
     }
 
 
-    function validateRegistryLegalEntity(address addr, string memory idProofHash) onlyOwner public {
+    function validateRegistryLegalEntity(address addr, string memory idProofHash) public {
+
+        require(isResponsibleForRegistryValidation(msg.sender));
 
         require(legalEntitiesInfo[addr].state == BlockchainAccountState.WAITING_VALIDATION, "A conta precisa estar no estado Aguardando Validação");
 
@@ -109,7 +111,9 @@ contract BNDESRegistry is Ownable() {
         emit AccountValidation(addr);
     }
 
-    function invalidateRegistryLegalEntity(address addr) onlyOwner public {
+    function invalidateRegistryLegalEntity(address addr) public {
+
+        require(isResponsibleForRegistryValidation(msg.sender));
 
         legalEntitiesInfo[addr].state = BlockchainAccountState.INVALIDATED_BY_VALIDATOR;
         
