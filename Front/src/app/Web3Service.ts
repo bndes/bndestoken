@@ -22,7 +22,6 @@ export class Web3Service {
     private eventoCadastro: any;
     private eventoLiberacao: any;
     private eventoTransferencia: any;
-    private eventoRepasse: any;
     private eventoResgate: any;
     private eventoLiquidacaoResgate: any;
 

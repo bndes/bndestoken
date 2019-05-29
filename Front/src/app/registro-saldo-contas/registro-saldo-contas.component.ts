@@ -68,8 +68,9 @@ export class RegistroSaldoContasComponent implements OnInit {
 
   recuperaContas(contaBlockchainSelecionada) {
 
-    let self = this
-
+    let self = this;
+    
+/*
     this.pessoaJuridicaService.recuperaEmpresaPorContaBlockchain(contaBlockchainSelecionada).subscribe(
       data => {
         if (data) {
@@ -106,6 +107,7 @@ export class RegistroSaldoContasComponent implements OnInit {
         console.log("Erro ao recuperar a Conta Blockchain")
       }
     )
+    */
   }
 
   recuperaSaldos(contaPJ, ehFornecedor) {

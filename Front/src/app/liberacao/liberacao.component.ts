@@ -204,7 +204,7 @@ export class LiberacaoComponent implements OnInit {
     let bRD = await this.web3Service.isResponsibleForDisbursementSync(this.selectedAccount);    
     if (!bRD) 
     {
-      let s = "Conta selecionada no Metamask não pode executar Libração.";
+      let s = "Conta selecionada no Metamask não pode executar Liberação.";
         this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
         return;
     }

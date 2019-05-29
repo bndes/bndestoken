@@ -12,63 +12,19 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
-          <label>Razão Social:</label>
-          <input name="razaoSocial" class="form-control form-control-sm" [ngModel]="fornecedor.dadosCadastrais.razaoSocial" readonly disabled/>
-        </div>
-
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ do Fornecedor:</label>
           <input  #cnpj name="cnpjWithMask"  [(ngModel)]="fornecedor.cnpjWithMask" class="form-control form-control-sm" (input)="changeCnpj()"
           [textMask]="{mask: maskCnpj}" required/>
         </div>
 
-
-        <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
-          <label>Cidade:</label>
-          <input name="cidade" class="form-control form-control-sm" [ngModel]="fornecedor.dadosCadastrais.cidade" readonly disabled/>
+        <div class="form-group col-md-6 col-sm-6" *ngIf="fornecedor.dadosCadastrais">
+          <label>Razão Social:</label>
+          <input name="razaoSocial" class="form-control form-control-sm" [ngModel]="fornecedor.dadosCadastrais.razaoSocial" readonly disabled/>
         </div>
 
       </div>
     </div>
-
-    <!-- <div class="conteudo form-group" *ngIf="fornecedor.dadosCadastrais">
-      <div class="row">
-        <div class="form-group col-md-12 col-sm-12">
-          <h6>Dados Bancários:</h6>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-md-3 col-sm-3">
-          <app-input-validation errorMessage="Campo Obrigatório">
-            <label class="required">Banco:</label>
-            <input name="banco" class="form-control form-control-sm" [(ngModel)]="banco" minlength="3"
-              maxlength="4" required/>
-          </app-input-validation>
-        </div>
-
-        <div class="form-group col-md-3 col-sm-3 offset-md-1">
-          <app-input-validation errorMessage="Campo Obrigatório e Somente números">
-            <label class="required">Agência:</label>
-            <input name="agencia" class="form-control form-control-sm" [(ngModel)]="agencia" minlength="4"
-              maxlength="4" pattern="^[0-9]*$" required/>
-          </app-input-validation>
-        </div>
-
-        <div class="form-group col-md-3 col-sm-3 offset-md-1">
-          <label class="required">Conta Corrente:</label>
-          <app-input-validation errorMessage="Campo Obrigatório">
-            <div class="input-group">
-              <input name="contaCorrente" class="form-control form-control-sm col-md-10 col-sm-10" [(ngModel)]="contaCorrente"                 maxlength="11" pattern="^[0-9]*$" required/> -
-              <input name="digitoContaCorrente" class="form-control form-control-sm col-md-2 col-sm-2" [(ngModel)]="digitoContaCorrente"
-                maxlength="2" required/>
-            </div>
-          </app-input-validation>
-        </div>
-
-      </div>
-    </div> -->
 
     <div class="conteudo form-group" *ngIf="fornecedor.dadosCadastrais">
 

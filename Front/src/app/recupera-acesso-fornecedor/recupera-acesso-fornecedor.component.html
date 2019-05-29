@@ -12,22 +12,17 @@
           <p>Dados Cadastrais</p>
         </div>        
 
-        <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
-            <label>Razão Social:</label>
-            <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly  
-            disabled/>
-          </div>        
-
           <div class="form-group col-md-4 col-sm-4">
             <label>CNPJ do Fornecedor:</label>
             <input name="cnpjWithMask" [(ngModel)]="fornecedor.cnpjWithMask" class="form-control form-control-sm"  (input)="changeCnpj()" 
             [textMask]="{mask: maskCnpj}"  required/>
           </div>
 
-          <div class="form-group col-md-4 col-sm-4" *ngIf="fornecedor.dadosCadastrais">
-            <label>Cidade:</label>
-            <input name="cidade" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.cidade" readonly disabled/>
-          </div>
+          <div class="form-group col-md-6 col-sm-6" *ngIf="fornecedor.dadosCadastrais">
+            <label>Razão Social:</label>
+            <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="fornecedor.dadosCadastrais.razaoSocial" readonly  
+            disabled/>
+          </div>        
 
       </div>
     </div>

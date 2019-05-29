@@ -12,21 +12,15 @@
           <p>Dados Cadastrais</p>
         </div>
 
-        <div class="form-group col-md-4 col-sm-4" *ngIf="cliente.dadosCadastrais">
-          <label>Razão Social:</label>
-          <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="cliente.dadosCadastrais.razaoSocial" readonly  disabled/>
-        </div>
-
-
         <div class="form-group col-md-4 col-sm-4">
           <label>CNPJ do Cliente:</label>
           <input name="cnpjWithMask" [(ngModel)]="cliente.cnpjWithMask"  class="form-control form-control-sm" (input)="changeCnpj()" 
           [textMask]="{mask: maskCnpj}" required/>
         </div>
 
-        <div class="form-group col-md-4 col-sm-4" *ngIf="cliente.dadosCadastrais">
-          <label>Cidade:</label>
-          <input name="cidade" class="form-control form-control-sm" [(ngModel)]="cliente.dadosCadastrais.cidade" readonly disabled/>
+        <div class="form-group col-md-6 col-sm-6" *ngIf="cliente.dadosCadastrais">
+          <label>Razão Social:</label>
+          <input name="razaoSocial" class="form-control form-control-sm" [(ngModel)]="cliente.dadosCadastrais.razaoSocial" readonly  disabled/>
         </div>
 
       </div>
@@ -51,7 +45,7 @@
         </div>
         <div class="form-group col-md-4 col-sm-4 offset-md-1">
           <app-input-validation errorMessage="Campo Obrigatório">
-            <label class="required">Subcrédito:</label>
+            <label class="required">Contrato Financeiro:</label>
             <select name="subcreditoSelecionado" class="form-control form-control-sm" [disabled]="subcreditoSelecionado === undefined"
               [(ngModel)]="subcreditoSelecionado" required>
               <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>

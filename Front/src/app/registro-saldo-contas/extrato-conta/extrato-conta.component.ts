@@ -78,7 +78,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
 
         let extrato: Extrato
         let dataHora: Date
-
+/*
         self.pessoaJuridicaService.buscaLiberacaoPorHash(transactionHash).subscribe(
           data => {
             if (self.contaBlockchainExtrato === data.contaBlockchainDestino) {
@@ -112,7 +112,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
 
           }
         )
-
+*/
       }
       else {
         console.log("Erro no registro de eventos de liberacao");
@@ -130,7 +130,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
 
         let extrato: Extrato
         let dataHora: Date
-
+/*
         self.pessoaJuridicaService.buscaTransferenciaPorHash(transactionHash).subscribe(
           data => {
             if (self.contaBlockchainExtrato === data.contaBlockchainOrigem || self.contaBlockchainExtrato === data.contaBlockchainDestino) {
@@ -170,6 +170,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
             console.log("Não foi possível encontrar a transferência.")
           }
         )
+*/        
       }
       else {
         console.log("Erro no registro de eventos transferência");
@@ -231,8 +232,9 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
       }
 
     });
-*/
+
     this.web3Service.registraEventosResgate(function (error, event) {
+      
       if (!error) {
         let valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(event.args.valor))
         let transactionHash = event.transactionHash
@@ -280,7 +282,7 @@ export class ExtratoContaComponent implements OnInit, OnChanges {
         console.log(error);
       }
     });
-
+*/
 
   }
 
