@@ -98,7 +98,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
                 console.log("Evento Cadastro");
                 console.log(eventoCadastro);
 
-                      
+                     
                 transacaoPJ = {
                     cnpj: eventoCadastro.args.cnpj,
                     razaoSocial: "",
@@ -110,6 +110,10 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     nomeConta: eventoCadastro.args.idFinancialSupportAgreement,
                     status: "Conta Cadastrada"
                 }
+
+                if (transacaoPJ.salic=="0") transacaoPJ.salic="-";
+                if (transacaoPJ.nomeConta=="0") transacaoPJ.nomeConta="-";
+
 
                 self.includeIfNotExists(transacaoPJ);
 
@@ -177,8 +181,11 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     nomeConta: eventoTroca.args.idFinancialSupportAgreement,
                     status: "Conta Associada por Troca"
                 };
+
+                if (transacaoPJ.salic=="0") transacaoPJ.salic="-";
+                if (transacaoPJ.nomeConta=="0") transacaoPJ.nomeConta="-";
+
                 self.includeIfNotExists(transacaoPJ);
-                
 
                 self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                     data => {

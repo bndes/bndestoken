@@ -80,7 +80,6 @@ export class LiquidacaoResgateComponent implements OnInit {
             data => {
   
               self.liquidacaoResgate.razaoSocial = data.dadosCadastrais.razaoSocial;
-              self.liquidacaoResgate.cidadeResgate = data.dadosCadastrais.cidade;
               self.liquidacaoResgate.cnpj = eventoResgate.args.cnpj;
               self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.value)),
           

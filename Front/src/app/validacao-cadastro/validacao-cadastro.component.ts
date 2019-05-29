@@ -20,6 +20,7 @@ export class ValidacaoCadastroComponent implements OnInit {
   isHashInvalido: boolean = false;
   hashDeclaracaoDigitado: string;
   selectedAccount: any;
+  contaBuscadaENaoAssociada: boolean = false;
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
       private router: Router, private ref: ChangeDetectorRef, private zone: NgZone) {
@@ -46,6 +47,7 @@ export class ValidacaoCadastroComponent implements OnInit {
 
   recuperaClientePorContaBlockchain(conta) {
     let self = this;    
+    self.contaBuscadaENaoAssociada = false;
 
     if ( conta != undefined && conta != "" && conta.length == 42 ) {
 
@@ -57,7 +59,6 @@ export class ValidacaoCadastroComponent implements OnInit {
 
               console.log("#### result da validacao cadastro da conta " + conta);
               console.log(result);
-              
               self.pj.cnpj = result.cnpj;
               self.pj.idSubcredito = result.idSubcredito;
               self.pj.salic = result.salic;
@@ -74,9 +75,12 @@ export class ValidacaoCadastroComponent implements OnInit {
                   }
               }) //fecha busca PJInfo
 
+
            } //fecha if de PJ valida
 
            else {
+            self.contaBuscadaENaoAssociada = true;
+
              self.apagaCamposDaEstrutura();
              console.log("Não encontrou PJ valida para a conta blockchain");
            }

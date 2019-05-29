@@ -36,10 +36,13 @@
     </table>
   </div>
 
-    <div class="msg-conta-invalida" *ngIf="pj.cnpj && !estaContaEstadoAguardandoValidacao()">
+    <div class="msg-conta-invalida" *ngIf="!contaBuscadaENaoAssociada && pj.cnpj && !estaContaEstadoAguardandoValidacao()">
       Conta não está no status aguardando validação
     </div>
-      <div class="msg-conta-invalida" *ngIf="pj.cnpj && hashDeclaracaoDigitado && !isHashDigitadoIgualAHashDeclaracao()">
+    <div class="msg-conta-invalida" *ngIf="contaBuscadaENaoAssociada">
+      Conta não associada a uma empresa
+    </div>
+      <div class="msg-conta-invalida" *ngIf="!contaBuscadaENaoAssociada && pj.cnpj && hashDeclaracaoDigitado && !isHashDigitadoIgualAHashDeclaracao()">
       Hash digitado é diferente do hash da declaração
       </div>          
 

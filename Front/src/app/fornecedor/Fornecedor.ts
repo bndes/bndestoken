@@ -3,7 +3,6 @@ export class Fornecedor {
   cnpj: string;
   cnpjWithMask: string;  
   dadosCadastrais: {
-    cidade: string;
     razaoSocial: string;
     CNAE: string;
     email: string;
