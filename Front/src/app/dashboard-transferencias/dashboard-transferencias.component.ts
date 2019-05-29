@@ -354,7 +354,7 @@ export class DashboardTransferenciasComponent implements OnInit {
 
             for (var i = 0; i < data.subcreditos.length; i++) {
               if (eventoTransferencia.args.fromIdFinancialSupportAgreement == data.subcreditos[i].numero) {
-                subcredito = data.subcreditos[i].nome + " - " + data.subcreditos[i].numero
+                subcredito = data.subcreditos[i].numero
               }
             }
 

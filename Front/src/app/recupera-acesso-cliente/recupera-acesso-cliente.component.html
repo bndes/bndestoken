@@ -40,7 +40,7 @@
             <label class="required">Contrato Financeiro:</label>
             <select name="numeroSubcreditoSelecionado" class="form-control form-control-sm" [disabled]="numeroSubcreditoSelecionado === undefined"
             [(ngModel)]="numeroSubcreditoSelecionado" (ngModelChange)="recuperaContaBlockchainCliente()" required>
-              <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
+              <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.numero}}</option>
             </select>
           </app-input-validation>
         </div>
