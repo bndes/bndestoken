@@ -44,7 +44,6 @@ export class AssociaContaClienteComponent implements OnInit {
   }
 
   inicializaDadosDerivadosPessoaJuridica() {
-    this.cliente.id = 0
     this.cliente.dadosCadastrais = undefined;
     this.cliente.subcreditos = new Array<Subcredito>();
   }
@@ -117,13 +116,13 @@ export class AssociaContaClienteComponent implements OnInit {
 
     let self = this;
 
-    this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
+    this.pessoaJuridicaService.recuperaClientePorCnpj(cnpj).subscribe(
       empresa => {
-        if (empresa) {
+        if (empresa && empresa.dadosCadastrais) {
           console.log("empresa encontrada - ");
           console.log(empresa);
-
-          self.cliente.id = empresa["_id"];
+          this.inicializaDadosDerivadosPessoaJuridica();
+          
           self.cliente.dadosCadastrais = empresa["dadosCadastrais"];
 
           for (var i = 0; i < empresa["subcreditos"].length; i++) {

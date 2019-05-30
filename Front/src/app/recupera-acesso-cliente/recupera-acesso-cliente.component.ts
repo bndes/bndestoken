@@ -41,7 +41,6 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   }
 
   inicializaDadosTroca() {
-    this.cliente.id = 0;
     this.cliente.dadosCadastrais = undefined;
     this.cliente.subcreditos = new Array<Subcredito>();
     this.contaBlockchainAssociada = undefined;    
@@ -112,15 +111,14 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   recuperaClientePorCNPJ(cnpj) {
     console.log("RECUPERA CLIENTE com CNPJ = " + cnpj);
 
-    this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
+    this.pessoaJuridicaService.recuperaClientePorCnpj(cnpj).subscribe(
       empresa => {
-        if (empresa) {
+        if (empresa && empresa.dadosCadastrais) {
           console.log("empresa encontrada - ");
           console.log(empresa);
 
           this.cliente.cnpj = cnpj;
           this.cliente.dadosCadastrais = empresa["dadosCadastrais"];
-          this.cliente.id = empresa["_id"];
 
           if (empresa["subcreditos"] && empresa["subcreditos"].length>0) {
 
