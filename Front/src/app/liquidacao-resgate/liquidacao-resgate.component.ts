@@ -187,7 +187,7 @@ export class LiquidacaoResgateComponent implements OnInit {
         }        
       ,(error) => {
         Utils.criarAlertaErro( self.bnAlertsService, 
-                               "Erro ao notificar liquidação de resgate.", 
+                               "Erro ao liquidar resgate.", 
                                error )  
        });
        Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
