@@ -59,7 +59,7 @@ var PessoasJuridicas = mongoose.model('Pessoasjuridicas', {
 
 //Configuracao de acesso ao BD
 let configAcessoBDPJ = config.infra.acesso_BD_PJ;
-configAcessoBDPJ.SENHA = process.env.BNC_BD_PJ_PASSWORD;
+configAcessoBDPJ.password = process.env.BNC_BD_PJ_PASSWORD;
 console.info("configAcessoBDPJ=");
 console.info(configAcessoBDPJ);
 
@@ -142,68 +142,47 @@ function buscaPJPorCnpjMock(req, res, next) {
 app.post('/api/pj-por-cnpj', buscaPJPorCnpj);
 
 	function buscaPJPorCnpj (req, res, next) {
-		console.info("buscaPJPorCnpj (sem mock)");		
 		let cnpjRecebido = req.body.cnpj;
-		console.info("cnpjRecebido:", cnpjRecebido);
-
-		//TESTE
-		/*
-		let pj = 	
-		{
-			cnpj: 11111111111111,
-			dadosCadastrais: {
-				razaoSocial: "FAKE"
-			}
-		}
-		res.json(pj);
-		*/
-		
-		res.json({});
-		return;
-		//TESTE
-
 
 		let isNum = /^\d+$/.test(cnpjRecebido);
 
 		if (!isNum) {			
-			return;
+			res.status(200).json({});
 		}
-	
-		//TODO: fazer pool de conexoes para melhorar performance
-    sql.connect(configAcessoBDPJ, function (err) {
-    
-				if (err) {
-						console.err("Erro ao conectar com o SQL Server para buscar dados de empresa");
-						console.err(err);
-						res.json({});
-						return;
+
+		new sql.ConnectionPool(configAcessoBDPJ).connect().then(pool => {
+			return pool.request()
+								 .input('cnpj', sql.VarChar(14), cnpjRecebido)
+								 .query(config.negocio.query_cnpj)
+			
+			}).then(result => {
+				let rows = result.recordset
+
+				if (!rows[0]) {
+					res.status(200).json({});
+					return;
 				}
 
-        var request = new sql.Request();
-        request.query('select * from dbo.CAD_EMPRESA where cnpj = ${cnpjRecebido}', function (err, recordset) {
-            
-						if (err) console.log(err);
-						console.log("recordset");
-						console.log(recordset);
+				let pj = 	
+				{
+					cnpj: rows[0]["CNPJ_EMPRESA"],
+					dadosCadastrais: {
+						razaoSocial: rows[0]["NOME_EMPRESARIAL"]
+					}
+				}
 
-						if (!recordset[0]) {
-							res.json({});
-							return;
-						}
+				console.log("pj do QSA");				
+				console.log(pj);
 
-						let pj = 	
-						{
-							cnpj: string,
-							dadosCadastrais: {
-								razaoSocial: string
-							}
-						}
-					
-						pj.cnpj = recordset[0]["CNPJ_EMPRESA"];
-						pj.dadosCadastrais.razaoSocial = recordset[0]["NOME_EMPRESARIAL"];
-						res.json(pj);
-        });
-    });
+				res.status(200).json(pj);				
+				sql.close();
+
+
+			}).catch(err => {
+				console.log(err);
+				res.status(500).send({ message: "${err}"})
+				sql.close();
+			});
 
 	}	
 

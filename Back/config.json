@@ -8,13 +8,15 @@
 		"endereco_websocket" : "ws://localhost:9545",
 		"endereco_websocket_rinkeby" : "wss://rinkeby.infura.io/ws",
 		"addr_bd": "mongodb://localhost/bndescoin",
+
 		"acesso_BD_PJ": {
-			"user": "BNC",
-			"server": "C06-PBNDDW11", 
+			"user": "BNC_User",
+			"server": "d-1-qsa", 
 			"database": "QSA"
 		}
 	},
 	"negocio": {
+		"query_cnpj": "select * from dbo.CAD_EMPRESA2 where CNPJ_EMPRESA =@cnpj"
 	}
 
 }
