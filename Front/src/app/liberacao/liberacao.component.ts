@@ -46,10 +46,11 @@ export class LiberacaoComponent implements OnInit {
   }
 
   inicializaLiberacao() {
-    this.liberacao.subcreditos = new Array<Subcredito>();
+    this.liberacao.subcreditos = new Array<Subcredito>();    
     this.liberacao.razaoSocial = null;
     this.liberacao.valor = null;
     this.liberacao.saldoCNPJ = null;
+    this.liberacao.numeroSubcreditoSelecionado = null;
     this.liberacao.contaBlockchainCNPJ = null;
   }
 
@@ -68,14 +69,22 @@ export class LiberacaoComponent implements OnInit {
 
 }  
 
-
   recuperaInformacoesDerivadasCNPJ() {
     this.liberacao.cnpj = Utils.removeSpecialCharacters(this.liberacao.cnpjWithMask);
 
     if (this.liberacao.cnpj != this.ultimoCNPJ) {
       this.inicializaLiberacao();
       this.ultimoCNPJ = this.liberacao.cnpj;
-      this.recuperaClientePorCNPJ(this.liberacao.cnpj);
+
+      if ( this.liberacao.cnpj.length == 14 ) { 
+        console.log (" Buscando o CNPJ do cliente (14 digitos fornecidos)...  ")
+        this.recuperaClientePorCNPJ(this.liberacao.cnpj);
+      } 
+      else {
+        this.inicializaLiberacao();
+      }  
+  
+
     }
   }
 
@@ -84,9 +93,9 @@ export class LiberacaoComponent implements OnInit {
 
     let self = this;
 
-    this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
+    this.pessoaJuridicaService.recuperaClientePorCnpj(cnpj).subscribe(
       empresa => {
-        if (empresa) {
+        if (empresa && empresa.dadosCadastrais) {
           console.log("empresa encontrada abaixo ");
           console.log(empresa);
 
@@ -109,12 +118,17 @@ export class LiberacaoComponent implements OnInit {
           }
         }
         else {
-          console.log("nenhuma empresa encontrada com o cnpj " + cnpj);
+          let texto = "Nenhuma empresa encontrada com o cnpj " + cnpj;
+          console.log(texto);
+          Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);
+
           this.inicializaLiberacao();
         }
       },
       error => {
-        console.log("Erro ao buscar dados da empresa");
+        let texto = "Erro ao buscar dados da empresa";
+        console.log(texto);
+        Utils.criarAlertaErro( this.bnAlertsService, texto,error);
         this.inicializaLiberacao();
       });
 
@@ -141,7 +155,7 @@ export class LiberacaoComponent implements OnInit {
         }
       },
       (error) => {
-        console.log("Erro ao verificar se subcredito estah associado na blockhain");
+        console.log("Erro ao verificar se contrato estah associado na blockhain");
       })
   
   }

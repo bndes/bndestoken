@@ -39,7 +39,6 @@ export class ResgateComponent implements OnInit {
     this.resgate.razaoSocialOrigem = "";
     this.resgate.cnpjOrigem = "";
     this.resgate.saldoOrigem = undefined;
-  
     this.resgate.valor = 0;
 
   }
@@ -79,24 +78,27 @@ export class ResgateComponent implements OnInit {
 
               console.log(result);
               self.resgate.cnpjOrigem = result.cnpj;
+              self.recuperaSaldoOrigem(contaBlockchain);
 
               this.pessoaJuridicaService.recuperaEmpresaPorCnpj(self.resgate.cnpjOrigem).subscribe(
                 data => {
-                    if (data) {
+                    if (data && data.dadosCadastrais) {
                     console.log("RECUPERA EMPRESA ORIGEM")
                     console.log(data)
                     self.resgate.razaoSocialOrigem = data.dadosCadastrais.razaoSocial;
-
-                    self.recuperaSaldoOrigem(contaBlockchain);
                 }
                 else {
-                    console.log("nenhuma empresa encontrada");
-                    this.inicializaResgate();
+                  let texto = "Nenhuma empresa encontrada associada ao CNPJ";
+                  console.log(texto);
+                  Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);
+                  //this.inicializaResgate();
                 }
               },
               error => {
-                  console.log("Erro ao buscar dados da empresa");
-                  this.inicializaResgate();
+                let texto = "Erro ao buscar dados da empresa";
+                console.log(texto);
+                Utils.criarAlertaErro( this.bnAlertsService, texto,error);      
+                this.inicializaResgate();
               });              
 
               self.ref.detectChanges();
@@ -104,8 +106,10 @@ export class ResgateComponent implements OnInit {
            } //fecha if de PJ valida
 
            else {
-             this.inicializaResgate();
-             console.log("Não encontrou PJ valida para a conta blockchain");
+            let texto = "Nenhuma empresa encontrada associada a conta blockchain";
+            console.log(texto);
+            Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);
+            this.inicializaResgate();
            }
            
           },

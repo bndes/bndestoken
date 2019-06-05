@@ -42,7 +42,6 @@ export class AssociaContaFornecedorComponent implements OnInit {
 
 
   inicializaDadosDerivadosPessoaJuridica() {
-    this.fornecedor.id = 0
     this.fornecedor.cnpj = ""
     this.fornecedor.dadosCadastrais = undefined
   }
@@ -107,20 +106,23 @@ export class AssociaContaFornecedorComponent implements OnInit {
 
     this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
       empresa => {
-        if (empresa) {
+        if (empresa && empresa.dadosCadastrais) {
           console.log("empresa encontrada - ")
           console.log(empresa)
 
-          this.fornecedor.id = empresa["_id"];
           this.fornecedor.dadosCadastrais = empresa["dadosCadastrais"];
 
         }
         else {
-          console.log("nenhuma empresa encontrada")
+          let texto = "Nenhuma empresa encontrada";
+          console.log(texto);
+          Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);
         }
       },
       error => {
-        console.log("Erro ao buscar dados da empresa")
+        let texto = "Erro ao buscar dados da empresa";
+        console.log(texto);
+        Utils.criarAlertaErro( this.bnAlertsService, texto,error);
         this.inicializaDadosDerivadosPessoaJuridica()
       })
   }
@@ -165,7 +167,7 @@ export class AssociaContaFornecedorComponent implements OnInit {
            }        
          ,(error) => {
            Utils.criarAlertaErro( self.bnAlertsService, 
-                                  "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
+                                  "Erro ao associar na blockchain\nVeja detalhe do erro no Metamask.", 
                                   error )  
           });
           Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 

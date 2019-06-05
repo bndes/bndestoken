@@ -119,8 +119,12 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
                 self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                     data => {
-                        transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
 
+                        transacaoPJ.razaoSocial = "Erro: Não encontrado";
+                        if (data && data.dadosCadastrais) {
+                            transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
+                          }
+              
                         // Colocar dentro da zona do Angular para ter a atualização de forma correta
                         self.zone.run(() => {
                             self.estadoLista = "cheia"
@@ -189,8 +193,11 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
                 self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
                     data => {
-                        transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
-
+                        transacaoPJ.razaoSocial = "Erro: Não encontrado";
+                        if (data && data.dadosCadastrais) {
+                            transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
+                          }
+                          
                         // Colocar dentro da zona do Angular para ter a atualização de forma correta
                         self.zone.run(() => {
                             self.estadoLista = "cheia"

@@ -67,12 +67,19 @@ export class ValidacaoCadastroComponent implements OnInit {
 
               this.pessoaJuridicaService.recuperaEmpresaPorCnpj(result.cnpj).subscribe(
                 empresa => {
-                  if (empresa) {
+                  if (empresa && empresa.dadosCadastrais) {
                     self.pj.razaoSocial = empresa.dadosCadastrais.razaoSocial;
                   }
                   else {
-                    console.error("Náo foi encontrada empresa para o CNPJ no banco de dados. CNPJ=" + result.cnpj);
+                    let texto = "Nenhuma empresa encontrada associada ao CNPJ";
+                    console.log(texto);
+                    Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);       
                   }
+              },
+              error => {
+                let texto = "Erro ao buscar dados da empresa";
+                console.log(texto);
+                Utils.criarAlertaErro( this.bnAlertsService, texto,error);
               }) //fecha busca PJInfo
 
 
@@ -80,9 +87,10 @@ export class ValidacaoCadastroComponent implements OnInit {
 
            else {
             self.contaBuscadaENaoAssociada = true;
-
-             self.apagaCamposDaEstrutura();
-             console.log("Não encontrou PJ valida para a conta blockchain");
+            let texto = "Nenhuma empresa encontrada associada a conta blockchain";
+            console.log(texto);
+            Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);       
+            self.apagaCamposDaEstrutura();
            }
            
           },

@@ -16,12 +16,15 @@ export class PessoaJuridicaService {
   serverUrl: string;
   operationAPIURL: string;
   mockMongoClient: boolean;
+  mockMongoPJ: boolean;
 
   constructor(private http: HttpClient, private constantes: ConstantesService) {
 
     this.serverUrl = ConstantesService.serverUrl;
     this.operationAPIURL = ConstantesService.operationAPIURL;
     this.mockMongoClient = ConstantesService.mockMongoClient;
+    this.mockMongoPJ = ConstantesService.mockMongoPJ;
+
     console.log("PessoaJuridicaService.ts :: Selecionou URL = " + this.serverUrl)
 
   }
@@ -36,13 +39,13 @@ export class PessoaJuridicaService {
 
     if (!this.mockMongoClient) {
         return this.http.get<Object>(this.operationAPIURL + str_cnpj )
-        .do(pessoaJuridica => self.formatPJOperationAPI(pessoaJuridica))        
+        .do(pessoaJuridica => self.formatClientOperationAPI(pessoaJuridica))        
         .catch(this.handleError);
 
     }
     else {
-      return this.http.post<Object>(this.serverUrl + 'pj-por-cnpj', { cnpj: str_cnpj })
-      .do(pessoaJuridica => self.formatPJMongo(pessoaJuridica))
+      return this.http.post<Object>(this.serverUrl + 'pj-por-cnpj-mock', { cnpj: str_cnpj })
+      //.do(pessoaJuridica => self.formatPJMock(pessoaJuridica))
       .catch(this.handleError);
     }
   }
@@ -56,14 +59,21 @@ export class PessoaJuridicaService {
     }
     let self = this;
 
-    return this.http.post<Object>(this.serverUrl + 'pj-por-cnpj', { cnpj: str_cnpj })
-      .do(pessoaJuridica => self.formatPJMongo(pessoaJuridica))
-      .catch(this.handleError);
+    if (!this.mockMongoPJ) { 
+      return this.http.post<Object>(this.serverUrl + 'pj-por-cnpj', { cnpj: str_cnpj })
+        //.do(pessoaJuridica => self.formatPJ(pessoaJuridica))
+        .catch(this.handleError);
+    }
+    else {
+      return this.http.post<Object>(this.serverUrl + 'pj-por-cnpj-mock', { cnpj: str_cnpj })
+       // .do(pessoaJuridica => self.formatPJMock(pessoaJuridica))
+        .catch(this.handleError);
+    }      
   }
 
 
 
-  formatPJOperationAPI (pessoaJuridica) {
+  formatClientOperationAPI (pessoaJuridica) {
 
     console.log('empresa retornada do GET:' +  JSON.stringify(pessoaJuridica));    
 
@@ -94,6 +104,7 @@ export class PessoaJuridicaService {
     return pessoaJuridica;
   }
 
+
   includeIfNotExists (subcreditos, numeroContrato) {
     let result = subcreditos.find(sub => sub.numero == numeroContrato);
     if (!result) {
@@ -106,12 +117,8 @@ export class PessoaJuridicaService {
   }
   
 
-  formatPJMongo (pessoaJuridica) {    
+  formatPJMock (pessoaJuridica) {    
     console.log('empresa retornada do back:' +  JSON.stringify(pessoaJuridica));
-
-    pessoaJuridica["contasFornecedor"] = "ALTERADO";
-
-    console.log('empresa retornada do back ALTERADA:' +  JSON.stringify(pessoaJuridica));
 
     return pessoaJuridica;
 

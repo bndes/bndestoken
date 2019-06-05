@@ -39,7 +39,6 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
   }
 
   inicializaDadosTroca() {
-    this.fornecedor.id = 0;
     this.fornecedor.cnpj = "";
     this.fornecedor.dadosCadastrais = undefined;
     this.hashdeclaracao = "";    
@@ -112,7 +111,7 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
 
     this.pessoaJuridicaService.recuperaEmpresaPorCnpj(cnpj).subscribe(
       empresa => {
-        if (empresa) {
+        if (empresa && empresa.dadosCadastrais) {
           console.log("Empresa encontrada - ");
           console.log(empresa);
 
@@ -121,11 +120,15 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
 
         }
         else {
-          console.log("Nenhuma empresa encontrada");
+          let texto = "nenhuma empresa encontrada";
+          console.log(texto);
+          Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);
         }
       },
       error => {
-        console.log("Erro ao buscar dados da empresa");
+        let texto = "Erro ao buscar dados da empresa";
+        console.log(texto);
+        Utils.criarAlertaErro( this.bnAlertsService, texto,error);
         this.inicializaDadosTroca();
       });
       
@@ -155,6 +158,12 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
     let self = this;
     let subcredito = 0
 
+    if (!this.contaBlockchainAssociada) {
+      let s = "O campo Conta Blockchain Atual é Obrigatório"
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }
+
     let bFornc = await this.web3Service.isFornecedorSync(this.contaBlockchainAssociada);
     if (!bFornc) {
       let s = "Conta não é de um fornecedor";
@@ -162,11 +171,6 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       return;
     }
 
-    if (!this.contaBlockchainAssociada) {
-      let s = "O campo Conta Blockchain Atual é Obrigatório"
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
-      return;
-    }
     if (!this.hashdeclaracao) {
       let s = "O Hash da declaração é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)

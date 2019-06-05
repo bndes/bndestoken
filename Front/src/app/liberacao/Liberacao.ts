@@ -13,8 +13,4 @@ export class Liberacao {
 
 export class Subcredito {
   numero: number;
-  nome: string;
-  contaBlockchain: string;
-  isActive: Boolean;
-  papel: String;  
 }

@@ -43,6 +43,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   inicializaDadosTroca() {
     this.cliente.dadosCadastrais = undefined;
     this.cliente.subcreditos = new Array<Subcredito>();
+    this.numeroSubcreditoSelecionado = undefined;
     this.contaBlockchainAssociada = undefined;    
     this.hashdeclaracao = "";
     this.salic = undefined;
@@ -53,14 +54,12 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     console.log("Entrou no changelog");
     this.cliente.cnpj = Utils.removeSpecialCharacters(this.cliente.cnpjWithMask);
     let cnpj = this.cliente.cnpj;
+    this.inicializaDadosTroca();
 
     if ( cnpj.length == 14 ) { 
       console.log (" Buscando o CNPJ do cliente (14 digitos fornecidos)...  " + cnpj)
       this.recuperaClientePorCNPJ(cnpj);
     } 
-    else {
-      this.inicializaDadosTroca();
-    }  
   }
 
 
@@ -130,18 +129,22 @@ export class RecuperaAcessoClienteComponent implements OnInit {
                
           }
           else {
-            let s = "Nenhum subcrédito encontrado associado a empresa.";
+            let s = "Nenhum contrato encontrado associado a empresa.";
             this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
             console.log(s);
           }
 
         }
         else {
-          console.log("nenhuma empresa encontrada");
+          let texto = "Nenhum cliente encontrado";
+          console.log(texto);
+          Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);
         }
       },
       error => {
-        console.log("Erro ao buscar dados da empresa");
+        let texto = "Erro ao buscar dados do cliente";
+        console.log(texto);
+        Utils.criarAlertaErro( this.bnAlertsService, texto,error);
         this.inicializaDadosTroca();
       });
 
@@ -166,7 +169,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
   
       },
       (error) => {
-        console.log("Erro ao verificar se subcredito estah associado na blockhain");
+        console.log("Erro ao verificar se contrato estah associado na blockhain");
       })
   
   }
@@ -205,18 +208,26 @@ export class RecuperaAcessoClienteComponent implements OnInit {
 
     let self = this;
 
+    if (!this.numeroSubcreditoSelecionado) {
+      let s = "O contrato é um Campo Obrigatório";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }
+
+
+    if (!this.contaBlockchainAssociada) {
+      let msg = "O contrato selecionado não possui conta blockchain associada"
+      console.log(msg);
+      self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
+      return;
+    }
+
     let bCliente = await this.web3Service.isClienteSync(this.contaBlockchainAssociada);
     if (!bCliente) {
       let s = "Conta não é de um cliente";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
       return;
     }
-    if (!this.numeroSubcreditoSelecionado) {
-      let s = "O Subcrédito é um Campo Obrigatório";
-      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
-      return;
-    }
-
     if (!this.salic) {
       let s = "O SALIC é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
@@ -229,13 +240,6 @@ export class RecuperaAcessoClienteComponent implements OnInit {
       return;
     }  
    
-
-    if (!this.contaBlockchainAssociada) {
-      let msg = "O subcrédito selecionado não possui conta blockchain associada"
-      console.log(msg);
-      self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
-      return;
-    }
 
     if (!this.contaBlockchainAssociada == this.selectedAccount) {
       let msg = "A nova conta não pode ser igual á conta anterior"

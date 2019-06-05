@@ -202,7 +202,7 @@ export class Web3Service {
         let contaBlockchain = await this.getCurrentAccountSync();    
 
         console.log("Web3Service - Cadastra")
-        console.log("CNPJ: " + cnpj + ", Subcredito: " + idSubcredito + ",salic: "+ salic + 
+        console.log("CNPJ: " + cnpj + ", Contrato: " + idSubcredito + ",salic: "+ salic + 
             ", hashdeclaracao: " + hashdeclaracao
             )
 
@@ -378,7 +378,7 @@ export class Web3Service {
         fSuccess: any, fError: any) {
 
         console.log("Web3Service - Troca Associacao")
-        console.log("CNPJ: " + cnpj + ", Subcredito: " + idSubcredito + ", cnpj: " + cnpj)
+        console.log("CNPJ: " + cnpj + ", Contrato: " + idSubcredito + ", cnpj: " + cnpj)
         console.log("salic= " + salic);
         console.log("hash= " + hashdeclaracao);
 

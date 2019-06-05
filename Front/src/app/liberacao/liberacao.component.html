@@ -44,7 +44,7 @@
           <label>Subcrédito Operacional:</label>
           <select name="numertoSubcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="liberacao.numeroSubcreditoSelecionado"
             (ngModelChange)="atualizaInfoPorMudancaSubcredito()" [disabled]="liberacao.subcreditos === undefined || liberacao.subcreditos.leght==0">
-            <option *ngFor="let subcredito of liberacao.subcreditos | orderBy: 'nome'" [attr.value]="subcredito.numero">{{subcredito.nome}} - {{subcredito.numero}}</option>
+            <option *ngFor="let subcredito of liberacao.subcreditos | orderBy: 'nome'" [attr.value]="subcredito.numero">{{subcredito.numero}}</option>
           </select>
         </div>
       </div>

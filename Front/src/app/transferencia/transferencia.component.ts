@@ -149,20 +149,24 @@ export class TransferenciaComponent implements OnInit {
 
               this.pessoaJuridicaService.recuperaEmpresaPorCnpj(self.transferencia.cnpjDestino).subscribe(
                 data => {
-                    if (data) {
+                    if (data && data.dadosCadastrais) {
                     console.log("RECUPERA EMPRESA DESTINO")
                     console.log(data)
                     self.transferencia.razaoSocialDestino = data.dadosCadastrais.razaoSocial;
                     this.validaEmpresaDestino(contaBlockchain);
                 }
                 else {
-                    console.log("nenhuma empresa encontrada");
-                    this.inicializaDadosDestino();
-                    this.transferencia.msgEmpresaDestino = "Conta Inválida"
+                  let texto = "Nenhuma empresa encontrada associada ao CNPJ";
+                  console.log(texto);
+                  Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);       
+                  //this.inicializaDadosDestino();
+                  this.transferencia.msgEmpresaDestino = "Conta Inválida"
                 }
               },
               error => {
-                  console.log("Erro ao buscar dados da empresa");
+                  let texto = "Erro ao buscar dados da empresa";
+                  console.log(texto);
+                  Utils.criarAlertaErro( this.bnAlertsService, texto,error);       
                   this.inicializaDadosDestino();
               });              
 
@@ -171,12 +175,21 @@ export class TransferenciaComponent implements OnInit {
            } //fecha if de PJ valida
 
            else {
-             this.inicializaDadosDestino();
+            let texto = "Nenhuma empresa encontrada associada a conta blockchain";
+            console.log(texto);
+            Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);       
+            this.inicializaDadosDestino();
+            this.transferencia.msgEmpresaDestino = "Conta Inválida"
+
              console.log("Não encontrou PJ valida para a conta blockchain");
            }
            
           },
           (error) => {
+            let texto = "Erro ao buscar dados da conta";
+            console.log(texto);
+            Utils.criarAlertaErro( this.bnAlertsService, texto,error);       
+
             this.inicializaDadosDestino();
             console.warn("Erro ao buscar dados da conta na blockchain")
           })

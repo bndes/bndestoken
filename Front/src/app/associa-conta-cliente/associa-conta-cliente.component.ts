@@ -45,6 +45,7 @@ export class AssociaContaClienteComponent implements OnInit {
 
   inicializaDadosDerivadosPessoaJuridica() {
     this.cliente.dadosCadastrais = undefined;
+    this.subcreditoSelecionado = undefined;
     this.cliente.subcreditos = new Array<Subcredito>();
   }
 
@@ -52,14 +53,12 @@ export class AssociaContaClienteComponent implements OnInit {
 
     this.cliente.cnpj = Utils.removeSpecialCharacters(this.cliente.cnpjWithMask);
     let cnpj = this.cliente.cnpj;
+    this.inicializaDadosDerivadosPessoaJuridica();
 
     if ( cnpj.length == 14 ) { 
       console.log (" Buscando o CNPJ do cliente (14 digitos fornecidos)...  " + cnpj)
       this.recuperaClientePorCNPJ(cnpj);
     } 
-    else {
-      this.inicializaDadosDerivadosPessoaJuridica();
-    }  
   }
 
   cancelar() { 
@@ -135,11 +134,16 @@ export class AssociaContaClienteComponent implements OnInit {
         }
         else {
           //Do no clean fields to better UX
-          console.log("nenhuma empresa encontrada");
+          let texto = "Nenhum cliente encontrado";
+          console.log(texto);
+          Utils.criarAlertaAcaoUsuario(this.bnAlertsService, texto);
+
         }
       },
       error => {
-        console.log("Erro ao buscar dados da empresa");
+        let texto = "Erro ao buscar dados do cliente";
+        console.log(texto);
+        Utils.criarAlertaErro( this.bnAlertsService, texto,error);
         this.inicializaDadosDerivadosPessoaJuridica();
       });
 
@@ -159,7 +163,7 @@ export class AssociaContaClienteComponent implements OnInit {
   
       },
       (error) => {
-        console.log("Erro ao verificar se subcredito estah associado na blockhain");
+        console.log("Erro ao verificar se contrato estah associado na blockhain");
       })
   
   }
@@ -183,7 +187,7 @@ export class AssociaContaClienteComponent implements OnInit {
     let self = this;
 
     if (this.subcreditoSelecionado === undefined) {
-      let s = "O Subcrédito é um Campo Obrigatório";
+      let s = "O Contrato é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return
     }
@@ -227,7 +231,7 @@ export class AssociaContaClienteComponent implements OnInit {
             }        
           ,(error) => {
             Utils.criarAlertaErro( self.bnAlertsService, 
-                                    "Erro ao associar na blockchain\nUma possibilidade é você já ter se registrado utilizando essa conta ethereum.", 
+                                    "Erro ao associar na blockchain\nVeja detalhe do erro no Metamask.", 
                                     error)  
           });
           Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 

@@ -51,7 +51,11 @@
               <option *ngFor="let subcredito of cliente.subcreditos" [attr.value]="subcredito.numero">{{subcredito.numero}}</option>
             </select>
           </app-input-validation>
-          <div *ngIf="subcreditoSelecionado === undefined" class="red">Não existem subcréditos para serem associados.</div>
+          <div *ngIf="subcreditoSelecionado === undefined">
+            <div class="msg-aviso">
+            Não existem subcréditos para serem associados.
+            </div>
+          </div>
         </div>
       </div>
 

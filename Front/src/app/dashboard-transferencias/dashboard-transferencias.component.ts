@@ -188,75 +188,7 @@ export class DashboardTransferenciasComponent implements OnInit {
     return itemB - itemA;
   }
 
-  selecionaTransacao(position: number, transferencia: DashboardTransferencia) {
-
-    this.marcadores = []
-    this.marcadoresLinha = []
-
-    if (this.isActive[position]) {
-      this.isActive[position] = false
-      this.mapaEstaAtivo = false
-    } else {
-      scrollTo(0, 100000);
-
-      this.isActive = new Array(this.listaTransferencias.length).fill(false)
-      this.isActive[position] = true
-      this.mapaEstaAtivo = true
-
-      let cnpjOrigem = transferencia.deCnpj
-      let cnpjDestino = transferencia.paraCnpj
-
-      this.exibirTransferenciaNoMapa([transferencia.deCnpj, transferencia.paraCnpj])
-    }
-
-  }
-
-  exibirTransferenciaNoMapa(listaCnpj: string[]) {
-
-    let self = this
-
-    for (var i = 0; i < listaCnpj.length; i++) {
-
-      this.pessoaJuridicaService.recuperaEmpresaPorCnpj(listaCnpj[i]).subscribe(
-        data => {
-          console.log("EMPRESA RECUPERADA PELO CNPJ")
-
-          let cidade = data ? data.dadosCadastrais.cidade : "Rio de janeiro"
-
-          this.mapa.converteCidadeEmCoordenadas(cidade, (result) => {
-
-            this.marcadores.push({
-              lat: result[0],
-              lng: result[1],
-              draggable: true,
-              info: data ? data.dadosCadastrais.razaoSocial : "Banco Nacional de Desenvolvimento Econômico e Social"
-            })
-
-          })
-
-          setTimeout(() => {
-            this.latitudeInicial = this.marcadores[0].lat
-            this.longitudeInicial = this.marcadores[0].lng
-
-            this.marcadoresLinha.push({
-              latA: this.marcadores[0].lat,
-              lngA: this.marcadores[0].lng,
-              latB: this.marcadores[1].lat,
-              lngB: this.marcadores[1].lng
-            })
-
-            this.ref.detectChanges()
-          }, 500)
-
-        },
-        error => {
-          console.log("Erro ao encontrar a empresa")
-        }
-      )
-    }
-
-  }
-
+  
   registrarExibicaoEventosLiberacao() {
     let self = this
 
@@ -268,26 +200,22 @@ export class DashboardTransferenciasComponent implements OnInit {
         self.pessoaJuridicaService.recuperaEmpresaPorCnpj(eventoLiberacao.args.cnpj).subscribe(
           data => {
 
-            let subcredito
-
-            for (var i = 0; i < data.subcreditos.length; i++) {
-              if (eventoLiberacao.args.idFinancialSupportAgreement == data.subcreditos[i].numero) {
-                subcredito = data.subcreditos[i].numero
-              }
-            }
-
             liberacao = {
               deRazaoSocial: self.razaoSocialBNDES,
               deCnpj: "BNDES",
               deConta: "-",
-              paraRazaoSocial: data.dadosCadastrais.razaoSocial,
+              paraRazaoSocial: "Erro: Não encontrado",
               paraCnpj: eventoLiberacao.args.cnpj,
-              paraConta: subcredito,
+              paraConta: eventoLiberacao.args.idFinancialSupportAgreement,
               valor: self.web3Service.converteInteiroParaDecimal(parseInt(eventoLiberacao.args.value)),
               tipo: "Liberação",
               hashID: eventoLiberacao.transactionHash,
               dataHora: null
             };
+
+            if (data && data.dadosCadastrais) {
+              liberacao.paraRazaoSocial = data.dadosCadastrais.razaoSocial;
+            }
 
             // Colocar dentro da zona do Angular para ter a atualização de forma correta
             self.zone.run(() => {
@@ -349,24 +277,26 @@ export class DashboardTransferenciasComponent implements OnInit {
 
         self.pessoaJuridicaService.recuperaEmpresaPorCnpj(eventoTransferencia.args.fromCnpj).subscribe(
           (data) => {
-            let fromRazaoSocial = data.dadosCadastrais.razaoSocial
-            let subcredito
 
-            for (var i = 0; i < data.subcreditos.length; i++) {
-              if (eventoTransferencia.args.fromIdFinancialSupportAgreement == data.subcreditos[i].numero) {
-                subcredito = data.subcreditos[i].numero
-              }
+            let fromRazaoSocial = "Erro: Não encontrado";
+            if (data && data.dadosCadastrais) {
+              fromRazaoSocial = data.dadosCadastrais.razaoSocial;
             }
+
+            let idContrato = eventoTransferencia.args.fromIdFinancialSupportAgreement;
 
             self.pessoaJuridicaService.recuperaEmpresaPorCnpj(eventoTransferencia.args.toCnpj).subscribe(
               data => {
-                console.log(data)
-                let toRazaoSocial = data.dadosCadastrais.razaoSocial
+                
+                let toRazaoSocial = "Erro: Não encontrado";
+                if (data && data.dadosCadastrais) {
+                  toRazaoSocial = data.dadosCadastrais.razaoSocial;
+                }
 
                 transferencia = {
                   deRazaoSocial: fromRazaoSocial,
                   deCnpj: eventoTransferencia.args.fromCnpj,
-                  deConta: subcredito,
+                  deConta: idContrato,
                   paraRazaoSocial: toRazaoSocial,
                   paraCnpj: eventoTransferencia.args.toCnpj,
                   paraConta: "-",
@@ -431,8 +361,9 @@ export class DashboardTransferenciasComponent implements OnInit {
 
         self.pessoaJuridicaService.recuperaEmpresaPorCnpj(eventoResgate.args.cnpj).subscribe(
           data => {
+
             resgate = {
-              deRazaoSocial: data.dadosCadastrais.razaoSocial,
+              deRazaoSocial: "Erro: Não encontrado",
               deCnpj: eventoResgate.args.cnpj,
               deConta: "-",
               paraRazaoSocial: self.razaoSocialBNDES,
@@ -443,6 +374,10 @@ export class DashboardTransferenciasComponent implements OnInit {
               hashID: eventoResgate.transactionHash,
               dataHora: null
             };
+
+            if (data && data.dadosCadastrais) {
+              resgate.deRazaoSocial = data.dadosCadastrais.razaoSocial;
+            }
 
             // Colocar dentro da zona do Angular para ter a atualização de forma correta
             self.zone.run(() => {
@@ -487,3 +422,74 @@ export class DashboardTransferenciasComponent implements OnInit {
 
 }
 
+/* Necessario rever
+  selecionaTransacao(position: number, transferencia: DashboardTransferencia) {
+
+    this.marcadores = []
+    this.marcadoresLinha = []
+
+    if (this.isActive[position]) {
+      this.isActive[position] = false
+      this.mapaEstaAtivo = false
+    } else {
+      scrollTo(0, 100000);
+
+      this.isActive = new Array(this.listaTransferencias.length).fill(false)
+      this.isActive[position] = true
+      this.mapaEstaAtivo = true
+
+      let cnpjOrigem = transferencia.deCnpj
+      let cnpjDestino = transferencia.paraCnpj
+
+      this.exibirTransferenciaNoMapa([transferencia.deCnpj, transferencia.paraCnpj])
+    }
+
+  }
+
+  
+  exibirTransferenciaNoMapa(listaCnpj: string[]) {
+
+    let self = this
+
+    for (var i = 0; i < listaCnpj.length; i++) {
+
+      this.pessoaJuridicaService.recuperaEmpresaPorCnpj(listaCnpj[i]).subscribe(
+        data => {
+          console.log("EMPRESA RECUPERADA PELO CNPJ")
+
+          let cidade = data ? data.dadosCadastrais.cidade : "Rio de janeiro"
+
+          this.mapa.converteCidadeEmCoordenadas(cidade, (result) => {
+
+            this.marcadores.push({
+              lat: result[0],
+              lng: result[1],
+              draggable: true,
+              info: data ? data.dadosCadastrais.razaoSocial : "Banco Nacional de Desenvolvimento Econômico e Social"
+            })
+
+          })
+
+          setTimeout(() => {
+            this.latitudeInicial = this.marcadores[0].lat
+            this.longitudeInicial = this.marcadores[0].lng
+
+            this.marcadoresLinha.push({
+              latA: this.marcadores[0].lat,
+              lngA: this.marcadores[0].lng,
+              latB: this.marcadores[1].lat,
+              lngB: this.marcadores[1].lng
+            })
+
+            this.ref.detectChanges()
+          }, 500)
+
+        },
+        error => {
+          console.log("Erro ao encontrar a empresa")
+        }
+      )
+    }
+
+  }
+*/

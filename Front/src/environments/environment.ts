@@ -4,9 +4,11 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
+  
   production: false,
   serverUrl: 'http://localhost:8080/api/',
   operationAPIURL: 'https://apigw-h.bndes.gov.br/tda/2.0.0/cliente/',
-  mockMongoClient: false
+  mockMongoClient: false,
+  mockMongoPJ: false
 
 }

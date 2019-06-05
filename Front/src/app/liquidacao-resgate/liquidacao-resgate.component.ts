@@ -76,26 +76,28 @@ export class LiquidacaoResgateComponent implements OnInit {
 
         if (self.liquidacaoResgate.hashResgate == eventoResgate.transactionHash) {
 
+          self.liquidacaoResgate.cnpj = eventoResgate.args.cnpj;
+          self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.value)),
+      
+          self.web3Service.getBlockTimestamp(eventoResgate.blockHash,
+            function (error, result) {
+              if (!error) {
+                self.liquidacaoResgate.dataHoraResgate = new Date(result.timestamp * 1000);
+               }
+              else {
+                console.log("Erro ao recuperar data e hora do bloco");
+                console.error(error);
+              }
+            });
+
           self.pessoaJuridicaService.recuperaEmpresaPorCnpj(eventoResgate.args.cnpj).subscribe(
             data => {
-  
-              self.liquidacaoResgate.razaoSocial = data.dadosCadastrais.razaoSocial;
-              self.liquidacaoResgate.cnpj = eventoResgate.args.cnpj;
-              self.liquidacaoResgate.valorResgate = self.web3Service.converteInteiroParaDecimal(parseInt(eventoResgate.args.value)),
-          
-              self.web3Service.getBlockTimestamp(eventoResgate.blockHash,
-                function (error, result) {
-                  if (!error) {
-                    self.liquidacaoResgate.dataHoraResgate = new Date(result.timestamp * 1000);
-                   }
-                  else {
-                    console.log("Erro ao recuperar data e hora do bloco");
-                    console.error(error);
-                  }
-                });
-            })
-  
-          
+              
+              self.liquidacaoResgate.razaoSocial = "Erro: Não encontrado";
+              if (data && data.dadosCadastrais) {
+                self.liquidacaoResgate.razaoSocial = data.dadosCadastrais.razaoSocial;
+              }              
+            })          
         }
 
       }
