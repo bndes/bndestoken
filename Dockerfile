@@ -6,8 +6,6 @@ RUN ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 
 ADD ./Back /backend/Back
 
-COPY ./Back/config_PRD.json /backend/Back/config.json
-
 ADD ./Back-Blockchain/ /backend/Back-Blockchain
 
 WORKDIR /backend/Back
