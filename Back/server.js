@@ -12,8 +12,6 @@ var sql = require("mssql");
 
 var contratoJson = require(config.infra.contrato_json);
 
-var endereco_websocket;
-
 // Configuration
 mongoose.connect(config.infra.addr_bd);
 
@@ -74,7 +72,6 @@ ABI = contratoJson['abi']
 let addrContrato;
 if (config.infra.rede_blockchain == 4) { //Rinkeby 
 	addrContrato = config.infra.endereco_contrato_rinkeby
-	endereco_websocket = config.infra.endereco_websocket_rinkeby
 }
 else {
 	
@@ -90,11 +87,10 @@ else {
 		process.exit();
 	}
 	addrContrato = n[config.infra.rede_blockchain].address;
-	endereco_websocket = config.infra.endereco_websocket
+
 }
 
 console.log("endereco do contrato=" + addrContrato);
-console.info("endereco_websocket", endereco_websocket);
 
 
 
