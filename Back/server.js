@@ -65,17 +65,19 @@ console.info(configAcessoBDPJ);
 
 var n = contratoJson.networks;
 
-console.log("config.infra.rede_blockchain (4=Rinkeby|4447=local) = " + config.infra.rede_blockchain);
+console.log("config.infra.rede_blockchain (1=Main|4=Rinkeby|4447=local) = " + config.infra.rede_blockchain);
 	
 ABI = contratoJson['abi']
 
 let addrContrato;
-if (config.infra.rede_blockchain == 4) { //Rinkeby 
-	addrContrato = config.infra.endereco_contrato_rinkeby
+if (config.infra.rede_blockchain < 10) {  
+	console.log ("config.infra.rede_blockchain=" + config.infra.rede_blockchain);
+	addrContrato = config.infra.endereco_contrato
 }
 else {
 	
 	try {
+		console.log ("config.infra.rede_blockchain>10 -> rede local=" + config.infra.rede_blockchain);
 		let test = n[config.infra.rede_blockchain].address 
 	} catch (error) {
 		console.log ("ERROR. Consider: ")
