@@ -4,6 +4,15 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract BNDESRegistry is Ownable() {
 
+    /**
+        The account of clients and suppliers are assigned to states. 
+        Reserved accounts (e.g. from BNDES and ANCINE) do not have state.
+        AVAILABLE - The account is not yet assigned any role (any of them - client, supplier or any reserved addresses).
+        WAITING_VALIDATION - The account was linked to a legal entity but it still needs to be validated
+        VALIDATED - The account was validated
+        INVALIDATED_BY_VALIDATOR - The account was invalidated
+        INVALIDATED_BY_CHANGE - The client or supplier changed the ethereum account so the original one must be invalidated.
+     */
     enum BlockchainAccountState {AVAILABLE,WAITING_VALIDATION,VALIDATED,INVALIDATED_BY_VALIDATOR,INVALIDATED_BY_CHANGE} 
     BlockchainAccountState blockchainState; //Not used. Defined to create the enum type.
 
@@ -12,17 +21,26 @@ contract BNDESRegistry is Ownable() {
     address responsibleForDisbursement;
     address redemptionAddress;
 
+    /**
+        Describes the Legal Entity - clients or suppliers
+     */
     struct LegalEntityInfo {
-        uint cnpj;
-        uint idFinancialSupportAgreement; //subcredit
-        uint salic;
-        string idProofHash;
+        uint cnpj; //Brazilian identification of legal entity
+        uint idFinancialSupportAgreement; //SCC contract
+        uint salic; //ANCINE identifier
+        string idProofHash; //hash of declaration
         BlockchainAccountState state;
     } 
 
+    /**
+        Links Ethereum addresses to LegalEntityInfo        
+     */
     mapping(address => LegalEntityInfo) public legalEntitiesInfo;
 
-    //cnpj => (idFinancialSupportAgreement => address)
+    /**
+        Links Legal Entity to Ethereum address. 
+        cnpj => (idFinancialSupportAgreement => address)
+     */
     mapping(uint => mapping(uint => address)) cnpjFSAddr; 
 
 
@@ -40,8 +58,14 @@ contract BNDESRegistry is Ownable() {
     }
 
 
-    /**
-    Associa um endereço blockchain ao CNPJ
+   /**
+    * Link blockchain address with CNPJ - It can be a cliente or a supplier
+    * The link still needs to be validated by BNDES
+    * @param cnpj Brazilian identifier to legal entities
+    * @param idFinancialSupportAgreement contract number of financial contract with BNDES. It assumes 0 if it is a supplier.
+    * @param salic contract number of financial contract with ANCINE. It assumes 0 if it is a supplier.
+    * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
+    *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
     function registryLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) public { 
 
@@ -63,8 +87,14 @@ contract BNDESRegistry is Ownable() {
         emit AccountRegistration(addr, cnpj, idFinancialSupportAgreement, salic, idProofHash);
     }
 
-    /**
-    Reassocia um cnpj/subcrédito a um novo endereço da blockchain (o sender)
+   /**
+    * Changes the original link between CNPJ and Ethereum account. 
+    * The new link still needs to be validated by BNDES    
+    * @param cnpj Brazilian identifier to legal entities
+    * @param idFinancialSupportAgreement contract number of financial contract with BNDES. It assumes 0 if it is a supplier.
+    * @param salic contract number of financial contract with ANCINE. It assumes 0 if it is a supplier.
+    * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
+    *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
     function changeAccountLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) public {
 
@@ -97,7 +127,12 @@ contract BNDESRegistry is Ownable() {
 
     }
 
-
+   /**
+    * Validates the initial registry of a legal entity or the change of its registry
+    * @param addr Ethereum address that needs to be validated
+    * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
+    *                   This PDF is signed with eCNPJ and send to BNDES. 
+    */
     function validateRegistryLegalEntity(address addr, string memory idProofHash) public {
 
         require(isResponsibleForRegistryValidation(msg.sender));
@@ -111,6 +146,11 @@ contract BNDESRegistry is Ownable() {
         emit AccountValidation(addr);
     }
 
+   /**
+    * Invalidates the initial registry of a legal entity or the change of its registry
+    * The invalidation can be called at any time in the lifecycle of the address (not only when it is WAITING_VALIDATION)
+    * @param addr Ethereum address that needs to be validated
+    */
     function invalidateRegistryLegalEntity(address addr) public {
 
         require(isResponsibleForRegistryValidation(msg.sender));
@@ -121,15 +161,40 @@ contract BNDESRegistry is Ownable() {
     }
 
 
+   /**
+    * By default, the owner is also the Responsible for Settlement. 
+    * The owner can assign other address to be the Responsible for Settlement. 
+    * @param rs Ethereum address to be assigned as Responsible for Settlement.
+    */
     function setResponsibleForSettlement(address rs) onlyOwner public {
         responsibleForSettlement = rs;
     }
+
+   /**
+    * By default, the owner is also the Responsible for Validation. 
+    * The owner can assign other address to be the Responsible for Validation. 
+    * @param rs Ethereum address to be assigned as Responsible for Validation.
+    */
     function setResponsibleForRegistryValidation(address rs) onlyOwner public {
         responsibleForRegistryValidation = rs;
     }
+
+   /**
+    * By default, the owner is also the Responsible for Disbursment. 
+    * The owner can assign other address to be the Responsible for Disbursment. 
+    * @param rs Ethereum address to be assigned as Responsible for Disbursment.
+    */
     function setResponsibleForDisbursement(address rs) onlyOwner public {
         responsibleForDisbursement = rs;
     }
+
+   /**
+    * The supplier reedems the BNDESToken by transfering the tokens to a specific address, 
+    * called Redemption address. 
+    * By default, the redemption address is the address of the owner. 
+    * The owner can change the redemption address using this function. 
+    * @param rs new Redemption address
+    */
     function setRedemptionAddress(address rs) onlyOwner public {
         redemptionAddress = rs;
     }
