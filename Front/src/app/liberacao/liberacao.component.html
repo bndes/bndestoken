@@ -41,7 +41,7 @@
         </div>
 
         <div class="form-group col-md-4 col-sm-4">
-          <label>Subcrédito Operacional:</label>
+          <label>Contrato Financeiro:</label>
           <select name="numertoSubcreditoSelecionado" class="form-control form-control-sm" [(ngModel)]="liberacao.numeroSubcreditoSelecionado"
             (ngModelChange)="atualizaInfoPorMudancaSubcredito()" [disabled]="liberacao.subcreditos === undefined || liberacao.subcreditos.leght==0">
             <option *ngFor="let subcredito of liberacao.subcreditos | orderBy: 'nome'" [attr.value]="subcredito.numero">{{subcredito.numero}}</option>
@@ -51,7 +51,7 @@
 
       <div class="row">
         <div class="form-group col-md-5 col-sm-5">
-          <label>Conta Blockchain associada ao subcrédito:</label>
+          <label>Conta Blockchain associada ao contrato:</label>
           <input name="contaBlockchain" type="text" class="form-control form-control-sm" [ngModel]="liberacao.contaBlockchainCNPJ" readonly 
           required disabled size="45">
           <div class="msg-conta-invalida" >

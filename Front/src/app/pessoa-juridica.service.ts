@@ -21,9 +21,19 @@ export class PessoaJuridicaService {
   constructor(private http: HttpClient, private constantes: ConstantesService) {
 
     this.serverUrl = ConstantesService.serverUrl;
-    this.operationAPIURL = ConstantesService.operationAPIURL;
-    this.mockMongoClient = ConstantesService.mockMongoClient;
-    this.mockMongoPJ = ConstantesService.mockMongoPJ;
+
+    this.http.post<Object>(this.serverUrl + 'constantesFrontPJ', {}).subscribe(
+
+      data => {
+
+        this.operationAPIURL = data["operationAPIURL"];
+        this.mockMongoClient = data["mockMongoClient"];
+        this.mockMongoPJ = data["mockMongoPJ"];
+
+      },
+      error => {
+          console.log("**** Erro ao buscar constantes do front");
+      });
 
     console.log("PessoaJuridicaService.ts :: Selecionou URL = " + this.serverUrl)
 

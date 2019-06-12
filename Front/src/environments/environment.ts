@@ -6,9 +6,6 @@
 export const environment = {
   
   production: false,
-  serverUrl: 'http://localhost:8080/api/',
-  operationAPIURL: 'https://apigw-h.bndes.gov.br/tda/2.0.0/cliente/',
-  mockMongoClient: false,
-  mockMongoPJ: false
+  serverUrl: 'http://localhost:8080/api/'
 
 }

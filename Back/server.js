@@ -108,6 +108,17 @@ app.post('/api/constantesFront', function (req, res) {
 	res.json({ addrContrato: addrContrato });
 });
 
+console.log("operationAPIURL=" + config.infra.operationAPIURL);
+
+app.post('/api/constantesFrontPJ', function (req, res) {
+	console.log("operationAPIURL=" + config.infra.operationAPIURL);
+	console.log("mockMongoClient=" + config.negocio.mockMongoClient)
+	console.log("mockMongoPJ=" + config.negocio.mockMongoPJ)	
+	res.json({ operationAPIURL: config.infra.operationAPIURL,  
+		mockMongoClient: config.negocio.mockMongoClient, 
+		mockMongoPJ: config.negocio.mockMongoPJ});
+});
+
 
 //criei como post porque o cnpj estah salvo com o caracter '/'
 app.post('/api/pj-por-cnpj-mock', buscaPJPorCnpjMock);
