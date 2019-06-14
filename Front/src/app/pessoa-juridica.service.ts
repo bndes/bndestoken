@@ -95,8 +95,10 @@ export class PessoaJuridicaService {
       let subcreditos = [];
   
       pessoaJuridica.operacoes.forEach(operacao => {
-      
-        this.includeIfNotExists(subcreditos, operacao.numeroContrato);
+
+        if (operacao && operacao.numeroContrato) {
+          this.includeIfNotExists(subcreditos, operacao.numeroContrato);
+        }
         
       });
 

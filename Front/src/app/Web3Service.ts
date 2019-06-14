@@ -9,6 +9,7 @@ export class Web3Service {
     private serverUrl: string;
 
     private contractAddr: string = '';
+    private blockchainNetwork: string = '';
     private web3Instance: any;                  // Current instance of web3
 
     private bndesTokenContract: any;
@@ -40,6 +41,7 @@ export class Web3Service {
             data => {
 
                 this.contractAddr = data["addrContrato"];
+                this.blockchainNetwork = data["blockchainNetwork"];
 
                 // Seta a ABI de acordo com o json do contrato
                 this.http.get(this.serverUrl + 'abi').subscribe(
@@ -56,6 +58,27 @@ export class Web3Service {
             error => {
                 console.log("**** Erro ao buscar constantes do front");
             });
+    }
+
+
+    public getInfoBlockchainNetwork(): any {
+
+        let blockchainNetworkAsString = "Localhost";
+        let blockchainNetworkPrefix = "";
+        if (this.blockchainNetwork=="4") {
+            blockchainNetworkAsString = "Rinkeby";
+            blockchainNetworkPrefix = "rinkeby."
+        }
+        else if (this.blockchainNetwork=="1") {
+            blockchainNetworkAsString = "Mainnet";
+        }
+
+        return {
+            blockchainNetwork:this.blockchainNetwork,
+            blockchainNetworkAsString:blockchainNetworkAsString,
+            blockchainNetworkPrefix: blockchainNetworkPrefix,
+            contractAddr: this.contractAddr
+        };
     }
 
 
@@ -269,6 +292,7 @@ export class Web3Service {
     }
 
     getPJInfoByCnpj(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): number {
+ 
         let self = this;
         return this.bndesTokenContract.getLegalEntityInfoByCNPJ(cnpj, idSubcredito,
             (error, result) => {

@@ -23,6 +23,7 @@ export class LiquidacaoResgateComponent implements OnInit {
 
   solicitacaoResgateId: string;
   maskCnpj: any;  
+  blockchainNetworkPrefix: string;  
 
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService,
@@ -111,7 +112,8 @@ export class LiquidacaoResgateComponent implements OnInit {
 
 
   recuperaStatusLiquidacaoResgate() {
-    let self = this
+    let self = this;
+    this.blockchainNetworkPrefix = this.web3Service.getInfoBlockchainNetwork().blockchainNetworkPrefix;    
 
     this.web3Service.registraEventosLiquidacaoResgate(function (error, event) {
 

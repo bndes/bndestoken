@@ -105,7 +105,7 @@ app.get('/api/abi', function (req, res) {
 
 //recupera constantes front
 app.post('/api/constantesFront', function (req, res) {
-	res.json({ addrContrato: addrContrato });
+	res.json({ addrContrato: addrContrato, blockchainNetwork: config.infra.rede_blockchain });
 });
 
 console.log("operationAPIURL=" + config.infra.operationAPIURL);

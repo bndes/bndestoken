@@ -75,6 +75,7 @@ export class DashboardTransferenciasComponent implements OnInit {
 
   razaoSocialBNDES: string = "Banco Nacional De Desenvolvimento Econômico E Social";
   selectedAccount: any;  
+  blockchainNetworkPrefix: string;  
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService,
     private web3Service: Web3Service, private ref: ChangeDetectorRef, private zone: NgZone, 
@@ -157,6 +158,8 @@ export class DashboardTransferenciasComponent implements OnInit {
 
     let self = this;
 
+    this.blockchainNetworkPrefix = this.web3Service.getInfoBlockchainNetwork().blockchainNetworkPrefix;
+
     // EVENTOS LIBERAÇÃO
     this.registrarExibicaoEventosLiberacao()
 
@@ -219,7 +222,7 @@ export class DashboardTransferenciasComponent implements OnInit {
 
             // Colocar dentro da zona do Angular para ter a atualização de forma correta
             self.zone.run(() => {
-              self.listaTransferencias.push(liberacao);
+              self.includeIfNotExists(liberacao);              
               self.estadoLista = "cheia"
             });
 
@@ -308,7 +311,7 @@ export class DashboardTransferenciasComponent implements OnInit {
 
                 // Colocar dentro da zona do Angular para ter a atualização de forma correta
                 self.zone.run(() => {
-                  self.listaTransferencias.push(transferencia);
+                  self.includeIfNotExists(transferencia);              
                   self.estadoLista = "cheia"
                 })
 
@@ -381,7 +384,7 @@ export class DashboardTransferenciasComponent implements OnInit {
 
             // Colocar dentro da zona do Angular para ter a atualização de forma correta
             self.zone.run(() => {
-              self.listaTransferencias.push(resgate);
+              self.includeIfNotExists(resgate); 
               self.estadoLista = "cheia"
             });
 
@@ -419,6 +422,11 @@ export class DashboardTransferenciasComponent implements OnInit {
 
     });
   }
+
+  includeIfNotExists(transacaoPJ) {
+    let result = this.listaTransferencias.find(tr => tr.hashID == transacaoPJ.hashID);
+    if (!result) this.listaTransferencias.push(transacaoPJ);        
+ }  
 
 }
 

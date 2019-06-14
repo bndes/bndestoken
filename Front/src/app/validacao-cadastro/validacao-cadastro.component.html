@@ -30,7 +30,7 @@
           <td>{{pj.salic}}</td>
           <td><input name="pj.contaBlockchain" (keyup)="recuperaClientePorContaBlockchain(pj.contaBlockchain)" [(ngModel)]="pj.contaBlockchain" class="form-control"></td>     
           <td>{{pj.status}}</td>
-          <td><input name="hashDeclaracaoDigitado" [(ngModel)]="hashDeclaracaoDigitado" class="form-control"></td>
+          <td><input name="hashDeclaracaoDigitado" [(ngModel)]="hashDeclaracaoDigitado" maxlength="64" class="form-control"></td>
         </tr>
       </tbody>
     </table>

@@ -164,6 +164,7 @@ export class AssociaContaClienteComponent implements OnInit {
       },
       (error) => {
         console.log("Erro ao verificar se contrato estah associado na blockhain");
+        console.log(error);
       })
   
   }
@@ -203,6 +204,7 @@ export class AssociaContaClienteComponent implements OnInit {
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return
     }     
+
 
     this.web3Service.isContaDisponivel(this.selectedAccount, 
     

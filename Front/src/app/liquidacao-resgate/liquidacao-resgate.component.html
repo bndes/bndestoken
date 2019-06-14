@@ -72,7 +72,7 @@
   
                 <div class="form-group col-md-6 col-sm-6 ">
                     <label>Hash da Comprovante de Pagamento:</label>
-                    <input name="hashComprovacao" [(ngModel)]="liquidacaoResgate.hashComprovacao" class="form-control form-control-sm" required [disabled]="liquidacaoResgate.isLiquidado">
+                    <input name="hashComprovacao" [(ngModel)]="liquidacaoResgate.hashComprovacao" maxlength="64" class="form-control form-control-sm" required [disabled]="liquidacaoResgate.isLiquidado">
                 </div>          
   
                 <div class="form-group col-md-6 col-sm-6 " *ngIf="liquidacaoResgate.isLiquidado">
@@ -85,7 +85,7 @@
             <div class="row" *ngIf="liquidacaoResgate.isLiquidado">
                 <div class="form-group col-md-6 col-sm-6 ">
 
-                <a href="https://rinkeby.etherscan.io/tx/{{liquidacaoResgate.hashID}}">
+                <a href="https://{{blockchainNetworkPrefix}}etherscan.io/tx/{{liquidacaoResgate.hashID}}">
                   <i class="fa fa-link" aria-hidden="true"></i>
                 </a>  
 

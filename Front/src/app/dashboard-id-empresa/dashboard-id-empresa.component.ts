@@ -18,6 +18,7 @@ import { BnAlertsService } from 'bndes-ux4';
 export class DashboardIdEmpresaComponent implements OnInit {
 
     listaTransacoesPJ: DashboardPessoaJuridica[] = undefined;
+    blockchainNetworkPrefix: string;
 
     estadoLista: string = "undefined";
 
@@ -35,7 +36,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
                         
             setInterval(function () {
               self.recuperaContaSelecionada(), 
-              1000});            
+              1000}); 
+              
     }
 
     ngOnInit() {
@@ -67,6 +69,8 @@ export class DashboardIdEmpresaComponent implements OnInit {
       }    
 
     registrarExibicaoEventos() {
+
+        this.blockchainNetworkPrefix = this.web3Service.getInfoBlockchainNetwork().blockchainNetworkPrefix;
 
         this.estadoLista = "vazia"
 
