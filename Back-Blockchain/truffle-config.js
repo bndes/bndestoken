@@ -6,7 +6,8 @@ module.exports = {
     development: {
       host: "localhost",
       port: 9545,
-      network_id: "*" // Match any network id
+      network_id: "*", // Match any network id
+      gas: 7952388  // Gas limit used for deploys      
     },
     rinkeby: {
       host: "vrt1281", // Connect to geth on the specified

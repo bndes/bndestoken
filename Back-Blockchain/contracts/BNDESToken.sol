@@ -9,10 +9,11 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
 
     uint private version = 20190517;
 
-    event BNDESTokenDisbursement(uint cnpj, uint idFinancialSupportAgreement, uint256 value);
-    event BNDESTokenTransfer(uint fromCnpj, uint fromIdFinancialSupportAgreement, uint toCnpj, uint256 value);
-    event BNDESTokenRedemption(uint cnpj, uint256 value);
+    event BNDESTokenDisbursement(uint64 cnpj, uint64 idFinancialSupportAgreement, uint256 value);
+    event BNDESTokenTransfer(uint64 fromCnpj, uint64 fromIdFinancialSupportAgreement, uint64 toCnpj, uint256 value);
+    event BNDESTokenRedemption(uint64 cnpj, uint256 value);
     event BNDESTokenRedemptionSettlement(string redemptionTransactionHash, string receiptHash);
+    event BNDESManualIntervention(string description);    
 
 
     function getVersion() view public returns (uint) {
@@ -83,11 +84,12 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
     function notifyRedemptionSettlement(string memory redemptionTransactionHash, string memory receiptHash) 
         public whenNotPaused {
         require (isResponsibleForSettlement(msg.sender), "A liquidação só não pode ser realizada pelo endereço que submeteu a transação"); 
+        require (super.isValidHash(receiptHash), "O hash do recibo é inválido");
         emit BNDESTokenRedemptionSettlement(redemptionTransactionHash, receiptHash);
     }
 
 
-    function registryLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) 
+    function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
         public whenNotPaused { 
         super.registryLegalEntity( cnpj,  idFinancialSupportAgreement,  salic, idProofHash);
     }
@@ -102,7 +104,7 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
-    function changeAccountLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) 
+    function changeAccountLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
         public whenNotPaused {
         
         address oldAddr = getBlockchainAccount(cnpj, idFinancialSupportAgreement);
@@ -118,12 +120,14 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
     }
 
     //These methods may be necessary to solve incidents.
-    function burn(address from, uint256 value) public onlyOwner {
+    function burn(address from, uint256 value, string memory description) public onlyOwner {
+        emit BNDESManualIntervention(description);
         _burn(from, value);
     }
 
     //These methods may be necessary to solve incidents.
-    function mint(address to, uint256 value) public onlyOwner {
+    function mint(address to, uint256 value, string memory description) public onlyOwner {
+        emit BNDESManualIntervention(description);
         _mint(to, value);
     }
 

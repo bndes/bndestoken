@@ -25,9 +25,9 @@ contract BNDESRegistry is Ownable() {
         Describes the Legal Entity - clients or suppliers
      */
     struct LegalEntityInfo {
-        uint cnpj; //Brazilian identification of legal entity
-        uint idFinancialSupportAgreement; //SCC contract
-        uint salic; //ANCINE identifier
+        uint64 cnpj; //Brazilian identification of legal entity
+        uint64 idFinancialSupportAgreement; //SCC contract
+        uint32 salic; //ANCINE identifier
         string idProofHash; //hash of declaration
         BlockchainAccountState state;
     } 
@@ -41,13 +41,21 @@ contract BNDESRegistry is Ownable() {
         Links Legal Entity to Ethereum address. 
         cnpj => (idFinancialSupportAgreement => address)
      */
-    mapping(uint => mapping(uint => address)) cnpjFSAddr; 
+    mapping(uint64 => mapping(uint64 => address)) cnpjFSAddr; 
 
 
-    event AccountRegistration(address addr, uint cnpj, uint idFinancialSupportAgreement, uint salic, string idProofHash);
-    event AccountChange(address addr, uint cnpj, uint idFinancialSupportAgreement, uint salic, string idProofHash);
-    event AccountValidation(address addr);
-    event AccountInvalidation(address addr);
+    /**
+        Links Ethereum addresses to the possibility to change the account
+        Since the Ethereum account can be changed once, it is not necessary to put the bool to false.
+        TODO: Discuss later what is the best data structure
+     */
+    mapping(address => bool) public legalEntitiesChangeAccount;
+
+
+    event AccountRegistration(address addr, uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string idProofHash);
+    event AccountChange(address oldAddr, address newAddr, uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string idProofHash);
+    event AccountValidation(address addr, uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic);
+    event AccountInvalidation(address addr, uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic);
 
 
     constructor () public {
@@ -67,19 +75,25 @@ contract BNDESRegistry is Ownable() {
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
-    function registryLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) public { 
+    function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) public { 
 
         address addr = msg.sender;
 
         // Endereço não pode ter sido cadastrado anteriormente
         require (isAvailableAccount(addr), "Endereço não pode ter sido cadastrado anteriormente");
 
+        require (isValidHash(idProofHash), "O hash da declaração é inválido");
+
         legalEntitiesInfo[addr] = LegalEntityInfo(cnpj, idFinancialSupportAgreement, salic, idProofHash, BlockchainAccountState.WAITING_VALIDATION);
         
         // Não pode haver outro endereço cadastrado para esse mesmo subcrédito
         if (idFinancialSupportAgreement > 0) {
             address account = getBlockchainAccount(cnpj,idFinancialSupportAgreement);
-            require (isAvailableAccount(account), "Subcredito já está associado a outro endereço. Use a função Troca.");
+            require (isAvailableAccount(account), "Cliente já está associado a outro endereço. Use a função Troca.");
+        }
+        else {
+            address account = getBlockchainAccount(cnpj,0);
+            require (isAvailableAccount(account), "Fornecedor já está associado a outro endereço. Use a função Troca.");
         }
         
         cnpjFSAddr[cnpj][idFinancialSupportAgreement] = addr;
@@ -96,11 +110,11 @@ contract BNDESRegistry is Ownable() {
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
-    function changeAccountLegalEntity(uint cnpj, uint idFinancialSupportAgreement, uint salic, string memory idProofHash) public {
+    function changeAccountLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) public {
 
         address newAddr = msg.sender;
         address oldAddr = getBlockchainAccount(cnpj, idFinancialSupportAgreement);
-
+    
         // Tem que haver um endereço associado a esse cnpj/subcrédito
         require(!isReservedAccount(oldAddr), "Não pode trocar endereço de conta reservada");
 
@@ -108,7 +122,11 @@ contract BNDESRegistry is Ownable() {
 
         require(isAvailableAccount(newAddr), "Novo endereço não está disponível");
 
-        require(newAddr != oldAddr, "O endereço novo deve ser diferente do antigo");
+        require(newAddr != oldAddr, "O endereço novo deve ser diferente do antigo");        
+
+        require (isChangeAccountEnabled(oldAddr), "A conta atual não está habilitada para troca");
+
+        require (isValidHash(idProofHash), "O hash da declaração é inválido");        
 
         require(legalEntitiesInfo[oldAddr].cnpj==cnpj 
                     && legalEntitiesInfo[oldAddr].idFinancialSupportAgreement ==idFinancialSupportAgreement, 
@@ -123,7 +141,7 @@ contract BNDESRegistry is Ownable() {
         // Aponta mapping CNPJ e Subcredito para newAddr
         cnpjFSAddr[cnpj][idFinancialSupportAgreement] = newAddr;
 
-        emit AccountChange(newAddr, cnpj, idFinancialSupportAgreement, salic, idProofHash); 
+        emit AccountChange(oldAddr, newAddr, cnpj, idFinancialSupportAgreement, salic, idProofHash); 
 
     }
 
@@ -135,7 +153,7 @@ contract BNDESRegistry is Ownable() {
     */
     function validateRegistryLegalEntity(address addr, string memory idProofHash) public {
 
-        require(isResponsibleForRegistryValidation(msg.sender));
+        require(isResponsibleForRegistryValidation(msg.sender), "Somente o responsável pela validação pode validar contas");
 
         require(legalEntitiesInfo[addr].state == BlockchainAccountState.WAITING_VALIDATION, "A conta precisa estar no estado Aguardando Validação");
 
@@ -143,7 +161,9 @@ contract BNDESRegistry is Ownable() {
 
         legalEntitiesInfo[addr].state = BlockchainAccountState.VALIDATED;
 
-        emit AccountValidation(addr);
+        emit AccountValidation(addr, legalEntitiesInfo[addr].cnpj, 
+            legalEntitiesInfo[addr].idFinancialSupportAgreement,
+            legalEntitiesInfo[addr].salic);
     }
 
    /**
@@ -153,11 +173,15 @@ contract BNDESRegistry is Ownable() {
     */
     function invalidateRegistryLegalEntity(address addr) public {
 
-        require(isResponsibleForRegistryValidation(msg.sender));
+        require(isResponsibleForRegistryValidation(msg.sender), "Somente o responsável pela validação pode invalidar contas");
+
+        require(!isReservedAccount(addr), "Não é possível invalidar conta reservada");
 
         legalEntitiesInfo[addr].state = BlockchainAccountState.INVALIDATED_BY_VALIDATOR;
         
-        emit AccountInvalidation(addr);
+        emit AccountInvalidation(addr, legalEntitiesInfo[addr].cnpj, 
+            legalEntitiesInfo[addr].idFinancialSupportAgreement,
+            legalEntitiesInfo[addr].salic);
     }
 
 
@@ -198,6 +222,19 @@ contract BNDESRegistry is Ownable() {
     function setRedemptionAddress(address rs) onlyOwner public {
         redemptionAddress = rs;
     }
+
+   /**
+    * Enable the legal entity to change the account
+    * @param rs account that can be changed.
+    */
+    function enableChangeAccount (address rs) public {
+        require(isResponsibleForRegistryValidation(msg.sender), "Somente o responsável pela validação pode habilitar a troca de conta");
+        legalEntitiesChangeAccount[rs] = true;
+    }
+
+    function isChangeAccountEnabled (address rs) view public returns (bool) {
+        return legalEntitiesChangeAccount[rs] == true;
+    }    
 
     function isResponsibleForSettlement(address addr) view public returns (bool) {
         return (addr == responsibleForSettlement);
@@ -288,26 +325,26 @@ contract BNDESRegistry is Ownable() {
         return redemptionAddress;
     }
 
-    function getCNPJ(address addr) view public returns (uint) {
+    function getCNPJ(address addr) view public returns (uint64) {
         return legalEntitiesInfo[addr].cnpj;
     }
 
-    function getIdLegalFinancialAgreement(address addr) view public returns (uint) {
+    function getIdLegalFinancialAgreement(address addr) view public returns (uint64) {
         return legalEntitiesInfo[addr].idFinancialSupportAgreement;
     }
 
-    function getLegalEntityInfo (address addr) view public returns (uint, uint, uint, string memory, uint, address) {
+    function getLegalEntityInfo (address addr) view public returns (uint64, uint64, uint32, string memory, uint, address) {
         return (legalEntitiesInfo[addr].cnpj, legalEntitiesInfo[addr].idFinancialSupportAgreement, 
              legalEntitiesInfo[addr].salic, legalEntitiesInfo[addr].idProofHash, (uint) (legalEntitiesInfo[addr].state),
              addr);
     }
 
-    function getBlockchainAccount(uint256 cnpj, uint256 idFinancialSupportAgreement) view public returns (address) {
+    function getBlockchainAccount(uint64 cnpj, uint64 idFinancialSupportAgreement) view public returns (address) {
         return cnpjFSAddr[cnpj][idFinancialSupportAgreement];
     }
 
-    function getLegalEntityInfoByCNPJ (uint256 cnpj, uint256 idFinancialSupportAgreement) 
-        view public returns (uint, uint, uint, string memory, uint, address) {
+    function getLegalEntityInfoByCNPJ (uint64 cnpj, uint64 idFinancialSupportAgreement) 
+        view public returns (uint64, uint64, uint32, string memory, uint, address) {
         
         address addr = getBlockchainAccount(cnpj,idFinancialSupportAgreement);
         return getLegalEntityInfo (addr);
@@ -323,6 +360,21 @@ contract BNDESRegistry is Ownable() {
         }
 
     }
+
+
+  function isValidHash(string memory str) pure public returns (bool)  {
+
+    bytes memory b = bytes(str);
+    if(b.length != 64) return false;
+
+    for (uint i=0; i<64; i++) {
+        if (b[i] < "0") return false;
+        if (b[i] > "9" && b[i] <"a") return false;
+        if (b[i] > "f") return false;
+    }
+        
+    return true;
+ }
 
 
 }
