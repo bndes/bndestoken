@@ -20,6 +20,7 @@ contract BNDESRegistry is Ownable() {
     address responsibleForRegistryValidation;
     address responsibleForDisbursement;
     address redemptionAddress;
+    address tokenAddress;
 
     /**
         Describes the Legal Entity - clients or suppliers
@@ -57,6 +58,13 @@ contract BNDESRegistry is Ownable() {
     event AccountValidation(address addr, uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic);
     event AccountInvalidation(address addr, uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic);
 
+    /**
+     * @dev Throws if called by any account other than the token address.
+     */
+    modifier onlyTokenAddress() {
+        require(isTokenAddress());
+        _;
+    }
 
     constructor () public {
         responsibleForSettlement = msg.sender;
@@ -75,9 +83,8 @@ contract BNDESRegistry is Ownable() {
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
-    function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) public { 
-
-        address addr = msg.sender;
+    function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, 
+        address addr, string memory idProofHash) onlyTokenAddress public { 
 
         // Endereço não pode ter sido cadastrado anteriormente
         require (isAvailableAccount(addr), "Endereço não pode ter sido cadastrado anteriormente");
@@ -110,9 +117,9 @@ contract BNDESRegistry is Ownable() {
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
-    function changeAccountLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) public {
+    function changeAccountLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, 
+        address newAddr, string memory idProofHash) onlyTokenAddress public {
 
-        address newAddr = msg.sender;
         address oldAddr = getBlockchainAccount(cnpj, idFinancialSupportAgreement);
     
         // Tem que haver um endereço associado a esse cnpj/subcrédito
@@ -121,8 +128,6 @@ contract BNDESRegistry is Ownable() {
         require(!isAvailableAccount(oldAddr), "Tem que haver um endereço associado a esse cnpj/subcrédito");
 
         require(isAvailableAccount(newAddr), "Novo endereço não está disponível");
-
-        require(newAddr != oldAddr, "O endereço novo deve ser diferente do antigo");        
 
         require (isChangeAccountEnabled(oldAddr), "A conta atual não está habilitada para troca");
 
@@ -224,6 +229,13 @@ contract BNDESRegistry is Ownable() {
     }
 
    /**
+    * @param rs Ethereum address to be assigned to the token address.
+    */
+    function setTokenAddress(address rs) onlyOwner public {
+        tokenAddress = rs;
+    }
+
+   /**
     * Enable the legal entity to change the account
     * @param rs account that can be changed.
     */
@@ -236,6 +248,9 @@ contract BNDESRegistry is Ownable() {
         return legalEntitiesChangeAccount[rs] == true;
     }    
 
+    function isTokenAddress() public view returns (bool) {
+        return tokenAddress == msg.sender;
+    } 
     function isResponsibleForSettlement(address addr) view public returns (bool) {
         return (addr == responsibleForSettlement);
     }

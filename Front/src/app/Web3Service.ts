@@ -8,18 +8,22 @@ export class Web3Service {
 
     private serverUrl: string;
 
-    private contractAddr: string = '';
+    private addrContratoBNDESRegistry: string = '';
+    private addrContratoBNDESToken: string = '';    
     private blockchainNetwork: string = '';
     private web3Instance: any;                  // Current instance of web3
 
-    private bndesTokenContract: any;
+    private bndesTokenSmartContract: any;
+    private bndesRegistrySmartContract: any;
 
     // Application Binary Interface so we can use the question contract
-    private ABI;
+    private ABIBndesToken;
+    private ABIBndesRegistry;
 
     private vetorTxJaProcessadas : any[];
 
-    private eventoGenerico: any;
+    private eventoBNDESToken: any;
+    private eventoBNDESRegistry: any;
     private eventoCadastro: any;
     private eventoLiberacao: any;
     private eventoTransferencia: any;
@@ -40,9 +44,19 @@ export class Web3Service {
         this.http.post<Object>(this.serverUrl + 'constantesFront', {}).subscribe(
             data => {
 
-                this.contractAddr = data["addrContrato"];
+                this.addrContratoBNDESRegistry = data["addrContratoBNDESRegistry"];
+                this.addrContratoBNDESToken = data["addrContratoBNDESToken"];
                 this.blockchainNetwork = data["blockchainNetwork"];
+                this.ABIBndesToken = data['abiBNDESToken'];
+                this.ABIBndesRegistry = data['abiBNDESRegistry'];
 
+                console.log("abis");
+                console.log(this.ABIBndesRegistry);
+
+                this.intializeWeb3();
+                this.inicializaQtdDecimais();
+
+                /*
                 // Seta a ABI de acordo com o json do contrato
                 this.http.get(this.serverUrl + 'abi').subscribe(
                     data => {
@@ -54,10 +68,12 @@ export class Web3Service {
                         console.log("Erro ao buscar ABI do contrato")
                     }
                 );
+                */
             },
             error => {
                 console.log("**** Erro ao buscar constantes do front");
             });
+            
     }
 
 
@@ -77,7 +93,7 @@ export class Web3Service {
             blockchainNetwork:this.blockchainNetwork,
             blockchainNetworkAsString:blockchainNetworkAsString,
             blockchainNetworkPrefix: blockchainNetworkPrefix,
-            contractAddr: this.contractAddr
+            contractAddr: this.addrContratoBNDESToken 
         };
     }
 
@@ -104,10 +120,12 @@ export class Web3Service {
             return; 
         }
 
-        this.bndesTokenContract = this.web3.eth.contract(this.ABI).at(this.contractAddr);
+        this.bndesTokenSmartContract = this.web3.eth.contract(this.ABIBndesToken).at(this.addrContratoBNDESToken);
+        this.bndesRegistrySmartContract = this.web3.eth.contract(this.ABIBndesRegistry).at(this.addrContratoBNDESRegistry);
 
         console.log("INICIALIZOU O WEB3 - bndesTokenContract abaixo");
-        console.log(this.bndesTokenContract);
+        console.log("BNDESToken=" + this.bndesTokenSmartContract);
+        console.log("BNDESRegistry=" + this.bndesRegistrySmartContract);
 
         let self = this;
 
@@ -130,7 +148,7 @@ export class Web3Service {
     set web3(web3: any) {
         this.web3Instance = web3;
     }
-    get currentAddr(): string {
+/*    get currentAddr(): string {
         return this.contractAddr;
     }
     set currentAddr(contractAddr: string) {
@@ -140,44 +158,45 @@ export class Web3Service {
             console.log('Invalid address used');
         }
     }
+*/    
     get Web3(): any {
         return window['Web3'];
     }
 
     getPastResgatesEvents() {
-        this.bndesTokenContract.getPastLogs('Resgate', { fromBlock: 0, toBlock: 'latest' });
+        this.bndesTokenSmartContract.getPastLogs('Resgate', { fromBlock: 0, toBlock: 'latest' });
     }
 
     registraEventosCadastro(callback) {
-        this.eventoCadastro = this.bndesTokenContract.AccountRegistration({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesRegistrySmartContract.AccountRegistration({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosTroca(callback) {
-        this.eventoCadastro = this.bndesTokenContract.AccountChange({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesRegistrySmartContract.AccountChange({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosValidacao(callback) {
-        this.eventoCadastro = this.bndesTokenContract.AccountValidation({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesRegistrySmartContract.AccountValidation({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosInvalidacao(callback) {
-        this.eventoCadastro = this.bndesTokenContract.AccountInvalidation({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoCadastro = this.bndesRegistrySmartContract.AccountInvalidation({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoCadastro.watch(callback);
     }
     registraEventosLiberacao(callback) {
-        this.eventoLiberacao = this.bndesTokenContract.BNDESTokenDisbursement({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLiberacao = this.bndesTokenSmartContract.BNDESTokenDisbursement({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiberacao.watch(callback);
     }
     registraEventosTransferencia(callback) {
-        this.eventoTransferencia = this.bndesTokenContract.BNDESTokenTransfer({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoTransferencia = this.bndesTokenSmartContract.BNDESTokenTransfer({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoTransferencia.watch(callback);
     }
     registraEventosResgate(callback) {
-        this.eventoResgate = this.bndesTokenContract.BNDESTokenRedemption({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoResgate = this.bndesTokenSmartContract.BNDESTokenRedemption({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoResgate.watch(callback);
     }
     registraEventosLiquidacaoResgate(callback) {
-        this.eventoLiquidacaoResgate = this.bndesTokenContract.BNDESTokenRedemptionSettlement({}, { fromBlock: 0, toBlock: 'latest' });
+        this.eventoLiquidacaoResgate = this.bndesTokenSmartContract.BNDESTokenRedemptionSettlement({}, { fromBlock: 0, toBlock: 'latest' });
         this.eventoLiquidacaoResgate.watch(callback);
     }
 
@@ -186,12 +205,17 @@ export class Web3Service {
         console.info("Callback ", callback);
         const filtro = { fromBlock: 'latest', toBlock: 'pending' }; 
         
-        this.eventoGenerico = this.bndesTokenContract.allEvents( filtro );                 
-        this.eventoGenerico.watch( function (error, result) {
-            console.log("Watcher executando...")
+        this.eventoBNDESToken = this.bndesTokenSmartContract.allEvents( filtro );                 
+        this.eventoBNDESToken.watch( function (error, result) {
+            console.log("Watcher BNDESToken executando...")
             self.procuraTransacao(error, result, txHashProcurado, self, callback);
-        });      
-        
+        });
+        this.eventoBNDESRegistry = this.bndesRegistrySmartContract.allEvents( filtro );                 
+        this.eventoBNDESRegistry.watch( function (error, result) {
+            console.log("Watcher BNDESRegistry executando...")
+            self.procuraTransacao(error, result, txHashProcurado, self, callback);
+        });
+     
         console.log("registrou o watcher de eventos");
     }
 
@@ -199,7 +223,6 @@ export class Web3Service {
         console.log( "Entrou no procuraTransacao" );
         console.log( "txHashProcurado: " + txHashProcurado );
         console.log( "result.transactionHash: " + result.transactionHash );
-        let meuErro;
         self.web3.eth.getTransactionReceipt(txHashProcurado,  function (error, result) {
             if ( !error ) {
                 let status = result.status
@@ -229,7 +252,7 @@ export class Web3Service {
             ", hashdeclaracao: " + hashdeclaracao
             )
 
-        this.bndesTokenContract.registryLegalEntity(cnpj, idSubcredito, salic, 
+        this.bndesRegistrySmartContract.registryLegalEntity(cnpj, idSubcredito, salic, 
             hashdeclaracao, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
@@ -242,7 +265,7 @@ export class Web3Service {
     getVersao(fSuccess: any, fError: any): number {
         console.log("vai recuperar a versao. " );
         let self = this;
-        return this.bndesTokenContract.getVersion(
+        return this.bndesTokenSmartContract.getVersion(
             (error, versao) => {
                 if (error) fError(error);
                 else fSuccess(   parseInt ( versao )  );
@@ -253,7 +276,7 @@ export class Web3Service {
     getTotalSupply(fSuccess: any, fError: any): number {
         console.log("vai recuperar o totalsupply. " );
         let self = this;
-        return this.bndesTokenContract.getTotalSupply(
+        return this.bndesTokenSmartContract.getTotalSupply(
             (error, totalSupply) => {
                 if (error) fError(error);
                 else fSuccess( self.converteInteiroParaDecimal(  parseInt ( totalSupply ) ) );
@@ -263,7 +286,7 @@ export class Web3Service {
     getBalanceOf(address: string, fSuccess: any, fError: any): number {
         console.log("vai recuperar o balanceOf de " + address);
         let self = this;
-        return this.bndesTokenContract.balanceOf(address,
+        return this.bndesTokenSmartContract.balanceOf(address,
             (error, valorSaldoCNPJ) => {
                 if (error) fError(error);
                 else fSuccess( self.converteInteiroParaDecimal( parseInt ( valorSaldoCNPJ ) ) );
@@ -272,7 +295,7 @@ export class Web3Service {
     }
 
     getCNPJ(addr: string, fSuccess: any, fError: any): number {
-        return this.bndesTokenContract.getCNPJ(addr,
+        return this.bndesRegistrySmartContract.getCNPJ(addr,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -281,7 +304,7 @@ export class Web3Service {
 
     getPJInfo(addr: string, fSuccess: any, fError: any): number {
         let self = this;
-        return this.bndesTokenContract.getLegalEntityInfo(addr,
+        return this.bndesRegistrySmartContract.getLegalEntityInfo(addr,
             (error, result) => {
                 if (error) fError(error);
                 else {
@@ -294,7 +317,7 @@ export class Web3Service {
     getPJInfoByCnpj(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): number {
  
         let self = this;
-        return this.bndesTokenContract.getLegalEntityInfoByCNPJ(cnpj, idSubcredito,
+        return this.bndesRegistrySmartContract.getLegalEntityInfoByCNPJ(cnpj, idSubcredito,
             (error, result) => {
                 if (error) fError(error);
                 else {
@@ -305,7 +328,7 @@ export class Web3Service {
     }
 
     getContaBlockchain(cnpj:string, idSubcredito: number, fSuccess: any, fError: any): string {
-        return this.bndesTokenContract.getBlockchainAccount(cnpj, idSubcredito,
+        return this.bndesRegistrySmartContract.getBlockchainAccount(cnpj, idSubcredito,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -313,7 +336,7 @@ export class Web3Service {
     }
 
     getAddressOwner(fSuccess: any, fError: any): number {
-        return this.bndesTokenContract.owner(
+        return this.bndesRegistrySmartContract.owner(
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -322,7 +345,7 @@ export class Web3Service {
 
     inicializaQtdDecimais() {
         let self = this;
-        this.bndesTokenContract.decimals(
+        this.bndesTokenSmartContract.decimals(
             (error, result) => {
                 if (error) { 
                     console.log( "Decimais error: " +  error);  
@@ -356,7 +379,7 @@ export class Web3Service {
         transferAmount = this.converteDecimalParaInteiro(transferAmount);     
         console.log('TransferAmount(after)=' + transferAmount);
 
-        this.bndesTokenContract.transfer(target, transferAmount, { from: contaSelecionada, gas: 500000 },
+        this.bndesTokenSmartContract.transfer(target, transferAmount, { from: contaSelecionada, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -378,7 +401,7 @@ export class Web3Service {
         console.log("Web3Service - Redeem");
         transferAmount = this.converteDecimalParaInteiro(transferAmount);     
 
-        this.bndesTokenContract.redeem(transferAmount, { from: contaSelecionada, gas: 500000 },
+        this.bndesTokenSmartContract.redeem(transferAmount, { from: contaSelecionada, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -391,7 +414,7 @@ export class Web3Service {
         console.log("HashComprovante - " + hashComprovante)
         console.log("isOk - " + isOk)
 
-        this.bndesTokenContract.notifyRedemptionSettlement(hashResgate, hashComprovante, 
+        this.bndesTokenSmartContract.notifyRedemptionSettlement(hashResgate, hashComprovante, 
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -408,7 +431,7 @@ export class Web3Service {
 
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.changeAccountLegalEntity(cnpj, idSubcredito, salic, hashdeclaracao, 
+        this.bndesTokenSmartContract.changeAccountLegalEntity(cnpj, idSubcredito, salic, hashdeclaracao, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if (error) fError(error);
@@ -424,7 +447,7 @@ export class Web3Service {
 
 
     isCliente(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isClient(address,
+        return this.bndesRegistrySmartContract.isClient(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -447,7 +470,7 @@ export class Web3Service {
 
 
     isFornecedor(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isSupplier(address,
+        return this.bndesRegistrySmartContract.isSupplier(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -469,7 +492,7 @@ export class Web3Service {
     }
         
     isResponsibleForSettlement(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isResponsibleForSettlement(address,
+        return this.bndesRegistrySmartContract.isResponsibleForSettlement(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -491,7 +514,7 @@ export class Web3Service {
 
     isResponsibleForRegistryValidation(address: string, fSuccess: any, fError: any): boolean {
 
-        return this.bndesTokenContract.isResponsibleForRegistryValidation(address,
+        return this.bndesRegistrySmartContract.isResponsibleForRegistryValidation(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -513,7 +536,7 @@ export class Web3Service {
 
 
     isResponsibleForDisbursement(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isResponsibleForDisbursement(address,
+        return this.bndesRegistrySmartContract.isResponsibleForDisbursement(address,
             (error, result) => {
                 if (error) fError(error);
                 else fSuccess(result);
@@ -536,7 +559,7 @@ export class Web3Service {
     
 
     accountIsActive(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isValidatedAccount(address, 
+        return this.bndesRegistrySmartContract.isValidatedAccount(address, 
         (error, result) => {
             if(error) fError(error);
             else fSuccess(result);
@@ -549,7 +572,7 @@ export class Web3Service {
     }
 
     isContaDisponivel(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isAvailableAccount(address, 
+        return this.bndesRegistrySmartContract.isAvailableAccount(address, 
             (error, result) => {
                 if(error) fError(error);
                 else fSuccess(result);
@@ -557,7 +580,7 @@ export class Web3Service {
     }
 
     isContaAguardandoValidacao(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isWaitingValidationAccount(address, 
+        return this.bndesRegistrySmartContract.isWaitingValidationAccount(address, 
             (error, result) => {
                 if(error) fError(error);
                 else fSuccess(result);
@@ -565,7 +588,7 @@ export class Web3Service {
     }
 
     isContaValidada(address: string, fSuccess: any, fError: any): boolean {
-        return this.bndesTokenContract.isValidatedAccount(address, 
+        return this.bndesRegistrySmartContract.isValidatedAccount(address, 
             (error, result) => {
                 if(error) fError(error);
                 else fSuccess(result);
@@ -591,7 +614,7 @@ export class Web3Service {
         
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.validateRegistryLegalEntity(address, hashTentativa, 
+        this.bndesRegistrySmartContract.validateRegistryLegalEntity(address, hashTentativa, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if(error) { fError(error); return false; }
@@ -603,7 +626,7 @@ export class Web3Service {
 
         let contaBlockchain = await this.getCurrentAccountSync();    
 
-        this.bndesTokenContract.invalidateRegistryLegalEntity(address, 
+        this.bndesRegistrySmartContract.invalidateRegistryLegalEntity(address, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
                 if(error) { fError(error); return false; }
@@ -616,7 +639,7 @@ export class Web3Service {
 
     getEstadoContaAsString(address: string, fSuccess: any, fError: any): string {
         let self = this;
-        return this.bndesTokenContract.getAccountState(address, 
+        return this.bndesRegistrySmartContract.getAccountState(address, 
         (error, result) => {
             if(error) fError(error);
             else {

@@ -107,7 +107,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
 
     function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
         public whenNotPaused { 
-        registry.registryLegalEntity(cnpj,  idFinancialSupportAgreement,  salic, idProofHash);
+        registry.registryLegalEntity(cnpj,  idFinancialSupportAgreement, salic, msg.sender, idProofHash);
     }
 
    /**
@@ -126,7 +126,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
         address oldAddr = registry.getBlockchainAccount(cnpj, idFinancialSupportAgreement);
         address newAddr = msg.sender;
         
-        registry.changeAccountLegalEntity(cnpj, idFinancialSupportAgreement, salic, idProofHash);
+        registry.changeAccountLegalEntity(cnpj, idFinancialSupportAgreement, salic, msg.sender, idProofHash);
 
         // Se há saldo no enderecoAntigo, precisa transferir
         if (balanceOf(oldAddr) > 0) {

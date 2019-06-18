@@ -10,8 +10,6 @@ var config = require('./config.json');
 var sql = require("mssql");
 
 
-var contratoJson = require(config.infra.contrato_json);
-
 // Configuration
 mongoose.connect(config.infra.addr_bd);
 
@@ -62,19 +60,23 @@ console.info("configAcessoBDPJ=");
 console.info(configAcessoBDPJ);
 
 
+var contrato_json_BNDESToken = require(config.infra.contrato_json_BNDESToken);
+var contrato_json_BNDESRegistry = require(config.infra.contrato_json_BNDESRegistry);
 
-var n = contratoJson.networks;
+var n = contrato_json_BNDESToken.networks;
 
 console.log("config.infra.rede_blockchain (1=Main|4=Rinkeby|4447=local) = " + config.infra.rede_blockchain);
-	
-ABI = contratoJson['abi']
 
-let addrContrato;
+//ABI = contrato_json_BNDESToken['abi']
+
+let addrContratoBNDESToken;
+let addrContratoBNDESRegistry;
 if (config.infra.rede_blockchain < 10) {  
 	console.log ("config.infra.rede_blockchain=" + config.infra.rede_blockchain);
-	addrContrato = config.infra.endereco_contrato
+	addrContratoBNDESToken = config.infra.endereco_BNDESToken;
+	addrContratoBNDESRegistry = config.infra.endereco_BNDESRegistry;
 }
-else {
+else { //TODO: testar localhost
 	
 	try {
 		console.log ("config.infra.rede_blockchain>10 -> rede local=" + config.infra.rede_blockchain);
@@ -88,15 +90,12 @@ else {
 		console.log ("	networks[config.infra.rede_blockchain] = " + n[config.infra.rede_blockchain])		
 		process.exit();
 	}
-	addrContrato = n[config.infra.rede_blockchain].address;
-
+	addrContratoBNDESToken = n[config.infra.rede_blockchain].address;
+	addrContratoBNDESRegistry = contrato_json_BNDESRegistry.networks[config.infra.rede_blockchain].address;
 }
 
-console.log("endereco do contrato=" + addrContrato);
-
-
-
-
+console.log("endereco do contrato BNDESToken=" + addrContratoBNDESToken);
+console.log("endereco do contrato BNDESRegistry=" + addrContratoBNDESRegistry);
 
 
 app.get('/api/abi', function (req, res) {
@@ -105,7 +104,12 @@ app.get('/api/abi', function (req, res) {
 
 //recupera constantes front
 app.post('/api/constantesFront', function (req, res) {
-	res.json({ addrContrato: addrContrato, blockchainNetwork: config.infra.rede_blockchain });
+	res.json({ addrContratoBNDESToken: addrContratoBNDESToken, 
+		addrContratoBNDESRegistry: addrContratoBNDESRegistry,
+		blockchainNetwork: config.infra.rede_blockchain,
+		abiBNDESToken: contrato_json_BNDESToken['abi'],
+		abiBNDESRegistry: contrato_json_BNDESRegistry['abi']
+	 });
 });
 
 console.log("operationAPIURL=" + config.infra.operationAPIURL);
@@ -113,7 +117,7 @@ console.log("operationAPIURL=" + config.infra.operationAPIURL);
 app.post('/api/constantesFrontPJ', function (req, res) {
 	console.log("operationAPIURL=" + config.infra.operationAPIURL);
 	console.log("mockMongoClient=" + config.negocio.mockMongoClient)
-	console.log("mockMongoPJ=" + config.negocio.mockMongoPJ)	
+	console.log("mockMongoPJ=" + config.negocio.mockMongoPJ)
 	res.json({ operationAPIURL: config.infra.operationAPIURL,  
 		mockMongoClient: config.negocio.mockMongoClient, 
 		mockMongoPJ: config.negocio.mockMongoPJ});
