@@ -324,7 +324,6 @@ contract BNDESRegistry is Ownable() {
     function getRedemptionAddress() view public returns (address) {
         return redemptionAddress;
     }
-
     function getCNPJ(address addr) view public returns (uint64) {
         return legalEntitiesInfo[addr].cnpj;
     }

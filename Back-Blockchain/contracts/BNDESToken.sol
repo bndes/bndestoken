@@ -5,20 +5,35 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "./BNDESRegistry.sol";
 
 
-contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
+contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
 
     uint private version = 20190517;
+
+    BNDESRegistry registry;
 
     event BNDESTokenDisbursement(uint64 cnpj, uint64 idFinancialSupportAgreement, uint256 value);
     event BNDESTokenTransfer(uint64 fromCnpj, uint64 fromIdFinancialSupportAgreement, uint64 toCnpj, uint256 value);
     event BNDESTokenRedemption(uint64 cnpj, uint256 value);
     event BNDESTokenRedemptionSettlement(string redemptionTransactionHash, string receiptHash);
-    event BNDESManualIntervention(string description);    
+    event BNDESManualIntervention(string description);
+
+    /**
+     * @dev Throws if called by any account other than the owner.
+     */
+    modifier onlyOwner() {
+        require(isOwner());
+        _;
+    }
+
+    constructor (address newRegistryAddr) public {
+        registry = BNDESRegistry(newRegistryAddr);
+    }
 
 
     function getVersion() view public returns (uint) {
         return version;
     }
+
 
    /**
     * The transfer funcion follows ERC20 token signature. 
@@ -32,34 +47,35 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
 
         require(from != to, "Não pode transferir token para si mesmo");
 
-        if (isResponsibleForDisbursement(from)) {
+        if (registry.isResponsibleForDisbursement(from)) {
 
-            require(isValidatedClient(to), "O endereço não pertence a um cliente ou não está validada");
+            require(registry.isValidatedClient(to), "O endereço não pertence a um cliente ou não está validada");
 
             _mint(to, value);
 
-            emit BNDESTokenDisbursement(getCNPJ(to), getIdLegalFinancialAgreement(to), value);
+            emit BNDESTokenDisbursement(registry.getCNPJ(to), registry.getIdLegalFinancialAgreement(to), value);
 
         } else { 
 
-            if (isRedemptionAddress(to)) { 
+            if (registry.isRedemptionAddress(to)) { 
 
-                require(isValidatedSupplier(from), "A conta do endereço não pertence a um fornecedor ou não está validada");
+                require(registry.isValidatedSupplier(from), "A conta do endereço não pertence a um fornecedor ou não está validada");
 
                 _burn(from, value);
 
-                emit BNDESTokenRedemption(getCNPJ(from), value);
+                emit BNDESTokenRedemption(registry.getCNPJ(from), value);
 
             } else {
 
                 // Se nem from nem to são o Banco, eh transferencia normal
 
-                require(isValidatedClient(from), "O endereço não pertence a um cliente ou não está validada");
-                require(isValidatedSupplier(to), "A conta do endereço não pertence a um fornecedor ou não está validada");
+                require(registry.isValidatedClient(from), "O endereço não pertence a um cliente ou não está validada");
+                require(registry.isValidatedSupplier(to), "A conta do endereço não pertence a um fornecedor ou não está validada");
 
                 _transfer(msg.sender, to, value);
 
-                emit BNDESTokenTransfer(getCNPJ(from), getIdLegalFinancialAgreement(from), getCNPJ(to), value);
+                emit BNDESTokenTransfer(registry.getCNPJ(from), registry.getIdLegalFinancialAgreement(from), 
+                                registry.getCNPJ(to), value);
   
             }
         }
@@ -73,7 +89,7 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
     * @param value - how much BNDESToken the supplier wants to redeem
     */
     function redeem (uint256 value) public whenNotPaused returns (bool) {
-        return transfer(getRedemptionAddress(), value);
+        return transfer(registry.getRedemptionAddress(), value);
     }
 
    /**
@@ -83,15 +99,15 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
     */
     function notifyRedemptionSettlement(string memory redemptionTransactionHash, string memory receiptHash) 
         public whenNotPaused {
-        require (isResponsibleForSettlement(msg.sender), "A liquidação só não pode ser realizada pelo endereço que submeteu a transação"); 
-        require (super.isValidHash(receiptHash), "O hash do recibo é inválido");
+        require (registry.isResponsibleForSettlement(msg.sender), "A liquidação só não pode ser realizada pelo endereço que submeteu a transação"); 
+        require (registry.isValidHash(receiptHash), "O hash do recibo é inválido");
         emit BNDESTokenRedemptionSettlement(redemptionTransactionHash, receiptHash);
     }
 
 
     function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
         public whenNotPaused { 
-        super.registryLegalEntity( cnpj,  idFinancialSupportAgreement,  salic, idProofHash);
+        registry.registryLegalEntity(cnpj,  idFinancialSupportAgreement,  salic, idProofHash);
     }
 
    /**
@@ -107,10 +123,10 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
     function changeAccountLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
         public whenNotPaused {
         
-        address oldAddr = getBlockchainAccount(cnpj, idFinancialSupportAgreement);
+        address oldAddr = registry.getBlockchainAccount(cnpj, idFinancialSupportAgreement);
         address newAddr = msg.sender;
         
-        super.changeAccountLegalEntity(cnpj, idFinancialSupportAgreement, salic, idProofHash);
+        registry.changeAccountLegalEntity(cnpj, idFinancialSupportAgreement, salic, idProofHash);
 
         // Se há saldo no enderecoAntigo, precisa transferir
         if (balanceOf(oldAddr) > 0) {
@@ -121,16 +137,19 @@ contract BNDESToken is BNDESRegistry, ERC20Pausable, ERC20Detailed("BNDESToken",
 
     //These methods may be necessary to solve incidents.
     function burn(address from, uint256 value, string memory description) public onlyOwner {
-        emit BNDESManualIntervention(description);
         _burn(from, value);
+        emit BNDESManualIntervention(description);        
     }
 
     //These methods may be necessary to solve incidents.
     function mint(address to, uint256 value, string memory description) public onlyOwner {
-        emit BNDESManualIntervention(description);
         _mint(to, value);
+        emit BNDESManualIntervention(description);        
     }
 
+    function isOwner() public view returns (bool) {
+        return registry.owner() == msg.sender;
+    } 
 
     //Unsupported methods - created to avoid call the lib functions by overriding them
     function transferFrom(address from, address to, uint256 value) public whenNotPaused returns (bool) {
