@@ -237,7 +237,7 @@ export class RecuperaAcessoClienteComponent implements OnInit {
         return;  
     }    
 
-    if (!this.hashdeclaracao) {
+    if (this.hashdeclaracao==undefined || this.hashdeclaracao==null) {
       let s = "O Hash da declaração é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;

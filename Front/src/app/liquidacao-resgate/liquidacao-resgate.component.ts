@@ -166,11 +166,17 @@ export class LiquidacaoResgateComponent implements OnInit {
       return;
     }
 
-    if (!this.liquidacaoResgate.hashComprovacao) {
+    if (this.liquidacaoResgate.hashComprovacao==undefined || this.liquidacaoResgate.hashComprovacao==null) {
       let s = "O hash da comprovação é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2);
       return;
     }
+    else if (!Utils.isValidHash(this.liquidacaoResgate.hashComprovacao)) {
+      let s = "O Hash do comprovante está preenchido com valor inválido";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }
+
 
     let self= this;
 

@@ -131,11 +131,17 @@ export class AssociaContaFornecedorComponent implements OnInit {
 
     let self = this
 
-    if (this.hashdeclaracao === undefined) {
+    if (this.hashdeclaracao==undefined || this.hashdeclaracao==null) {
       let s = "O Hash da declaração é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return
     }  
+    else if (!Utils.isValidHash(this.hashdeclaracao)) {
+      let s = "O Hash da declaração está preenchido com valor inválido";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }
+
 
     console.log("this.hashdeclaracao = " + this.hashdeclaracao );
 
@@ -167,7 +173,7 @@ export class AssociaContaFornecedorComponent implements OnInit {
            }        
          ,(error) => {
            Utils.criarAlertaErro( self.bnAlertsService, 
-                                  "Erro ao associar na blockchain\nVeja detalhe do erro no Metamask.", 
+                                  "Erro ao associar na blockchain.", 
                                   error )  
           });
           Utils.criarAlertaAcaoUsuario( self.bnAlertsService, 
