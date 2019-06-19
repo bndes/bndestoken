@@ -54,6 +54,7 @@ import { InputValidationComponent } from './shared/input-validation/input-valida
 
 import { Utils } from './shared/utils';
 import { CnpjPipe } from './pipes/cnpj.pipe'
+import { HashPipe } from './pipes/hash.pipe'
 import { registerLocaleData } from '@angular/common';
 import localePT from '@angular/common/locales/pt';
 import { ExtratoContaComponent } from './registro-saldo-contas/extrato-conta/extrato-conta.component';
@@ -103,6 +104,7 @@ export const optionsMaskCurrencyBND: CurrencyMaskConfig = {
     AssinadorComponent,
     InputValidationComponent,
     CnpjPipe,
+    HashPipe,
     ExtratoContaComponent,
     ValidacaoCadastroComponent,
   ],

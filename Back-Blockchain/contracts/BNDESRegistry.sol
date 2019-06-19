@@ -77,9 +77,11 @@ contract BNDESRegistry is Ownable() {
    /**
     * Link blockchain address with CNPJ - It can be a cliente or a supplier
     * The link still needs to be validated by BNDES
+    * This method can only be called by BNDESToken contract because BNDESToken can pause.
     * @param cnpj Brazilian identifier to legal entities
     * @param idFinancialSupportAgreement contract number of financial contract with BNDES. It assumes 0 if it is a supplier.
     * @param salic contract number of financial contract with ANCINE. It assumes 0 if it is a supplier.
+    * @param addr the address to be associated with the legal entity.
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
@@ -110,10 +112,13 @@ contract BNDESRegistry is Ownable() {
 
    /**
     * Changes the original link between CNPJ and Ethereum account. 
-    * The new link still needs to be validated by BNDES    
+    * The new link still needs to be validated by BNDES.
+    * This method can only be called by BNDESToken contract because BNDESToken can pause and because there are 
+    * additional instructions there.
     * @param cnpj Brazilian identifier to legal entities
     * @param idFinancialSupportAgreement contract number of financial contract with BNDES. It assumes 0 if it is a supplier.
     * @param salic contract number of financial contract with ANCINE. It assumes 0 if it is a supplier.
+    * @param newAddr the new address to be associated with the legal entity
     * @param idProofHash The legal entities have to send BNDES a PDF where it assumes as responsible for an Ethereum account. 
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
@@ -141,7 +146,7 @@ contract BNDESRegistry is Ownable() {
         legalEntitiesInfo[newAddr] = LegalEntityInfo(cnpj, idFinancialSupportAgreement, salic, idProofHash, BlockchainAccountState.WAITING_VALIDATION);
 
         // Apaga o mapping do endereço antigo
-        legalEntitiesInfo[oldAddr] = LegalEntityInfo(0, 0, 0, "", BlockchainAccountState.INVALIDATED_BY_CHANGE);
+        legalEntitiesInfo[oldAddr].state = BlockchainAccountState.INVALIDATED_BY_CHANGE;
 
         // Aponta mapping CNPJ e Subcredito para newAddr
         cnpjFSAddr[cnpj][idFinancialSupportAgreement] = newAddr;

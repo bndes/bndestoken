@@ -9,6 +9,24 @@ export class Utils {
       return str.replace(/-/g, '').replace(/\./g, '').replace('/', '').replace(/_/g, '')
     }  
 
+    static isValidSalic(text) {
+      if (!text) return false;
+      let isNum = /^\d+$/.test(text);
+      let textAsString = new String(text);
+      if (isNum && textAsString.length && textAsString.length==6) {
+        return true;
+      }
+      return false;
+    }
+
+    static isValidHash(text) {
+      if (!text) return false;
+      let isHash = /^[\da-f]+$/.test(text);
+      if (isHash && text.length && text.length==64) {
+        return true;
+      }
+      return false;
+    }
     
     static completarCnpjComZero(cnpj){
         return ("00000000000000" + cnpj).slice(-14)

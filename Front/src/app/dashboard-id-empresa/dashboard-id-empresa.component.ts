@@ -109,49 +109,16 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     contaBlockchain: eventoCadastro.args.addr,
                     salic: eventoCadastro.args.salic,
                     hashID: eventoCadastro.transactionHash,
+                    uniqueIdentifier: eventoCadastro.transactionHash,
                     dataHora: null,
                     hashDeclaracao: eventoCadastro.args.idProofHash,
                     nomeConta: eventoCadastro.args.idFinancialSupportAgreement,
                     status: "Conta Cadastrada"
                 }
 
-                if (transacaoPJ.salic=="0") transacaoPJ.salic="-";
-                if (transacaoPJ.nomeConta=="0") transacaoPJ.nomeConta="-";
-
-
                 self.includeIfNotExists(transacaoPJ);
-
-                self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
-                    data => {
-
-                        transacaoPJ.razaoSocial = "Erro: Não encontrado";
-                        if (data && data.dadosCadastrais) {
-                            transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
-                          }
-              
-                        // Colocar dentro da zona do Angular para ter a atualização de forma correta
-                        self.zone.run(() => {
-                            self.estadoLista = "cheia"
-                            console.log("inseriu transacao cadastro");
-                        });
-                    },
-                    error => {
-                        console.log("Erro ao buscar dados da empresa");
-                        transacaoPJ.razaoSocial = "";
-                        transacaoPJ.contaBlockchain = "";
-                    });
-
-                self.web3Service.getBlockTimestamp(eventoCadastro.blockHash,
-                    function (error, result) {
-                        if (!error) {
-                            transacaoPJ.dataHora = new Date(result.timestamp * 1000);
-                            self.ref.detectChanges();
-                        }
-                        else {
-                            console.log("Erro ao recuperar data e hora do bloco");
-                            console.error(error);
-                        }
-                });
+                self.recuperaInfoDerivadaPorCnpj(self, transacaoPJ);
+                self.recuperaDataHora(self, event, transacaoPJ);
 
 
             } else {
@@ -178,61 +145,45 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
             if (!error) {
 
+                let transacaoPJContaInativada = {
+                    cnpj: eventoTroca.args.cnpj,
+                    razaoSocial: "",
+                    contaBlockchain: eventoTroca.args.oldAddr,
+                    salic: eventoTroca.args.salic,
+                    hashID: eventoTroca.transactionHash,
+                    uniqueIdentifier: eventoTroca.transactionHash + "Old",
+                    dataHora: null,
+                    hashDeclaracao: eventoTroca.args.idProofHash,
+                    nomeConta: eventoTroca.args.idFinancialSupportAgreement,
+                    status: "Conta Inativada por Troca"
+                };
+
+                self.includeIfNotExists(transacaoPJContaInativada);
+                self.recuperaInfoDerivadaPorCnpj(self, transacaoPJContaInativada);
+                self.recuperaDataHora(self, event, transacaoPJContaInativada);
+  
+
+
                 transacaoPJ = {
                     cnpj: eventoTroca.args.cnpj,
                     razaoSocial: "",
-                    contaBlockchain: eventoTroca.args.addr,
+                    contaBlockchain: eventoTroca.args.newAddr,
                     salic: eventoTroca.args.salic,
                     hashID: eventoTroca.transactionHash,
+                    uniqueIdentifier: eventoTroca.transactionHash + "New",                    
                     dataHora: null,
                     hashDeclaracao: eventoTroca.args.idProofHash,
                     nomeConta: eventoTroca.args.idFinancialSupportAgreement,
                     status: "Conta Associada por Troca"
                 };
 
-                if (transacaoPJ.salic=="0") transacaoPJ.salic="-";
-                if (transacaoPJ.nomeConta=="0") transacaoPJ.nomeConta="-";
-
+                //TODO: nao precisa chamar novamente
                 self.includeIfNotExists(transacaoPJ);
+                self.recuperaInfoDerivadaPorCnpj(self, transacaoPJ);
+                self.recuperaDataHora(self, event, transacaoPJ);
+            }    
 
-                self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
-                    data => {
-                        transacaoPJ.razaoSocial = "Erro: Não encontrado";
-                        if (data && data.dadosCadastrais) {
-                            transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
-                          }
-                          
-                        // Colocar dentro da zona do Angular para ter a atualização de forma correta
-                        self.zone.run(() => {
-                            self.estadoLista = "cheia"
-                            console.log("inseriu transacao Troca");
-                        });
-
-                    },
-                    error => {
-                        console.log("Erro ao buscar dados da empresa");
-                        transacaoPJ.razaoSocial = "";
-                        transacaoPJ.contaBlockchain = "";
-                    });
-
-                self.web3Service.getBlockTimestamp(eventoTroca.blockHash,
-                    function (error, result) {
-                        if (!error) {
-                            transacaoPJ.dataHora = new Date(result.timestamp * 1000);
-                            self.ref.detectChanges();
-                        }
-                        else {
-                            console.log("Erro ao recuperar data e hora do bloco");
-                            console.error(error);
-                        }
-                    });
-
-                } else {
-                    console.log("Erro no registro de eventos de troca");
-                    console.log(error);
-                }
-    
-        })        
+        });        
     }
 
     registraEventosValidacao() {
@@ -251,31 +202,20 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
                       
                 transacaoPJ = {
-                    cnpj: "",
+                    cnpj: event.args.cnpj,
                     razaoSocial: "",
                     contaBlockchain: event.args.addr,
-                    salic: "",
+                    salic: event.args.salic,
                     hashID: event.transactionHash,
+                    uniqueIdentifier: event.transactionHash,
                     dataHora: null,
                     hashDeclaracao: "",
-                    nomeConta: "",
+                    nomeConta: event.args.idFinancialSupportAgreement,
                     status: "Conta Validada"
                 }
                 self.includeIfNotExists(transacaoPJ);
-
-
-                self.web3Service.getBlockTimestamp(event.blockHash,
-                    function (error, result) {
-                        if (!error) {
-                            transacaoPJ.dataHora = new Date(result.timestamp * 1000);
-                            self.ref.detectChanges();
-                        }
-                        else {
-                            console.log("Erro ao recuperar data e hora do bloco");
-                            console.error(error);
-                        }
-                });
-
+                self.recuperaInfoDerivadaPorCnpj(self, transacaoPJ);
+                self.recuperaDataHora(self, event, transacaoPJ);
 
             } else {
                 console.log("Erro no registro de eventos de validacao");
@@ -299,32 +239,22 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
                 console.log("Evento invalidacao");
                 console.log(event);
-
                       
                 transacaoPJ = {
-                    cnpj: "",
+                    cnpj: event.args.cnpj,
                     razaoSocial: "",
                     contaBlockchain: event.args.addr,
-                    salic: "",
+                    salic: event.args.salic,
                     hashID: event.transactionHash,
+                    uniqueIdentifier: event.transactionHash,                    
                     dataHora: null,
                     hashDeclaracao: "",
-                    nomeConta: "",
+                    nomeConta: event.args.idFinancialSupportAgreement,
                     status: "Conta Invalidada"
                 }
                 self.includeIfNotExists(transacaoPJ);
-
-                self.web3Service.getBlockTimestamp(event.blockHash,
-                    function (error, result) {
-                        if (!error) {
-                            transacaoPJ.dataHora = new Date(result.timestamp * 1000);
-                            self.ref.detectChanges();
-                        }
-                        else {
-                            console.log("Erro ao recuperar data e hora do bloco");
-                            console.error(error);
-                        }
-                });
+                self.recuperaInfoDerivadaPorCnpj(self, transacaoPJ);                
+                self.recuperaDataHora(self, event, transacaoPJ);
 
 
             } else {
@@ -336,7 +266,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
     }
 
     includeIfNotExists(transacaoPJ) {
-        let result = this.listaTransacoesPJ.find(tr => tr.hashID == transacaoPJ.hashID);
+        let result = this.listaTransacoesPJ.find(tr => tr.uniqueIdentifier == transacaoPJ.uniqueIdentifier);
         if (!result) this.listaTransacoesPJ.push(transacaoPJ);        
     }
 
@@ -351,6 +281,47 @@ export class DashboardIdEmpresaComponent implements OnInit {
 
     customComparator(itemA, itemB) {
         return itemB - itemA;
+    }
+
+    recuperaInfoDerivadaPorCnpj(self, transacaoPJ) {
+        self.pessoaJuridicaService.recuperaEmpresaPorCnpj(transacaoPJ.cnpj).subscribe(
+            data => {
+                transacaoPJ.razaoSocial = "Erro: Não encontrado";
+                if (data && data.dadosCadastrais) {
+                    transacaoPJ.razaoSocial = data.dadosCadastrais.razaoSocial;
+                  }
+                  
+                // Colocar dentro da zona do Angular para ter a atualização de forma correta
+                self.zone.run(() => {
+                    self.estadoLista = "cheia"
+                    console.log("inseriu transacao Troca");
+                });
+
+            },
+            error => {
+                console.log("Erro ao buscar dados da empresa");
+                transacaoPJ.razaoSocial = "";
+                transacaoPJ.contaBlockchain = "";
+            });
+
+        if (transacaoPJ.salic=="0") transacaoPJ.salic="-";
+        if (transacaoPJ.nomeConta=="0") transacaoPJ.nomeConta="-";
+
+    }
+
+    recuperaDataHora(self, event, transacaoPJ) {
+        self.web3Service.getBlockTimestamp(event.blockHash,
+            function (error, result) {
+                if (!error) {
+                    transacaoPJ.dataHora = new Date(result.timestamp * 1000);
+                    self.ref.detectChanges();
+                }
+                else {
+                    console.log("Erro ao recuperar data e hora do bloco");
+                    console.error(error);
+                }
+        });
+
     }
 
 }

@@ -6,6 +6,7 @@ export class DashboardPessoaJuridica {
   nomeConta: string;
   status: string;
   hashID: string;
+  uniqueIdentifier: string;
   hashDeclaracao: string;
   dataHora: Date;
 }

@@ -252,7 +252,7 @@ export class Web3Service {
             ", hashdeclaracao: " + hashdeclaracao
             )
 
-        this.bndesRegistrySmartContract.registryLegalEntity(cnpj, idSubcredito, salic, 
+        this.bndesTokenSmartContract.registryLegalEntity(cnpj, idSubcredito, salic, 
             hashdeclaracao, 
             { from: contaBlockchain, gas: 500000 },
             (error, result) => {
@@ -301,6 +301,28 @@ export class Web3Service {
                 else fSuccess(result);
             });
     }
+
+    isChangeAccountEnabled(addr: string, fSuccess: any, fError: any): number {
+        return this.bndesRegistrySmartContract.isChangeAccountEnabled(addr,
+            (error, result) => {
+                if (error) fError(error);
+                else fSuccess(result);
+            });
+    }    
+
+    isChangeAccountEnabledSync(addr: string) {
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isChangeAccountEnabled(addr, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO isChangeAccountEnabledSync");
+                reject(false);
+            });
+        })
+    }
+
 
     getPJInfo(addr: string, fSuccess: any, fError: any): number {
         let self = this;

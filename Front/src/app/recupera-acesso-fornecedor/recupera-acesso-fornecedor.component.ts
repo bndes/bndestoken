@@ -175,7 +175,21 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       let s = "O Hash da declaração é um Campo Obrigatório";
       this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
       return;
-    }  
+    }
+    else if (!Utils.isValidHash(this.hashdeclaracao)) {
+      let s = "O Hash da declaração está preenchido com valor inválido";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 2)
+      return;
+    }
+
+
+    let bChangeAccountSync = await this.web3Service.isChangeAccountEnabledSync(this.contaBlockchainAssociada);
+    if (!bChangeAccountSync) {
+      let s = "A conta não está habilitada para troca. Contacte o BNDES";
+      this.bnAlertsService.criarAlerta("error", "Erro", s, 5);
+      return;
+    }
+
 
 
     this.web3Service.trocaAssociacaoDeConta(parseInt(this.fornecedor.cnpj), 0, 0,this.hashdeclaracao,

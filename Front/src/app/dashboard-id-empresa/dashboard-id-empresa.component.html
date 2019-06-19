@@ -31,6 +31,7 @@
             <i [hidden]="reverse" class="fa fa-caret-down"></i>
             <i [hidden]="!reverse" class="fa fa-caret-up"></i>
           </th>            
+          <th>HashDeclaração</th>
           <th [class.active]="order === 'dataHora'" (click)="setOrder('dataHora')">Data/Hora
             <i [hidden]="reverse" class="fa fa-caret-down"></i>
             <i [hidden]="!reverse" class="fa fa-caret-up"></i>
@@ -43,8 +44,7 @@
             <i [hidden]="reverse" class="fa fa-caret-down"></i>
             <i [hidden]="!reverse" class="fa fa-caret-up"></i>
           </th>
-          <th>HashDeclaração</th>
-          <th>Link</th>
+          <th>Link Etherscan</th>
         </tr>
       </thead>
 
@@ -54,12 +54,12 @@
           <td>{{transacaoPJ.cnpj | cnpjMask}}</td>
           <td>{{transacaoPJ.nomeConta}}</td>
           <td>{{transacaoPJ.salic}}</td>
+          <td class="tooltipCaixa"><a target="_blank" href="https://github.com/bndes/bndestoken/tree/master/Docs-Declaracao/{{transacaoPJ.cnpj}}-{{transacaoPJ.hashDeclaracao}}.pdf">
+            {{transacaoPJ.hashDeclaracao | hashMask}}
+          </a><span class="tooltiptext" style="width: 520px;" *ngIf="transacaoPJ.hashDeclaracao">{{transacaoPJ.hashDeclaracao}}</span></td>
           <td>{{transacaoPJ.dataHora | date: 'dd/MM/yyyy hh:mm a' }}</td>
           <td>{{transacaoPJ.contaBlockchain}}</td>
           <td>{{transacaoPJ.status}}</td>
-          <td><a target="_blank" href="https://github.com/bndes/bndestoken/tree/master/Docs-Declaracao/{{transacaoPJ.cnpj}}-{{transacaoPJ.hashDeclaracao}}.pdf">
-            {{transacaoPJ.hashDeclaracao}}
-          </a></td>
           <td class="text-center">
             <a target="_blank" href="https://{{blockchainNetworkPrefix}}etherscan.io/tx/{{transacaoPJ.hashID}}">
               <i class="fa fa-link" aria-hidden="true"></i>
