@@ -250,7 +250,7 @@ export class DashboardIdEmpresaComponent implements OnInit {
                     dataHora: null,
                     hashDeclaracao: "",
                     nomeConta: event.args.idFinancialSupportAgreement,
-                    status: "Conta Invalidada"
+                    status: "Conta Invalidada por Validador"
                 }
                 self.includeIfNotExists(transacaoPJ);
                 self.recuperaInfoDerivadaPorCnpj(self, transacaoPJ);                

@@ -190,6 +190,13 @@ export class RecuperaAcessoFornecedorComponent implements OnInit {
       return;
     }
 
+    let isNewAccountAvailable = await this.web3Service.isContaDisponivelSync(this.selectedAccount);
+    if (!isNewAccountAvailable) {
+      let msg = "A nova conta não está disponível"
+      console.log(msg);
+      self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
+      return;
+    } 
 
 
     this.web3Service.trocaAssociacaoDeConta(parseInt(this.fornecedor.cnpj), 0, 0,this.hashdeclaracao,

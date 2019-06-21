@@ -56,19 +56,6 @@ export class Web3Service {
                 this.intializeWeb3();
                 this.inicializaQtdDecimais();
 
-                /*
-                // Seta a ABI de acordo com o json do contrato
-                this.http.get(this.serverUrl + 'abi').subscribe(
-                    data => {
-                        this.ABI = data['abi'];
-                        this.intializeWeb3();
-                        this.inicializaQtdDecimais();
-                    },
-                    error => {
-                        console.log("Erro ao buscar ABI do contrato")
-                    }
-                );
-                */
             },
             error => {
                 console.log("**** Erro ao buscar constantes do front");
@@ -600,6 +587,21 @@ export class Web3Service {
                 else fSuccess(result);
             });
     }
+
+    public isContaDisponivelSync(address: string) {
+        
+        let self = this;
+
+        return new Promise (function(resolve) {
+            self.isContaDisponivel(address, function(result) {
+                resolve(result);
+            }, function(reject) {
+                console.log("ERRO IS CONTA DISPONIVEL SYNC");
+                reject(false);
+            });
+        })
+    }
+
 
     isContaAguardandoValidacao(address: string, fSuccess: any, fError: any): boolean {
         return this.bndesRegistrySmartContract.isWaitingValidationAccount(address, 

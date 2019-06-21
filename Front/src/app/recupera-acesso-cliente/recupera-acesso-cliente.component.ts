@@ -249,8 +249,9 @@ export class RecuperaAcessoClienteComponent implements OnInit {
     }
    
 
-    if (!this.contaBlockchainAssociada == this.selectedAccount) {
-      let msg = "A nova conta não pode ser igual á conta anterior"
+    let isNewAccountAvailable = await this.web3Service.isContaDisponivelSync(this.selectedAccount);
+    if (!isNewAccountAvailable) {
+      let msg = "A nova conta não está disponível"
       console.log(msg);
       self.bnAlertsService.criarAlerta("error", "Erro", msg, 2);
       return;
