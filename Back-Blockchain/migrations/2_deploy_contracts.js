@@ -4,5 +4,5 @@ var BNDESToken = artifacts.require("./BNDESToken.sol");
 
 module.exports = function(deployer) {
 	
-	deployer.deploy(BNDESRegistry).then( ()=> deployer.deploy(BNDESToken) );
+	deployer.deploy(BNDESRegistry).then( ()=> deployer.deploy(BNDESToken, BNDESRegistry.address ) );
 };
