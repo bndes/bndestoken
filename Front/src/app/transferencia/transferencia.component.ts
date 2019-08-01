@@ -20,6 +20,7 @@ export class TransferenciaComponent implements OnInit {
   transferencia: Transferencia;
   selectedAccount: any;
   maskCnpj: any;
+  cnpjOrigem : string;
 
   constructor(private pessoaJuridicaService: PessoaJuridicaService, protected bnAlertsService: BnAlertsService, private web3Service: Web3Service,
     private ref: ChangeDetectorRef, private zone: NgZone, private router: Router) {
@@ -85,6 +86,7 @@ export class TransferenciaComponent implements OnInit {
             if ( result.cnpj != 0 ) { //encontrou uma PJ valida  
 
               console.log(result);
+              self.cnpjOrigem = result.cnpj;
               self.transferencia.subcredito = result.idSubcredito;
               self.ref.detectChanges();
 
@@ -146,30 +148,37 @@ export class TransferenciaComponent implements OnInit {
 
               console.log(result);
               self.transferencia.cnpjDestino = result.cnpj;
+              if ( self.cnpjOrigem == self.transferencia.cnpjDestino) {
+                let texto = "Erro: não é possível transferir entre o mesmo CNPJ: " + self.cnpjOrigem;
+                console.log(texto);
+                Utils.criarAlertaErro( this.bnAlertsService, texto, null);       
 
-              this.pessoaJuridicaService.recuperaEmpresaPorCnpj(self.transferencia.cnpjDestino).subscribe(
-                data => {
-                    if (data && data.dadosCadastrais) {
-                    console.log("RECUPERA EMPRESA DESTINO")
-                    console.log(data)
-                    self.transferencia.razaoSocialDestino = data.dadosCadastrais.razaoSocial;
-                    this.validaEmpresaDestino(contaBlockchain);
-                }
-                else {
-                  let texto = "Nenhuma empresa encontrada associada ao CNPJ";
-                  console.log(texto);
-                  Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);       
-                  //this.inicializaDadosDestino();
-                  this.transferencia.msgEmpresaDestino = "Conta Inválida"
-                }
-              },
-              error => {
-                  let texto = "Erro ao buscar dados da empresa";
-                  console.log(texto);
-                  Utils.criarAlertaErro( this.bnAlertsService, texto,error);       
-                  this.inicializaDadosDestino();
-              });              
-
+                this.inicializaDadosDestino();                
+              } 
+              else { 
+                this.pessoaJuridicaService.recuperaEmpresaPorCnpj(self.transferencia.cnpjDestino).subscribe(
+                  data => {
+                      if (data && data.dadosCadastrais) {
+                      console.log("RECUPERA EMPRESA DESTINO")
+                      console.log(data)
+                      self.transferencia.razaoSocialDestino = data.dadosCadastrais.razaoSocial;
+                      this.validaEmpresaDestino(contaBlockchain);
+                  }
+                  else {
+                    let texto = "Nenhuma empresa encontrada associada ao CNPJ";
+                    console.log(texto);
+                    Utils.criarAlertaAcaoUsuario( this.bnAlertsService, texto);       
+                    //this.inicializaDadosDestino();
+                    this.transferencia.msgEmpresaDestino = "Conta Inválida"
+                  }
+                },
+                  error => {
+                      let texto = "Erro ao buscar dados da empresa";
+                      console.log(texto);
+                      Utils.criarAlertaErro( this.bnAlertsService, texto,error);       
+                      this.inicializaDadosDestino();
+                  });              
+              }
               self.ref.detectChanges();
 
            } //fecha if de PJ valida

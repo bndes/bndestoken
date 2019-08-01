@@ -71,6 +71,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
 
                 require(registry.isValidatedClient(from), "O endereço não pertence a um cliente ou não está validada");
                 require(registry.isValidatedSupplier(to), "A conta do endereço não pertence a um fornecedor ou não está validada");
+                require( ( registry.getCNPJ(from) != registry.getCNPJ(to) ) , "Um mesmo CNPJ não pode transferir token para si mesmo, ainda que em papéis distintos (Cliente/Fornecedor)" );
 
                 _transfer(msg.sender, to, value);
 
