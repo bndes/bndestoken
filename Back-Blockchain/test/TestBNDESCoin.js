@@ -9,6 +9,8 @@ var subcreditoFornecedor = 0;
 var cnpjOrigemVazio = 0;
 var isNotRepassador = false;
 
+var catchRevert = require('./exceptions').catchRevert
+
 contract('BNDESToken', function (accounts) {
 
   var bndesAddr = accounts[0];
@@ -85,15 +87,11 @@ contract('BNDESToken', function (accounts) {
     })
   });
 
-  /*
+  
   it("should NOT change the blockchain address of the first client to his current address " + emp1Addr, function () {    
-    return coin.troca(cnpj1, subcredito1, {from: emp1Addr}
-    ).then(function () {
-      //assert.equal(0, 0, "Deveria lancar erro!");
-      assert(false, 'Expected throw not received');
-    })    
+     await catchRevert(coin.troca(cnpj1, subcredito1, {from: emp1Addr}));
   });
-  */
+
 
   it('should NOT change the blockchain address of the first client to his current address', async () => {
     // note there is no await keyword for tx as in my previous comment
