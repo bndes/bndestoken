@@ -200,7 +200,7 @@ contract BNDESRegistry is Ownable() {
     * The owner can assign other address to be the Responsible for Settlement. 
     * @param rs Ethereum address to be assigned as Responsible for Settlement.
     */
-    function setResponsibleForSettlement(address rs) onlyOwner public {
+    function setResponsibleForSettlement(address rs) onlyOwner external {
         responsibleForSettlement = rs;
     }
 
@@ -209,7 +209,7 @@ contract BNDESRegistry is Ownable() {
     * The owner can assign other address to be the Responsible for Validation. 
     * @param rs Ethereum address to be assigned as Responsible for Validation.
     */
-    function setResponsibleForRegistryValidation(address rs) onlyOwner public {
+    function setResponsibleForRegistryValidation(address rs) onlyOwner external {
         responsibleForRegistryValidation = rs;
     }
 
@@ -218,7 +218,7 @@ contract BNDESRegistry is Ownable() {
     * The owner can assign other address to be the Responsible for Disbursment. 
     * @param rs Ethereum address to be assigned as Responsible for Disbursment.
     */
-    function setResponsibleForDisbursement(address rs) onlyOwner public {
+    function setResponsibleForDisbursement(address rs) onlyOwner external {
         responsibleForDisbursement = rs;
     }
 
@@ -229,14 +229,14 @@ contract BNDESRegistry is Ownable() {
     * The owner can change the redemption address using this function. 
     * @param rs new Redemption address
     */
-    function setRedemptionAddress(address rs) onlyOwner public {
+    function setRedemptionAddress(address rs) onlyOwner external {
         redemptionAddress = rs;
     }
 
    /**
     * @param rs Ethereum address to be assigned to the token address.
     */
-    function setTokenAddress(address rs) onlyOwner public {
+    function setTokenAddress(address rs) onlyOwner external {
         tokenAddress = rs;
     }
 
