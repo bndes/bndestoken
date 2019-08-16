@@ -30,7 +30,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
     }
 
 
-    function getVersion() view public returns (uint) {
+    function getVersion() view external returns (uint) {
         return version;
     }
 
@@ -89,7 +89,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
     * the FIAT money.
     * @param value - how much BNDESToken the supplier wants to redeem
     */
-    function redeem (uint256 value) public whenNotPaused returns (bool) {
+    function redeem (uint256 value) external whenNotPaused returns (bool) {
         return transfer(registry.getRedemptionAddress(), value);
     }
 
@@ -107,7 +107,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
 
 
     function registryLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
-        public whenNotPaused { 
+        external whenNotPaused { 
         registry.registryLegalEntity(cnpj,  idFinancialSupportAgreement, salic, msg.sender, idProofHash);
     }
 
@@ -122,7 +122,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
     *                   This PDF is signed with eCNPJ and send to BNDES. 
     */
     function changeAccountLegalEntity(uint64 cnpj, uint64 idFinancialSupportAgreement, uint32 salic, string memory idProofHash) 
-        public whenNotPaused {
+        external whenNotPaused {
         
         address oldAddr = registry.getBlockchainAccount(cnpj, idFinancialSupportAgreement);
         address newAddr = msg.sender;
