@@ -21,7 +21,7 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
      * @dev Throws if called by any account other than the owner.
      */
     modifier onlyOwner() {
-        require(isOwner());
+        require(registry.owner() == msg.sender);
         _;
     }
 
@@ -147,10 +147,6 @@ contract BNDESToken is ERC20Pausable, ERC20Detailed("BNDESToken", "BND", 2) {
         _mint(to, value);
         emit BNDESManualIntervention(description);        
     }
-
-    function isOwner() public view returns (bool) {
-        return registry.owner() == msg.sender;
-    } 
 
     //Unsupported methods - created to avoid call the lib functions by overriding them
     function transferFrom(address from, address to, uint256 value) public whenNotPaused returns (bool) {
