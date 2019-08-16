@@ -381,7 +381,7 @@ contract BNDESRegistry is Ownable() {
     }
 
 
-  function isValidHash(string memory str) pure public returns (bool)  {
+  function isValidHash(string memory str) pure internal returns (bool)  {
 
     bytes memory b = bytes(str);
     if(b.length != 64) return false;
