@@ -1,9 +1,10 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./LegalEntityMapping.sol";
 
-contract BNDESRegistry is Ownable() {
+contract BNDESRegistry is Pausable, Ownable() {
 
     LegalEntityMapping private legalEntityMapping;
 
@@ -14,8 +15,8 @@ contract BNDESRegistry is Ownable() {
     }
 
     //Using this method, it is possible to update legalEntityMapping
-    function setLegalEntityMapping (address legalEntityMapAddr) public onlyOwner {
-        legalEntityMapping = LegalEntityMapping(legalEntityMapAddr);
+    function setLegalEntityMapping (address newAddr) public onlyOwner {
+        legalEntityMapping = LegalEntityMapping(newAddr);
     }
 
     function getLegalEntity (address addr) internal returns (LegalEntityMapping) {
