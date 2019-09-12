@@ -9,6 +9,9 @@ contract BNDESGovernance is Ownable() {
 
     struct ChangeDataStructure {
         
+        //Hash of the change motivation
+        bytes32 hashMotivation;
+        
         //Addresses of contracts to be updated
         address[] contractsToBeUpdated;
 
@@ -27,50 +30,94 @@ contract BNDESGovernance is Ownable() {
         ChangeStateEnum chageState;
     }
 
-    //Mapping from (the hash of the change motivation) to (the data structure of this change)
-    mapping (bytes32 => ChangeDataStructure) public governingChanges;
 
-    address public governanceHandlerAddr;
+    ChangeDataStructure[] public governingChanges;
 
-    constructor (address _governanceHandlerAddr) {
-        governanceHandlerAddr = _governanceHandlerAddr;
+    address public handlerAddr;
+
+
+    /**
+	 * Check if msg.sender is a Handler of this contract. It is used for setters.
+	 * If fail, throw PermissionException.
+	 */
+	modifier onlyHandler {
+		require(isHandler(), "Do not have the handler permission!");
+		_;
+	}  
+
+    constructor (address _handlerAddr) public {
+        handlerAddr = _handlerAddr;
     }
 
-    function setGovernanceHandlerAdd (address _governanceHandlerAddr) public onlyOwner {
-        governanceHandlerAddr = _governanceHandlerAddr;
+    /**
+     * @return true if `msg.sender` is the handler of the contract.
+     */
+    function isHandler() public view returns (bool) {
+        return msg.sender == handlerAddr;
     }
 
-    function createNewChange (bytes32 hashChangeMotivation, address[] contractsToBeUpdated, address[] updatingContracts,
-        address[] newContracts, updatingDataContracts, boolean containsDecision) public onlyHandler {
+    function setHandler (address newAddr) public onlyOwner {
+        handlerAddr = newAddr;
+    }
+
+    event notifyObservers();
+    
+
+    function createNewChange (bytes32 hashChangeMotivation, address[] memory contractsToBeUpdated, address[] memory updatingContracts,
+        address[] memory newContracts, address[] memory updatingDataContracts, address decisionContract, bool containsDecision) public onlyHandler {
             
-            ChangeDataStructure cds;
+            //TODO: avaliar se é storage ou memory
+            ChangeDataStructure memory cds;
             if (containsDecision) {
-                cds = new ChangeDataStructure(contractsToBeUpdated, updatingContractsnewContracts, updatingDataContracts,
-                                    address(0), ChangeStateEnum.WAITING);
+                cds = ChangeDataStructure(hashChangeMotivation, contractsToBeUpdated, updatingContracts, newContracts, updatingDataContracts,
+                                    decisionContract, ChangeStateEnum.WAITING);
             }
             else {
-                cds = new ChangeDataStructure(contractsToBeUpdated, updatingContractsnewContracts, updatingDataContracts,
+                cds = ChangeDataStructure(hashChangeMotivation, contractsToBeUpdated, updatingContracts, newContracts, updatingDataContracts,
                                     address(0), ChangeStateEnum.APPROVED);
             }
-            governingChanges[hashChangeMotivation] = cds;
+            governingChanges.push(cds);
     }
 
+//testar mudança do contrato para add new metodo - como fica na factory? quais são os limites do admin
 
+    function approveChange (bytes32 hashChangeMotivation) public {
 
+        //verify address of decision contract
 
+        //checar que foi do contrato adequado
+        emit notifyObservers(); //quais pontos deve avisar?
+
+    }
+
+    function repproveChange (bytes32 hashChangeMotivation) public {
+
+        //verify address of decision contract
+
+        emit notifyObservers(); //quais pontos deve avisar?
+    }
+
+    function cancelChange (bytes32 hashChangeMotivation) public {
+
+        //verify address of decision contract or owner
+
+        emit notifyObservers(); //quais pontos deve avisar?
+    }
 
     function registryObserverGovernance(address observerAddr) external {
 
     }
 
 
-
-
-    event notifyObservers();
-
-    function isThereOpenedChangeToThisContract (bytes32 hashGoverningChange, address updatedContract) external {
+    function isThereOpenedChangeToThisContract (bytes32 hashGoverningChange, address contractsToBeUpdated, 
+            address updatingContract) external returns (bool) {
 
     }
 
+    function isThereOpenedChangeToThisDataContract (bytes32 hashGoverningChange, address updatingDataContracts) 
+        external returns (bool) {
+
+
+    }
 
 }

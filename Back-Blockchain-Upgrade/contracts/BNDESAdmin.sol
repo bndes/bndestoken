@@ -6,6 +6,7 @@ import "./Storage.sol";
 import "./BNDESRegistry.sol";
 import "./BNDESResolver.sol";
 import "./IChangeDataContract.sol";
+import "./BNDESGovernance.sol";
 
 
 //TODO: aspecto changes precisam receber o hash da mudança para verificar se foi aprovado  - onlyUnderApproval  
@@ -33,18 +34,10 @@ contract BNDESAdmin is Ownable() {
         bndesRegistry = new BNDESRegistry(legalEntityMappingAddr);
 
         bndesResolver = new BNDESResolver();
-        bndesResolver.changeContract("BNDESRegistry", newBNDESRegistryAddr);
+        bndesResolver.changeContract("BNDESRegistry", address(bndesRegistry));
 
-
-        bndesGovernance = new BNDESGovernance();
+        bndesGovernance = new BNDESGovernance(msg.sender);
         
-    }
-
-    function getOwnershipContracts() public onlyOwner {
-
-        storageContract.transferOwnership(owner());
-        bndesRegistry.transferOwnership(owner());
-        bndesResolver.transferOwnership(owner());
     }
 
     function changeBNDESResolver (address newBndesResolverAddr) public onlyOwner {
@@ -87,6 +80,19 @@ contract BNDESAdmin is Ownable() {
         //mudar nos contratos que referenciam o bndesregistry 
         
     }
+
+
+    function getOwnershipContracts() public onlyOwner {
+
+        storageContract.transferOwnership(owner());
+        bndesRegistry.transferOwnership(owner());
+        bndesResolver.transferOwnership(owner());
+    }
+
+    function getOwnershipBNDESRegistry() public onlyOwner {
+        bndesRegistry.transferOwnership(owner());
+    }
+
 
     function pauseAll() public onlyOwner {
         bndesRegistry.pause();
