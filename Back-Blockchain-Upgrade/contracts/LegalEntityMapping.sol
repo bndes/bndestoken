@@ -1,6 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./Storage.sol";
+import "./UpdatableHandleable.sol";
 
 /*
 
@@ -13,26 +14,28 @@ import "./Storage.sol";
 
 */
 
-contract LegalEntityMapping {
+//TODO: avaliar se vale coloca-lo como atualizavel soh por causa do add do storage
+
+contract LegalEntityMapping is UpdatableHandleable {
 
     Storage storageContract;
-    address addrLegalEntity;
+    address addrLegalEntityToPoint;
 
-    constructor (address storageContractAddr) public {
-        storageContract = Storage(storageContractAddr); 
+    constructor (address upgraderInfo,address storageContractAddr) UpdatableHandleable (upgraderInfo) public {
+        storageContract = Storage(storageContractAddr);
     }
 
-    function setAddrLegalEntity(address newAddr) public {
-        addrLegalEntity = newAddr;
+    function setAddrLegalEntityToPoint(address newAddr) public {
+        addrLegalEntityToPoint = newAddr;
     }
 
     function getCNPJ() view public returns (uint) {
-        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntity,"cnpj"));
+        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntityToPoint,"cnpj"));
         return storageContract.getUint(key);
     }
 
-    function setCNPJ(uint cnpj) public {
-        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntity,"cnpj"));
+    function setCNPJ(uint cnpj) public onlyHandler {
+        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntityToPoint,"cnpj"));
         storageContract.setUint(key, cnpj);
     }
 

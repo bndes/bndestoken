@@ -1,15 +1,18 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "./Updatable.sol";
 
-
-contract BNDESResolver is Ownable() {
+contract Resolver is Updatable {
     
     mapping (string => address) nameToAddress;
     mapping (string => address[]) nameToPreviousAddresses;
+
+    constructor (address upgraderInfo) Updatable (upgraderInfo) public {
+
+    }
     
-    function changeContract(string memory name, address newAddr) public onlyOwner returns (bool) {
+    function changeContract(string memory name, address newAddr) public onlyAllowedUpgrader returns (bool) {
 
         address contractAddr = nameToAddress[name];
         if(newAddr != contractAddr) {

@@ -1,91 +1,74 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "./UpgraderInfo.sol";
+import "./Upgrader.sol";
 
 
-contract BNDESGovernance is Ownable() {
+contract BNDESGovernance is Pausable, Ownable() {
 
-    enum ChangeStateEnum { WAITING, APPROVED, REPROVED, CANCELED }
+    enum ChangeState { WAITING, APPROVED, REPROVED, CANCELED, FINALIZED }
 
     struct ChangeDataStructure {
         
         //Hash of the change motivation
         bytes32 hashMotivation;
         
-        //Addresses of contracts to be updated
-        address[] contractsToBeUpdated;
+        //Address of upgrader contract
+        address upgraderContractAddr;
 
-        //Addresses of contracts to be updated
-        address[] updatingContracts;
-
-        //Addresses of new contracts
-        address[] newContracts;
-
-        //Addresses of contracts that change data
-        address[] updatingDataContracts;
-        
         //Address of multisig contract (if necessary)
-        address decisionContract;
+        address decisionContractAddr;
 
-        ChangeStateEnum chageState;
+        ChangeState chageState;
     }
 
 
     ChangeDataStructure[] public governingChanges;
 
-    address public handlerAddr;
+    UpgraderInfo public upgraderInfo;
 
-
-    /**
-	 * Check if msg.sender is a Handler of this contract. It is used for setters.
-	 * If fail, throw PermissionException.
-	 */
-	modifier onlyHandler {
-		require(isHandler(), "Do not have the handler permission!");
-		_;
-	}  
-
-    constructor (address _handlerAddr) public {
-        handlerAddr = _handlerAddr;
+    constructor () public {
+        upgraderInfo = new UpgraderInfo();
     }
 
-    /**
-     * @return true if `msg.sender` is the handler of the contract.
-     */
-    function isHandler() public view returns (bool) {
-        return msg.sender == handlerAddr;
-    }
-
-    function setHandler (address newAddr) public onlyOwner {
-        handlerAddr = newAddr;
+    function getUpgraderInfoAddr() public returns (address) {
+        return upgraderInfo.getAllowedUpgraderAddr();
     }
 
     event notifyObservers();
     
 
-    function createNewChange (bytes32 hashChangeMotivation, address[] memory contractsToBeUpdated, address[] memory updatingContracts,
-        address[] memory newContracts, address[] memory updatingDataContracts, address decisionContract, bool containsDecision) public onlyHandler {
+    function createNewChange (bytes32 hashChangeMotivation, address upgraderContractAddr,
+            address decisionContractAddr) public onlyOwner {
             
             //TODO: avaliar se é storage ou memory
             ChangeDataStructure memory cds;
-            if (containsDecision) {
-                cds = ChangeDataStructure(hashChangeMotivation, contractsToBeUpdated, updatingContracts, newContracts, updatingDataContracts,
-                                    decisionContract, ChangeStateEnum.WAITING);
+            if (decisionContractAddr != address(0)) {
+                cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
+                                    decisionContractAddr, ChangeState.WAITING);
             }
             else {
-                cds = ChangeDataStructure(hashChangeMotivation, contractsToBeUpdated, updatingContracts, newContracts, updatingDataContracts,
-                                    address(0), ChangeStateEnum.APPROVED);
+                cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
+                                    address(0), ChangeState.APPROVED);
+                approveChange(hashChangeMotivation);
             }
             governingChanges.push(cds);
     }
 
-//testar mudança do contrato para add new metodo - como fica na factory? quais são os limites do admin
 
     function approveChange (bytes32 hashChangeMotivation) public {
 
         //verify address of decision contract
 
-        //checar que foi do contrato adequado
+        address upgraderContractAddr = address(0);
+
+
+        upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
+        Upgrader upgrader = Upgrader(upgraderContractAddr);
+        upgrader.upgrade();
+
         emit notifyObservers(); //quais pontos deve avisar?
 
     }
@@ -97,27 +80,24 @@ contract BNDESGovernance is Ownable() {
         emit notifyObservers(); //quais pontos deve avisar?
     }
 
-    function cancelChange (bytes32 hashChangeMotivation) public {
+    function cancelChange (bytes32 hashChangeMotivation) public onlyOwner {
 
         //verify address of decision contract or owner
 
         emit notifyObservers(); //quais pontos deve avisar?
     }
 
+    //todo: funcao de finalizar mudanca
+            //remove atribuicao do admin
+
+
+
     function registryObserverGovernance(address observerAddr) external {
 
     }
 
 
-    function isThereOpenedChangeToThisContract (bytes32 hashGoverningChange, address contractsToBeUpdated, 
-            address updatingContract) external returns (bool) {
-
-    }
-
-    function isThereOpenedChangeToThisDataContract (bytes32 hashGoverningChange, address updatingDataContracts) 
-        external returns (bool) {
 
 
-    }
 
 }

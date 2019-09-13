@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./LegalEntityMapping.sol";
 import "./Storage.sol";
 import "./BNDESRegistry.sol";
-import "./BNDESResolver.sol";
 import "./IChangeDataContract.sol";
 import "./BNDESGovernance.sol";
 
@@ -16,9 +15,9 @@ contract BNDESAdmin is Ownable() {
     LegalEntityMapping public legalEntityMapping;
 
     BNDESRegistry public bndesRegistry;
-    BNDESResolver public bndesResolver;
+//    BNDESResolver public bndesResolver;
     BNDESGovernance public bndesGovernance;
-
+/*
     constructor () public {
     }
     
@@ -82,12 +81,6 @@ contract BNDESAdmin is Ownable() {
     }
 
 
-    function getOwnershipContracts() public onlyOwner {
-
-        storageContract.transferOwnership(owner());
-        bndesRegistry.transferOwnership(owner());
-        bndesResolver.transferOwnership(owner());
-    }
 
     function getOwnershipBNDESRegistry() public onlyOwner {
         bndesRegistry.transferOwnership(owner());
@@ -97,5 +90,5 @@ contract BNDESAdmin is Ownable() {
     function pauseAll() public onlyOwner {
         bndesRegistry.pause();
     }
-   
+   */
 }

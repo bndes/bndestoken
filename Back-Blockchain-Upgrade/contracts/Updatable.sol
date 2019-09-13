@@ -1,40 +1,34 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "./UpgraderInfo.sol";
 
-contract Updatable is Pausable, Ownable() {
+contract Updatable is Pausable {
 
-    address private admin;
+    address public upgraderInfoAddr;
+    bool public dataAvailable;
 
-    event AdminTransferred(address indexed previousAdmin, address indexed newAdmin);
 
-    constructor () internal {
-        admin = msg.sender;
-        emit AdminTransferred(address(0), admin);
+    constructor (address newAddr) public {
+        upgraderInfoAddr = newAddr;
+        dataAvailable = true;
     }
 
-    function getAdmin() public view returns (address) {
-        return admin;
-    }
-
-    modifier onlyAdmin() {
-        require(isAdmin());
+    modifier onlyAllowedUpgrader() {
+        require(isAllowedUpgrader(), "This function can only be executed by Upgraders");
         _;
     }
 
-    function isAdmin() public view returns (bool) {
-        return msg.sender == admin;
+    function isAllowedUpgrader() public view returns (bool) {
+        UpgraderInfo ui = UpgraderInfo (upgraderInfoAddr);
+        return ui.isAllowedUpgrader();
     }
 
-    function transferAdmin(address newAdmin) public onlyOwner {
-        _transferAdmin(newAdmin);
+    function getDataAvailable () external view returns (bool) {
+        return dataAvailable;
     }
 
-    function _transferAdmin(address newAdmin) internal {
-        require(newAdmin != address(0), "NewAdmin is not a valid address");
-        emit AdminTransferred(admin, newAdmin);
-        admin = newAdmin;
+    function setDataAvailable (bool b) external onlyAllowedUpgrader {
+        dataAvailable = b;
     }
-
 }
