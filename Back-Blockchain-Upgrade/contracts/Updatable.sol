@@ -12,6 +12,10 @@ contract Updatable is Pausable {
     constructor (address newAddr) public {
         upgraderInfoAddr = newAddr;
         dataAvailable = true;
+
+//avaliar se fica aqui. Problema é se mudar Admin
+        UpgraderInfo ui = UpgraderInfo(newAddr);
+        addPauser(ui.getAdminAddr());
     }
 
     modifier onlyAllowedUpgrader() {

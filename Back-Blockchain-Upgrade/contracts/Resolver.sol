@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./Updatable.sol";
 
 contract Resolver is Updatable {
@@ -8,8 +7,7 @@ contract Resolver is Updatable {
     mapping (string => address) nameToAddress;
     mapping (string => address[]) nameToPreviousAddresses;
 
-    constructor (address upgraderInfo) Updatable (upgraderInfo) public {
-
+    constructor (address upgraderInfoAddr) Updatable (upgraderInfoAddr) public {
     }
     
     function changeContract(string memory name, address newAddr) public onlyAllowedUpgrader returns (bool) {

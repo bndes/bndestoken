@@ -15,20 +15,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\r\n\r\nimport \"./BNDESGovernance.sol\";\r\n\r\n\r\ncontract Upgrader {\r\n\r\n    function upgrade () external;\r\n\r\n\r\n}",
+  "source": "pragma solidity ^0.5.0;\r\n\r\n\r\ncontract Upgrader {\r\n\r\n    function upgrade () external;\r\n\r\n\r\n}",
   "sourcePath": "D:\\Workspace\\bndestoken\\Back-Blockchain-Upgrade\\contracts\\Upgrader.sol",
   "ast": {
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/Upgrader.sol",
     "exportedSymbols": {
       "Upgrader": [
-        1331
+        1735
       ]
     },
-    "id": 1332,
+    "id": 1736,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1326,
+        "id": 1731,
         "literals": [
           "solidity",
           "^",
@@ -36,18 +36,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:12"
-      },
-      {
-        "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/BNDESGovernance.sol",
-        "file": "./BNDESGovernance.sol",
-        "id": 1327,
-        "nodeType": "ImportDirective",
-        "scope": 1332,
-        "sourceUnit": 185,
-        "src": "27:31:12",
-        "symbolAliases": [],
-        "unitAlias": ""
+        "src": "0:23:11"
       },
       {
         "baseContracts": [],
@@ -55,9 +44,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1331,
+        "id": 1735,
         "linearizedBaseContracts": [
-          1331
+          1735
         ],
         "name": "Upgrader",
         "nodeType": "ContractDefinition",
@@ -65,49 +54,49 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1330,
+            "id": 1734,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "upgrade",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1328,
+              "id": 1732,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "108:2:12"
+              "src": "73:2:11"
             },
             "returnParameters": {
-              "id": 1329,
+              "id": 1733,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "119:0:12"
+              "src": "84:0:11"
             },
-            "scope": 1331,
-            "src": "91:29:12",
+            "scope": 1735,
+            "src": "56:29:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1332,
-        "src": "64:63:12"
+        "scope": 1736,
+        "src": "29:63:11"
       }
     ],
-    "src": "0:127:12"
+    "src": "0:92:11"
   },
   "legacyAST": {
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/Upgrader.sol",
     "exportedSymbols": {
       "Upgrader": [
-        1331
+        1735
       ]
     },
-    "id": 1332,
+    "id": 1736,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1326,
+        "id": 1731,
         "literals": [
           "solidity",
           "^",
@@ -115,18 +104,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:12"
-      },
-      {
-        "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/BNDESGovernance.sol",
-        "file": "./BNDESGovernance.sol",
-        "id": 1327,
-        "nodeType": "ImportDirective",
-        "scope": 1332,
-        "sourceUnit": 185,
-        "src": "27:31:12",
-        "symbolAliases": [],
-        "unitAlias": ""
+        "src": "0:23:11"
       },
       {
         "baseContracts": [],
@@ -134,9 +112,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1331,
+        "id": 1735,
         "linearizedBaseContracts": [
-          1331
+          1735
         ],
         "name": "Upgrader",
         "nodeType": "ContractDefinition",
@@ -144,36 +122,36 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1330,
+            "id": 1734,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "upgrade",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1328,
+              "id": 1732,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "108:2:12"
+              "src": "73:2:11"
             },
             "returnParameters": {
-              "id": 1329,
+              "id": 1733,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "119:0:12"
+              "src": "84:0:11"
             },
-            "scope": 1331,
-            "src": "91:29:12",
+            "scope": 1735,
+            "src": "56:29:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1332,
-        "src": "64:63:12"
+        "scope": 1736,
+        "src": "29:63:11"
       }
     ],
-    "src": "0:127:12"
+    "src": "0:92:11"
   },
   "compiler": {
     "name": "solc",
@@ -181,7 +159,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-09-13T18:12:29.220Z",
+  "updatedAt": "2019-09-16T21:42:25.661Z",
   "devdoc": {
     "methods": {}
   },

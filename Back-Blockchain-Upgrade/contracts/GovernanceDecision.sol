@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./Governance.sol";
 
 /**
  * The upgrader works in following steps:
@@ -11,9 +12,14 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  *    * Function done() can be called at any time to let upgrader destruct itself.
  *    * Function status() can be called at any time to show caller status of the upgrader.
  */
-contract BNDESGovernanceDecision is Ownable() {
+contract GovernanceDecision is Ownable() {
 
 	using SafeMath for uint256;
+
+	uint private changeNumber;
+
+	address private governanceAddr;
+
 
 	/** Marker */
 	enum UpgraderStatus {
@@ -54,6 +60,11 @@ contract BNDESGovernanceDecision is Ownable() {
 		_;
 	}
 
+    modifier onlyGovernance() {
+        require(governanceAddr==msg.sender, "This function can only be executed by the Governance");
+        _;
+    }
+
 	/**
 	 * Constructor.
 	 *
@@ -64,7 +75,7 @@ contract BNDESGovernanceDecision is Ownable() {
 	 * exception	UpgraderConflictException	another upgrader is working.
 	 * exception	InvalidHandlerException	_originalAddr or _newAddr does not belong to a deployed Handler contract.
 	 */
-	constructor (address[] memory _voters, uint256 _percentage, uint256 _period) public {
+	constructor (address[] memory _voters, uint256 _percentage, uint256 _period, address gAddr, address adminAddr) public {
 
         proposalBlockNumber = 0;
 		proposalPeriod = _period;
@@ -74,6 +85,8 @@ contract BNDESGovernanceDecision is Ownable() {
 
 		// Mark the contract as preparing.
 		status = UpgraderStatus.Preparing;
+
+		governanceAddr = gAddr;
 	}
 
 
@@ -176,6 +189,21 @@ contract BNDESGovernanceDecision is Ownable() {
 		return status;
 	}
 
+	function approveChangeIfPossible() external onlyOwner {
+		
+		if (status == UpgraderStatus.Success) {
+	        Governance governance = Governance (governanceAddr);
+			governance.approveChangeWithDecisionContract(changeNumber);
+		}
+
+		//TODO: e se percentual jah nao dah para aprovar?
+		//!!!!!!!!!!!!!!!! DISCUTIR REQUISITOS DO CONTRATO DE DECISAO
+		else if (status == UpgraderStatus.Expired) {
+			Governance governance = Governance (governanceAddr);
+			governance.denyChangeWithDecisionContract(changeNumber);
+		}
+	}
+
 	/**
 	 * Destruct itself.
 	 *
@@ -210,6 +238,19 @@ contract BNDESGovernanceDecision is Ownable() {
 	function setProposalPeriod (uint256 _proposalPeriod) public onlyOwner returns(bool) {
 		proposalPeriod = _proposalPeriod;
 		return true;
+	}
+
+	function getChangeNumber () public view returns(uint256) {
+		return changeNumber;
+	}
+
+	function setChangeNumber (uint256 number) public onlyGovernance returns(bool) {
+		changeNumber = number;
+		return true;
+	}
+
+	function getGovernanceAddr() public view returns(address) {
+		return governanceAddr;
 	}
 
 }
