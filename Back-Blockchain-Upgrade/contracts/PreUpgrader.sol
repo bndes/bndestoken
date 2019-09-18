@@ -6,26 +6,20 @@ import "./Resolver.sol";
 
 contract PreUpgrader {
 
-    Governance public governance;
-    Resolver public resolver;
+    address public governanceAddr;
+    address public resolverAddr;
 
     constructor(address ownerOfGovernanceAddr, address adminOfNewContractsAddr) public {
 
-        governance = new Governance(adminOfNewContractsAddr);
+        Governance governance = new Governance(adminOfNewContractsAddr);
         governance.transferOwnership(ownerOfGovernanceAddr);
         governance.renouncePauser();
+        governanceAddr = address(governance);
 
-        resolver = new Resolver(governance.getUpgraderInfoAddr());
+
+        Resolver resolver = new Resolver(governance.getUpgraderInfoAddr());
         resolver.renouncePauser();
+        resolverAddr = address(resolver);
     }
-
-    function getGovernanceAddr() public view returns(address) {
-        return address(governance);
-    }
-
-    function getResolverAddr() public view returns (address) {
-        return address(resolver);
-    }
-
 
 }

@@ -10,36 +10,45 @@ import "./Governance.sol";
 
 contract Upgrader1 is Upgrader {
 
-    PreUpgrader public preUpgrader;
+    //Variables from previous Migration
+    address public governanceAddr;
+    address public resolverAddr;
 
-    Storage public storageContract;
-    LegalEntityMapping public legalEntityMapping;
-    BNDESRegistry public bndesRegistry;
+    //New variables
+    address public storageContractAddr;
+    address public legalEntityMappingAddr;
+    address public bndesRegistryAddr;
 
     constructor (address preUpgraderAddr) public {
-        preUpgrader = PreUpgrader(preUpgraderAddr);
+        PreUpgrader preUpgrader = PreUpgrader(preUpgraderAddr);
+        governanceAddr = preUpgrader.governanceAddr();
+        resolverAddr = preUpgrader.resolverAddr();
     }
 
     modifier onlyGovernance() {
-        require(preUpgrader.getGovernanceAddr()==msg.sender, "This function can only be executed by the Governance");
+        require(governanceAddr==msg.sender, "This function can only be executed by the Governance");
         _;
     }
 
     function upgrade () external onlyGovernance {
 
-        address governanceAddr = preUpgrader.getGovernanceAddr();
         Governance governance = Governance (governanceAddr);
         address upgraderInfoAddr = governance.getUpgraderInfoAddr();
 
-        storageContract = new Storage(upgraderInfoAddr);
-        legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr, address(storageContract));
-        bndesRegistry = new BNDESRegistry(upgraderInfoAddr, address(legalEntityMapping));
+        Storage storageContract = new Storage(upgraderInfoAddr);
+        storageContractAddr = address(storageContract);
+        
+        LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,storageContractAddr);
+        legalEntityMappingAddr = address(legalEntityMapping);
 
-        storageContract.addHandler(address(legalEntityMapping));
-        legalEntityMapping.addHandler(address(bndesRegistry));
+        BNDESRegistry bndesRegistry = new BNDESRegistry(upgraderInfoAddr, legalEntityMappingAddr);
+        bndesRegistryAddr = address(bndesRegistry);
 
-        Resolver resolver = Resolver(preUpgrader.getResolverAddr());
-        resolver.changeContract("BNDESRegistry", address(bndesRegistry));
+        storageContract.addHandler(legalEntityMappingAddr);
+        legalEntityMapping.addHandler(bndesRegistryAddr);
+
+        Resolver resolver = Resolver(resolverAddr);
+        resolver.changeContract("BNDESRegistry", bndesRegistryAddr);
        
         storageContract.renouncePauser();
         legalEntityMapping.renouncePauser();
@@ -48,6 +57,4 @@ contract Upgrader1 is Upgrader {
     }
 
 
-
-    //TODO: gets
 }

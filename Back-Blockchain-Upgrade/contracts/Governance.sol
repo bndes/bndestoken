@@ -139,7 +139,7 @@ contract Governance is Pausable, Ownable() {
         emit ChangeCancelled(changeNumber);
     }
 
-    function getChange(uint changeNumber) public returns (bytes32, address, address, ChangeState) {
+    function getChange(uint changeNumber) public view returns (bytes32, address, address, ChangeState) {
         ChangeDataStructure memory cds = governingChanges[changeNumber];
         return (cds.hashChangeMotivation, cds.upgraderContractAddr, cds.decisionContractAddr, cds.changeState);
     }
