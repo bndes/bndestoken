@@ -325,7 +325,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 118,
-        "sourceUnit": 2168,
+        "sourceUnit": 2118,
         "src": "27:64:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -336,7 +336,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 118,
-        "sourceUnit": 1507,
+        "sourceUnit": 1457,
         "src": "93:25:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -347,7 +347,7 @@
         "id": 4,
         "nodeType": "ImportDirective",
         "scope": 118,
-        "sourceUnit": 983,
+        "sourceUnit": 929,
         "src": "120:34:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -361,10 +361,10 @@
               "id": 5,
               "name": "Updatable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1506,
+              "referencedDeclaration": 1456,
               "src": "184:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Updatable_$1506",
+                "typeIdentifier": "t_contract$_Updatable_$1456",
                 "typeString": "contract Updatable"
               }
             },
@@ -374,9 +374,9 @@
           }
         ],
         "contractDependencies": [
-          2167,
-          1506,
-          2084
+          2034,
+          2117,
+          1456
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -384,9 +384,9 @@
         "id": 117,
         "linearizedBaseContracts": [
           117,
-          1506,
-          2167,
-          2084
+          1456,
+          2117,
+          2034
         ],
         "name": "BNDESRegistry",
         "nodeType": "ContractDefinition",
@@ -401,7 +401,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+              "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
               "typeString": "contract LegalEntityMapping"
             },
             "typeName": {
@@ -409,10 +409,10 @@
               "id": 7,
               "name": "LegalEntityMapping",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 982,
+              "referencedDeclaration": 928,
               "src": "203:18:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                 "typeString": "contract LegalEntityMapping"
               }
             },
@@ -512,7 +512,7 @@
                       "referencedDeclaration": 8,
                       "src": "416:18:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
@@ -546,10 +546,10 @@
                         "name": "LegalEntityMapping",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 982,
+                        "referencedDeclaration": 928,
                         "src": "437:18:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$982_$",
+                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$928_$",
                           "typeString": "type(contract LegalEntityMapping)"
                         }
                       },
@@ -563,13 +563,13 @@
                       "nodeType": "FunctionCall",
                       "src": "437:42:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
                     "src": "416:63:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -607,10 +607,10 @@
                   "name": "Updatable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1506,
+                  "referencedDeclaration": 1456,
                   "src": "373:9:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1506_$",
+                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1456_$",
                     "typeString": "type(contract Updatable)"
                   }
                 },
@@ -716,7 +716,7 @@
                       "referencedDeclaration": 8,
                       "src": "582:18:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
@@ -750,10 +750,10 @@
                         "name": "LegalEntityMapping",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 982,
+                        "referencedDeclaration": 928,
                         "src": "603:18:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$982_$",
+                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$928_$",
                           "typeString": "type(contract LegalEntityMapping)"
                         }
                       },
@@ -767,13 +767,13 @@
                       "nodeType": "FunctionCall",
                       "src": "603:27:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
                     "src": "582:48:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -797,7 +797,7 @@
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1469,
+                  "referencedDeclaration": 1419,
                   "src": "551:19:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -896,7 +896,7 @@
                         "referencedDeclaration": 8,
                         "src": "734:18:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                          "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                           "typeString": "contract LegalEntityMapping"
                         }
                       },
@@ -907,7 +907,7 @@
                       "lValueRequested": false,
                       "memberName": "setAddrLegalEntityToPoint",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 933,
+                      "referencedDeclaration": 879,
                       "src": "734:44:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -942,7 +942,7 @@
                     "referencedDeclaration": 8,
                     "src": "802:18:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -1008,7 +1008,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                    "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                     "typeString": "contract LegalEntityMapping"
                   },
                   "typeName": {
@@ -1016,10 +1016,10 @@
                     "id": 49,
                     "name": "LegalEntityMapping",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 982,
+                    "referencedDeclaration": 928,
                     "src": "703:18:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -1077,7 +1077,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2419,
+                              "referencedDeclaration": 2369,
                               "src": "911:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -1113,7 +1113,7 @@
                           "referencedDeclaration": 61,
                           "src": "896:14:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$982_$",
+                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$928_$",
                             "typeString": "function (address) returns (contract LegalEntityMapping)"
                           }
                         },
@@ -1127,7 +1127,7 @@
                         "nodeType": "FunctionCall",
                         "src": "896:26:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                          "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                           "typeString": "contract LegalEntityMapping"
                         }
                       },
@@ -1138,7 +1138,7 @@
                       "lValueRequested": false,
                       "memberName": "setCNPJ",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 981,
+                      "referencedDeclaration": 927,
                       "src": "896:34:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -1175,7 +1175,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2419,
+                          "referencedDeclaration": 2369,
                           "src": "961:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1379,7 +1379,7 @@
                           "referencedDeclaration": 61,
                           "src": "1070:14:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$982_$",
+                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$928_$",
                             "typeString": "function (address) returns (contract LegalEntityMapping)"
                           }
                         },
@@ -1393,7 +1393,7 @@
                         "nodeType": "FunctionCall",
                         "src": "1070:20:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                          "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                           "typeString": "contract LegalEntityMapping"
                         }
                       },
@@ -1404,7 +1404,7 @@
                       "lValueRequested": false,
                       "memberName": "getCNPJ",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 955,
+                      "referencedDeclaration": 901,
                       "src": "1070:28:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -1776,7 +1776,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 118,
-        "sourceUnit": 2168,
+        "sourceUnit": 2118,
         "src": "27:64:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1787,7 +1787,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 118,
-        "sourceUnit": 1507,
+        "sourceUnit": 1457,
         "src": "93:25:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1798,7 +1798,7 @@
         "id": 4,
         "nodeType": "ImportDirective",
         "scope": 118,
-        "sourceUnit": 983,
+        "sourceUnit": 929,
         "src": "120:34:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1812,10 +1812,10 @@
               "id": 5,
               "name": "Updatable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1506,
+              "referencedDeclaration": 1456,
               "src": "184:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Updatable_$1506",
+                "typeIdentifier": "t_contract$_Updatable_$1456",
                 "typeString": "contract Updatable"
               }
             },
@@ -1825,9 +1825,9 @@
           }
         ],
         "contractDependencies": [
-          2167,
-          1506,
-          2084
+          2034,
+          2117,
+          1456
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -1835,9 +1835,9 @@
         "id": 117,
         "linearizedBaseContracts": [
           117,
-          1506,
-          2167,
-          2084
+          1456,
+          2117,
+          2034
         ],
         "name": "BNDESRegistry",
         "nodeType": "ContractDefinition",
@@ -1852,7 +1852,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+              "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
               "typeString": "contract LegalEntityMapping"
             },
             "typeName": {
@@ -1860,10 +1860,10 @@
               "id": 7,
               "name": "LegalEntityMapping",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 982,
+              "referencedDeclaration": 928,
               "src": "203:18:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                 "typeString": "contract LegalEntityMapping"
               }
             },
@@ -1963,7 +1963,7 @@
                       "referencedDeclaration": 8,
                       "src": "416:18:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
@@ -1997,10 +1997,10 @@
                         "name": "LegalEntityMapping",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 982,
+                        "referencedDeclaration": 928,
                         "src": "437:18:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$982_$",
+                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$928_$",
                           "typeString": "type(contract LegalEntityMapping)"
                         }
                       },
@@ -2014,13 +2014,13 @@
                       "nodeType": "FunctionCall",
                       "src": "437:42:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
                     "src": "416:63:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -2058,10 +2058,10 @@
                   "name": "Updatable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1506,
+                  "referencedDeclaration": 1456,
                   "src": "373:9:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1506_$",
+                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1456_$",
                     "typeString": "type(contract Updatable)"
                   }
                 },
@@ -2167,7 +2167,7 @@
                       "referencedDeclaration": 8,
                       "src": "582:18:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
@@ -2201,10 +2201,10 @@
                         "name": "LegalEntityMapping",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 982,
+                        "referencedDeclaration": 928,
                         "src": "603:18:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$982_$",
+                          "typeIdentifier": "t_type$_t_contract$_LegalEntityMapping_$928_$",
                           "typeString": "type(contract LegalEntityMapping)"
                         }
                       },
@@ -2218,13 +2218,13 @@
                       "nodeType": "FunctionCall",
                       "src": "603:27:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                        "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                         "typeString": "contract LegalEntityMapping"
                       }
                     },
                     "src": "582:48:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -2248,7 +2248,7 @@
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1469,
+                  "referencedDeclaration": 1419,
                   "src": "551:19:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2347,7 +2347,7 @@
                         "referencedDeclaration": 8,
                         "src": "734:18:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                          "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                           "typeString": "contract LegalEntityMapping"
                         }
                       },
@@ -2358,7 +2358,7 @@
                       "lValueRequested": false,
                       "memberName": "setAddrLegalEntityToPoint",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 933,
+                      "referencedDeclaration": 879,
                       "src": "734:44:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -2393,7 +2393,7 @@
                     "referencedDeclaration": 8,
                     "src": "802:18:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -2459,7 +2459,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                    "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                     "typeString": "contract LegalEntityMapping"
                   },
                   "typeName": {
@@ -2467,10 +2467,10 @@
                     "id": 49,
                     "name": "LegalEntityMapping",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 982,
+                    "referencedDeclaration": 928,
                     "src": "703:18:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                      "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                       "typeString": "contract LegalEntityMapping"
                     }
                   },
@@ -2528,7 +2528,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2419,
+                              "referencedDeclaration": 2369,
                               "src": "911:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2564,7 +2564,7 @@
                           "referencedDeclaration": 61,
                           "src": "896:14:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$982_$",
+                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$928_$",
                             "typeString": "function (address) returns (contract LegalEntityMapping)"
                           }
                         },
@@ -2578,7 +2578,7 @@
                         "nodeType": "FunctionCall",
                         "src": "896:26:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                          "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                           "typeString": "contract LegalEntityMapping"
                         }
                       },
@@ -2589,7 +2589,7 @@
                       "lValueRequested": false,
                       "memberName": "setCNPJ",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 981,
+                      "referencedDeclaration": 927,
                       "src": "896:34:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -2626,7 +2626,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2419,
+                          "referencedDeclaration": 2369,
                           "src": "961:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2830,7 +2830,7 @@
                           "referencedDeclaration": 61,
                           "src": "1070:14:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$982_$",
+                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$_t_contract$_LegalEntityMapping_$928_$",
                             "typeString": "function (address) returns (contract LegalEntityMapping)"
                           }
                         },
@@ -2844,7 +2844,7 @@
                         "nodeType": "FunctionCall",
                         "src": "1070:20:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_LegalEntityMapping_$982",
+                          "typeIdentifier": "t_contract$_LegalEntityMapping_$928",
                           "typeString": "contract LegalEntityMapping"
                         }
                       },
@@ -2855,7 +2855,7 @@
                       "lValueRequested": false,
                       "memberName": "getCNPJ",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 955,
+                      "referencedDeclaration": 901,
                       "src": "1070:28:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -3213,7 +3213,7 @@
     }
   },
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-09-19T19:13:06.416Z",
+  "updatedAt": "2019-09-19T21:32:06.937Z",
   "devdoc": {
     "methods": {
       "pause()": {

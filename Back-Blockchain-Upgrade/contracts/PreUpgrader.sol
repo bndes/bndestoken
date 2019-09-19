@@ -8,10 +8,11 @@ contract PreUpgrader {
 
     address public governanceAddr;
     address public resolverAddr;
+ 
 
-    constructor(address ownerOfGovernanceAddr, address adminOfNewContractsAddr) public {
+    constructor(address ownerOfGovernanceAddr, address adminOfNewContractsAddr, uint[] memory governanceMembersId) public {
 
-        Governance governance = new Governance(adminOfNewContractsAddr);
+        Governance governance = new Governance(adminOfNewContractsAddr, governanceMembersId);
         governance.transferOwnership(ownerOfGovernanceAddr);
         governance.renouncePauser();
         governanceAddr = address(governance);

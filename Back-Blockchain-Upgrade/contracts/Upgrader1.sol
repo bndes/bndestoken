@@ -43,6 +43,7 @@ contract Upgrader1 is Upgrader {
 
         BNDESRegistry bndesRegistry = new BNDESRegistry(upgraderInfoAddr, legalEntityMappingAddr);
         bndesRegistryAddr = address(bndesRegistry);
+        //TODO: setar o registry na governanca
 
         storageContract.addHandler(legalEntityMappingAddr);
         legalEntityMapping.addHandler(bndesRegistryAddr);

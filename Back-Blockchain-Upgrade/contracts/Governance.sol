@@ -29,9 +29,19 @@ contract Governance is Pausable, Ownable() {
 
     UpgraderInfo public upgraderInfo;
 
-    constructor (address adminOfNewContractsAddr) public {
+    IdRegistry private idRegistry;
+    uint[] governanceMembersId;
+
+    constructor (address adminOfNewContractsAddr, uint[] memory _governanceMembersId) public {
         addPauser(adminOfNewContractsAddr);
         upgraderInfo = new UpgraderInfo(adminOfNewContractsAddr);
+        governanceMembersId = _governanceMembersId;
+    }
+
+    //TODO: metodos para mudar governanceMembersId
+
+    function setIdRegistryAddr(address idRegistryAddr) public onlyOwner {
+        idRegistry = IdRegistry(idRegistryAddr);
     }
 
     function getUpgraderInfoAddr() public view returns (address) {
@@ -47,24 +57,23 @@ contract Governance is Pausable, Ownable() {
     
 
     function createNewChange (bytes32 hashChangeMotivation, address upgraderContractAddr,
-            address decisionContractAddr) public onlyOwner {
+            uint256 percentageDecision) public onlyOwner {
             
             uint changeNumber = governingChanges.length;
 
             //TODO: avaliar se é storage ou memory
             ChangeDataStructure memory cds;
-            if (decisionContractAddr != address(0)) {
+            if (percentageDecision != 0) {
+                GovernanceDecision governanceDecision = new GovernanceDecision(governanceMembersId, percentageDecision, address(this), address(idRegistry), changeNumber);
                 cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
-                        decisionContractAddr, ChangeState.WAITING);
-                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, decisionContractAddr);
-                GovernanceDecision governanceDecision = GovernanceDecision(decisionContractAddr);
-                governanceDecision.startProposal(changeNumber);
+                        address(governanceDecision), ChangeState.WAITING);
+                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(governanceDecision));
 
             }
             else { //The owner decided by itself
                 cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
                                     address(0), ChangeState.APPROVED);
-                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, decisionContractAddr);
+                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(0));
                 cds.changeState = ChangeState.APPROVED;
                 emit ChangeApproved(changeNumber);
 

@@ -5,14 +5,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./IdRegistry.sol";
 import "./Governance.sol";
 
-/**
- * The upgrader works in following steps:
- *   1. Call startProposal() to start the voting process;
- *   2. Call getResolution() before the expiration;
- *   3. Upgrade succeed or proposal is expired.
- *    * Function done() can be called at any time to let upgrader destruct itself.
- *    * Function status() can be called at any time to show caller status of the upgrader.
- */
+
 contract GovernanceDecision is Ownable() {
 
 	using SafeMath for uint256;
@@ -26,7 +19,6 @@ contract GovernanceDecision is Ownable() {
 
 	/** Marker */
 	enum UpgraderStatus {
-		Preparing,
 		Voting,
 		Approved,
 		Rejected,
@@ -48,42 +40,23 @@ contract GovernanceDecision is Ownable() {
 		_;
 	}
 
-    modifier onlyGovernance() {
-        require(governanceAddr==msg.sender, "This function can only be executed by the Governance");
-        _;
-    }
-
-
-	constructor (uint[] memory _votersId, uint256 _percentage, address gAddr, address idRegistryAddr) public {
+	constructor (uint[] memory _votersId, uint256 _percentage, address gAddr, address idRegistryAddr, uint256 _changeNumber) public {
 
 		_addVoters(_votersId);
 		_setPercentage(_percentage);
 
 		idRegistry = IdRegistry(idRegistryAddr);
-
-		// Mark the contract as preparing.
-		status = UpgraderStatus.Preparing;
-
 		governanceAddr = gAddr;
+
+		changeNumber = _changeNumber;
+
+		// Mark the contract as voting.
+		status = UpgraderStatus.Voting;
+
 	}
 
 	//TODO: cancel change
 
-
-	/**
-	 * Start voting.
-	 *
-	 * exception	RestartingException	proposal has been already started.
-	 * exception	PermissionException	msg.sender is not the owner.
-	 */
-	function startProposal (uint256 _changeNumber) external onlyGovernance returns(bool) {
-	 	require(status == UpgraderStatus.Preparing, "Proposal has been already started!");
-
-		 changeNumber = _changeNumber;
-
-		// Mark the contract as voting.
-		status = UpgraderStatus.Voting;
-	}
 
 	/**
 	 * Vote.
@@ -108,35 +81,22 @@ contract GovernanceDecision is Ownable() {
 
 
 
-	/**
-	 * Anyone can try to get resolution.
-	 * If voters get consensus, upgrade the Handler contract.
-	 * Otherwise, do nothing.
-	 *
-	 * exception	PreparingUpgraderException	proposal has not been started.
-	 *
-	 * @return	status of proposal.
-	 * 
-	 */
-	function getResolution() external onlyInVotingState returns(UpgraderStatus) {
+	function makeDecision() public onlyInVotingState onlyOwner returns(UpgraderStatus) {
+
+		Governance governance = Governance (governanceAddr);
+
 		if (numOfAgreements > numOfVoters.mul(percentage).div(100)) {
 			status = UpgraderStatus.Approved;
+			governance.approveChangeWithDecisionContract(changeNumber);
 		}
-//TODO: testar caso negativo
+		else {
+			status = UpgraderStatus.Rejected;
+			governance.denyChangeWithDecisionContract(changeNumber);
+		}
+
 		return status;
 	}
 
-
-	function approveChangeIfPossible() external onlyOwner {
-
-		Governance governance = Governance (governanceAddr);
-		if (status == UpgraderStatus.Approved) {
-			governance.approveChangeWithDecisionContract(changeNumber);
-		}
-		else if (status == UpgraderStatus.Rejected) {
-			governance.denyChangeWithDecisionContract(changeNumber);
-		}
-	}
 
 	/**
 	 * Destruct itself.
@@ -148,10 +108,6 @@ contract GovernanceDecision is Ownable() {
 	}
 */
 
-
-	function addVoters (uint[] memory _votersId) public onlyInVotingState onlyOwner {
-		_addVoters(_votersId);
-	}
 
 	function _addVoters (uint[] memory _votersId) internal {
 		for (uint256 i = 0; i < _votersId.length; i++) {
@@ -167,19 +123,6 @@ contract GovernanceDecision is Ownable() {
 		return changeNumber;
 	}
 
-
-	/**
-	 * Set percentage.
-	 * If percentage is over 100, it will be fixed automatically.
-	 *
-	 * @param	_percentage	value of this.percentage.
-	 *
-	 * exception	PermissionException	msg.sender is not the owner.
-	 * 
-	 */
-	function setPercentage(uint256 _percentage) external onlyInVotingState onlyOwner {
-		_setPercentage(_percentage);
-	}
 
 	function _setPercentage(uint256 _percentage) internal {
 		percentage = _percentage;
