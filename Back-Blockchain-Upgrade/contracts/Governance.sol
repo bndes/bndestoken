@@ -58,7 +58,7 @@ contract Governance is Pausable, Ownable() {
                         decisionContractAddr, ChangeState.WAITING);
                 emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, decisionContractAddr);
                 GovernanceDecision governanceDecision = GovernanceDecision(decisionContractAddr);
-                governanceDecision.setChangeNumber(changeNumber);
+                governanceDecision.startProposal(changeNumber);
 
             }
             else { //The owner decided by itself
@@ -135,6 +135,8 @@ contract Governance is Pausable, Ownable() {
             "A mudança precisa estar no estado de espera da decisão da mudança ou aprovada");
 
         cds.changeState = ChangeState.CANCELED;
+
+        //TODO: cancelar no contrato de decisão
 
         emit ChangeCancelled(changeNumber);
     }

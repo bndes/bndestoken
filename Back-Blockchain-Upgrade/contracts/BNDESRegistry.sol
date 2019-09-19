@@ -34,4 +34,9 @@ contract BNDESRegistry is Updatable {
         return cnpj;
     }
 
+    function getId(address addr) external returns (uint) {
+        getCNPJ(addr);
+    }
+
+
 }
