@@ -3,21 +3,16 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./IdRegistry.sol";
-import "./Governance.sol";
 
 
 contract GovernanceDecision is Ownable() {
 
 	using SafeMath for uint256;
 
-	uint private changeNumber;
-
-	address private governanceAddr;
+	uint public changeNumber;
 
 	IdRegistry private idRegistry;
 
-
-	/** Marker */
 	enum UpgraderStatus {
 		Voting,
 		Approved,
@@ -40,13 +35,12 @@ contract GovernanceDecision is Ownable() {
 		_;
 	}
 
-	constructor (uint[] memory _votersId, uint256 _percentage, address gAddr, address idRegistryAddr, uint256 _changeNumber) public {
+	constructor (uint[] memory _votersId, uint256 _percentage, address idRegistryAddr, uint256 _changeNumber) public {
 
 		_addVoters(_votersId);
 		_setPercentage(_percentage);
 
 		idRegistry = IdRegistry(idRegistryAddr);
-		governanceAddr = gAddr;
 
 		changeNumber = _changeNumber;
 
@@ -81,20 +75,17 @@ contract GovernanceDecision is Ownable() {
 
 
 
-	function makeDecision() public onlyInVotingState onlyOwner returns(UpgraderStatus) {
-
-		Governance governance = Governance (governanceAddr);
+	function makeResult() public onlyInVotingState onlyOwner returns(bool) {
 
 		if (numOfAgreements > numOfVoters.mul(percentage).div(100)) {
 			status = UpgraderStatus.Approved;
-			governance.approveChangeWithDecisionContract(changeNumber);
+			return true;
 		}
 		else {
 			status = UpgraderStatus.Rejected;
-			governance.denyChangeWithDecisionContract(changeNumber);
+			return false;
 		}
 
-		return status;
 	}
 
 
@@ -116,11 +107,6 @@ contract GovernanceDecision is Ownable() {
 				numOfVoters++;
 			}
 		}
-	}
-
-
-	function getChangeNumber () public view returns(uint256) {
-		return changeNumber;
 	}
 
 

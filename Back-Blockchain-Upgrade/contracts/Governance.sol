@@ -29,8 +29,8 @@ contract Governance is Pausable, Ownable() {
 
     UpgraderInfo public upgraderInfo;
 
-    IdRegistry private idRegistry;
     uint[] governanceMembersId;
+    IdRegistry private idRegistry;
 
     constructor (address adminOfNewContractsAddr, uint[] memory _governanceMembersId) public {
         addPauser(adminOfNewContractsAddr);
@@ -61,10 +61,9 @@ contract Governance is Pausable, Ownable() {
             
             uint changeNumber = governingChanges.length;
 
-            //TODO: avaliar se é storage ou memory
             ChangeDataStructure memory cds;
             if (percentageDecision != 0) {
-                GovernanceDecision governanceDecision = new GovernanceDecision(governanceMembersId, percentageDecision, address(this), address(idRegistry), changeNumber);
+                GovernanceDecision governanceDecision = new GovernanceDecision(governanceMembersId, percentageDecision, address(idRegistry), changeNumber);
                 cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
                         address(governanceDecision), ChangeState.WAITING);
                 emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(governanceDecision));
@@ -79,39 +78,32 @@ contract Governance is Pausable, Ownable() {
 
             }
             governingChanges.push(cds);
-            
     }
 
-    function approveChangeWithDecisionContract (uint changeNumber) public {
+	function makeResult(uint changeNumber) public onlyOwner returns(bool) {
 
         require (changeNumber<governingChanges.length, "Invalid change number");
         
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
         require(cds.changeState==ChangeState.WAITING, "A mudança precisa estar no estado WAITING");
-        
-        require(cds.decisionContractAddr==msg.sender, "A aprovação precisa ser chamada pelo contrato de decisão da mudança");
 
-        cds.changeState = ChangeState.APPROVED;
+        GovernanceDecision governanceDecision = GovernanceDecision(cds.decisionContractAddr);
 
-        emit ChangeApproved(changeNumber);
-    }
+        if (governanceDecision.makeResult()) {
+           
+            cds.changeState = ChangeState.APPROVED;
+            emit ChangeApproved(changeNumber);
+            return true;
+        }
+		else {
 
-    function denyChangeWithDecisionContract (uint changeNumber) public {
+            cds.changeState = ChangeState.DISAPPROVED;
+            emit ChangeDisapproved(changeNumber);
+			return false;
+		}
 
-        require (changeNumber<governingChanges.length, "Invalid change number");
-
-        ChangeDataStructure memory cds = governingChanges[changeNumber];
-
-        require(cds.changeState==ChangeState.WAITING, "A mudança precisa estar no estado de espera da decisão da mudança");
-        
-        require(cds.decisionContractAddr==msg.sender, "A aprovação precisa ser chamada pelo contrato de decisão da mudança");
-
-        cds.changeState = ChangeState.DISAPPROVED;
-
-        emit ChangeDisapproved(changeNumber);
-    }
-
+	}
 
     function executeChange (uint changeNumber) public {
 
