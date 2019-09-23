@@ -32,6 +32,11 @@ contract Governance is Pausable, Ownable() {
     uint[] governanceMembersId;
     IdRegistry private idRegistry;
 
+    modifier onlyAllowedUpgrader() {
+        require(upgraderInfo.isAllowedUpgrader(), "This function can only be executed by Upgraders");
+        _;
+    }    
+
     constructor (address adminOfNewContractsAddr, uint[] memory _governanceMembersId) public {
         addPauser(adminOfNewContractsAddr);
         upgraderInfo = new UpgraderInfo(adminOfNewContractsAddr);
@@ -40,7 +45,8 @@ contract Governance is Pausable, Ownable() {
 
     //TODO: metodos para mudar governanceMembersId
 
-    function setIdRegistryAddr(address idRegistryAddr) public onlyOwner {
+
+    function setIdRegistryAddr(address idRegistryAddr) public onlyAllowedUpgrader {
         idRegistry = IdRegistry(idRegistryAddr);
     }
 

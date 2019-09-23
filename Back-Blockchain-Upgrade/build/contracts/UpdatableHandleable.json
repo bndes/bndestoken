@@ -267,14 +267,14 @@
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/UpdatableHandleable.sol",
     "exportedSymbols": {
       "UpdatableHandleable": [
-        1491
+        1494
       ]
     },
-    "id": 1492,
+    "id": 1495,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1404,
+        "id": 1407,
         "literals": [
           "solidity",
           "^",
@@ -287,10 +287,10 @@
       {
         "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/Updatable.sol",
         "file": "./Updatable.sol",
-        "id": 1405,
+        "id": 1408,
         "nodeType": "ImportDirective",
-        "scope": 1492,
-        "sourceUnit": 1403,
+        "scope": 1495,
+        "sourceUnit": 1406,
         "src": "27:25:10",
         "symbolAliases": [],
         "unitAlias": ""
@@ -301,45 +301,45 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1406,
+              "id": 1409,
               "name": "Updatable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1402,
+              "referencedDeclaration": 1405,
               "src": "88:9:10",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Updatable_$1402",
+                "typeIdentifier": "t_contract$_Updatable_$1405",
                 "typeString": "contract Updatable"
               }
             },
-            "id": 1407,
+            "id": 1410,
             "nodeType": "InheritanceSpecifier",
             "src": "88:9:10"
           }
         ],
         "contractDependencies": [
-          1980,
-          2063,
-          1402
+          2066,
+          1983,
+          1405
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1491,
+        "id": 1494,
         "linearizedBaseContracts": [
-          1491,
-          1402,
-          2063,
-          1980
+          1494,
+          1405,
+          2066,
+          1983
         ],
         "name": "UpdatableHandleable",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 1411,
+            "id": 1414,
             "name": "handlerAddrPermission",
             "nodeType": "VariableDeclaration",
-            "scope": 1491,
+            "scope": 1494,
             "src": "107:54:10",
             "stateVariable": true,
             "storageLocation": "default",
@@ -348,9 +348,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 1410,
+              "id": 1413,
               "keyType": {
-                "id": 1408,
+                "id": 1411,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "115:7:10",
@@ -366,7 +366,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 1409,
+                "id": 1412,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "126:4:10",
@@ -381,13 +381,13 @@
           },
           {
             "body": {
-              "id": 1419,
+              "id": 1422,
               "nodeType": "Block",
               "src": "237:8:10",
               "statements": []
             },
             "documentation": null,
-            "id": 1420,
+            "id": 1423,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [
@@ -395,11 +395,11 @@
                 "arguments": [
                   {
                     "argumentTypes": null,
-                    "id": 1416,
+                    "id": 1419,
                     "name": "upgraderInfo",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1413,
+                    "referencedDeclaration": 1416,
                     "src": "215:12:10",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -407,17 +407,17 @@
                     }
                   }
                 ],
-                "id": 1417,
+                "id": 1420,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1415,
+                  "id": 1418,
                   "name": "Updatable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1402,
+                  "referencedDeclaration": 1405,
                   "src": "205:9:10",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1402_$",
+                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1405_$",
                     "typeString": "type(contract Updatable)"
                   }
                 },
@@ -428,15 +428,15 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1414,
+              "id": 1417,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1413,
+                  "id": 1416,
                   "name": "upgraderInfo",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1420,
+                  "scope": 1423,
                   "src": "183:20:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -445,7 +445,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1412,
+                    "id": 1415,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "183:7:10",
@@ -462,12 +462,12 @@
               "src": "182:22:10"
             },
             "returnParameters": {
-              "id": 1418,
+              "id": 1421,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "237:0:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "170:75:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -475,7 +475,7 @@
           },
           {
             "body": {
-              "id": 1429,
+              "id": 1432,
               "nodeType": "Block",
               "src": "407:84:10",
               "statements": [
@@ -488,18 +488,18 @@
                         "arguments": [],
                         "expression": {
                           "argumentTypes": [],
-                          "id": 1423,
+                          "id": 1426,
                           "name": "isHandler",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1454,
+                          "referencedDeclaration": 1457,
                           "src": "420:9:10",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                             "typeString": "function () view returns (bool)"
                           }
                         },
-                        "id": 1424,
+                        "id": 1427,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -516,7 +516,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "446f206e6f742068617665207468652068616e646c6572207065726d697373696f6e20746f20777269746521",
-                        "id": 1425,
+                        "id": 1428,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -543,21 +543,21 @@
                           "typeString": "literal_string \"Do not have the handler permission to write!\""
                         }
                       ],
-                      "id": 1422,
+                      "id": 1425,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2318,
-                        2319
+                        2321,
+                        2322
                       ],
-                      "referencedDeclaration": 2319,
+                      "referencedDeclaration": 2322,
                       "src": "412:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1426,
+                    "id": 1429,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -571,23 +571,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1427,
+                  "id": 1430,
                   "nodeType": "ExpressionStatement",
                   "src": "412:68:10"
                 },
                 {
-                  "id": 1428,
+                  "id": 1431,
                   "nodeType": "PlaceholderStatement",
                   "src": "485:1:10"
                 }
               ]
             },
             "documentation": "Check if msg.sender is a Handler of this contract. It is used for setters.\r\nIf fail, throw PermissionException.\r",
-            "id": 1430,
+            "id": 1433,
             "name": "onlyHandler",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1421,
+              "id": 1424,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "407:0:10"
@@ -597,7 +597,7 @@
           },
           {
             "body": {
-              "id": 1442,
+              "id": 1445,
               "nodeType": "Block",
               "src": "527:107:10",
               "statements": [
@@ -611,7 +611,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 1437,
+                        "id": 1440,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -621,18 +621,18 @@
                           "arguments": [],
                           "expression": {
                             "argumentTypes": [],
-                            "id": 1433,
+                            "id": 1436,
                             "name": "isHandler",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1454,
+                            "referencedDeclaration": 1457,
                             "src": "540:9:10",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                               "typeString": "function () view returns (bool)"
                             }
                           },
-                          "id": 1434,
+                          "id": 1437,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -653,18 +653,18 @@
                           "arguments": [],
                           "expression": {
                             "argumentTypes": [],
-                            "id": 1435,
+                            "id": 1438,
                             "name": "isAllowedUpgrader",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1381,
+                            "referencedDeclaration": 1384,
                             "src": "555:17:10",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                               "typeString": "function () view returns (bool)"
                             }
                           },
-                          "id": 1436,
+                          "id": 1439,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -687,7 +687,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "446f206e6f742068617665207468652068616e646c6572207065726d697373696f6e20746f20777269746521",
-                        "id": 1438,
+                        "id": 1441,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -714,21 +714,21 @@
                           "typeString": "literal_string \"Do not have the handler permission to write!\""
                         }
                       ],
-                      "id": 1432,
+                      "id": 1435,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2318,
-                        2319
+                        2321,
+                        2322
                       ],
-                      "referencedDeclaration": 2319,
+                      "referencedDeclaration": 2322,
                       "src": "532:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1439,
+                    "id": 1442,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -742,23 +742,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1440,
+                  "id": 1443,
                   "nodeType": "ExpressionStatement",
                   "src": "532:91:10"
                 },
                 {
-                  "id": 1441,
+                  "id": 1444,
                   "nodeType": "PlaceholderStatement",
                   "src": "628:1:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1443,
+            "id": 1446,
             "name": "onlyHandlerOrUpgrader",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1431,
+              "id": 1434,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "527:0:10"
@@ -768,7 +768,7 @@
           },
           {
             "body": {
-              "id": 1453,
+              "id": 1456,
               "nodeType": "Block",
               "src": "690:59:10",
               "statements": [
@@ -777,34 +777,34 @@
                     "argumentTypes": null,
                     "baseExpression": {
                       "argumentTypes": null,
-                      "id": 1448,
+                      "id": 1451,
                       "name": "handlerAddrPermission",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1411,
+                      "referencedDeclaration": 1414,
                       "src": "708:21:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
                         "typeString": "mapping(address => bool)"
                       }
                     },
-                    "id": 1451,
+                    "id": 1454,
                     "indexExpression": {
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 1449,
+                        "id": 1452,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2315,
+                        "referencedDeclaration": 2318,
                         "src": "730:3:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 1450,
+                      "id": 1453,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -829,36 +829,36 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 1447,
-                  "id": 1452,
+                  "functionReturnParameters": 1450,
+                  "id": 1455,
                   "nodeType": "Return",
                   "src": "701:40:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1454,
+            "id": 1457,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "isHandler",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1444,
+              "id": 1447,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "660:2:10"
             },
             "returnParameters": {
-              "id": 1447,
+              "id": 1450,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1446,
+                  "id": 1449,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1454,
+                  "scope": 1457,
                   "src": "684:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -867,7 +867,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1445,
+                    "id": 1448,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "684:4:10",
@@ -882,7 +882,7 @@
               ],
               "src": "683:6:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "642:107:10",
             "stateMutability": "view",
             "superFunction": null,
@@ -890,14 +890,14 @@
           },
           {
             "body": {
-              "id": 1471,
+              "id": 1474,
               "nodeType": "Block",
               "src": "841:74:10",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1467,
+                    "id": 1470,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -906,25 +906,25 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 1463,
+                        "id": 1466,
                         "name": "handlerAddrPermission",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1411,
+                        "referencedDeclaration": 1414,
                         "src": "852:21:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
                           "typeString": "mapping(address => bool)"
                         }
                       },
-                      "id": 1465,
+                      "id": 1468,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 1464,
+                        "id": 1467,
                         "name": "_handlerAddr",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1456,
+                        "referencedDeclaration": 1459,
                         "src": "874:12:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -947,7 +947,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "74727565",
-                      "id": 1466,
+                      "id": 1469,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -968,7 +968,7 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1468,
+                  "id": 1471,
                   "nodeType": "ExpressionStatement",
                   "src": "852:42:10"
                 },
@@ -976,7 +976,7 @@
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 1469,
+                    "id": 1472,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -991,28 +991,28 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 1462,
-                  "id": 1470,
+                  "functionReturnParameters": 1465,
+                  "id": 1473,
                   "nodeType": "Return",
                   "src": "899:11:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1472,
+            "id": 1475,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1459,
+                "id": 1462,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1458,
+                  "id": 1461,
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1365,
+                  "referencedDeclaration": 1368,
                   "src": "806:19:10",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1026,15 +1026,15 @@
             "name": "addHandler",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1457,
+              "id": 1460,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1456,
+                  "id": 1459,
                   "name": "_handlerAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1472,
+                  "scope": 1475,
                   "src": "775:20:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1043,7 +1043,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1455,
+                    "id": 1458,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "775:7:10",
@@ -1060,15 +1060,15 @@
               "src": "774:22:10"
             },
             "returnParameters": {
-              "id": 1462,
+              "id": 1465,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1461,
+                  "id": 1464,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1472,
+                  "scope": 1475,
                   "src": "834:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1077,7 +1077,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1460,
+                    "id": 1463,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "834:4:10",
@@ -1092,7 +1092,7 @@
               ],
               "src": "833:6:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "754:161:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1100,14 +1100,14 @@
           },
           {
             "body": {
-              "id": 1489,
+              "id": 1492,
               "nodeType": "Block",
               "src": "1010:75:10",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1485,
+                    "id": 1488,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1116,25 +1116,25 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 1481,
+                        "id": 1484,
                         "name": "handlerAddrPermission",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1411,
+                        "referencedDeclaration": 1414,
                         "src": "1021:21:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
                           "typeString": "mapping(address => bool)"
                         }
                       },
-                      "id": 1483,
+                      "id": 1486,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 1482,
+                        "id": 1485,
                         "name": "_handlerAddr",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1474,
+                        "referencedDeclaration": 1477,
                         "src": "1043:12:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -1157,7 +1157,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "66616c7365",
-                      "id": 1484,
+                      "id": 1487,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1178,7 +1178,7 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1486,
+                  "id": 1489,
                   "nodeType": "ExpressionStatement",
                   "src": "1021:43:10"
                 },
@@ -1186,7 +1186,7 @@
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 1487,
+                    "id": 1490,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -1201,28 +1201,28 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 1480,
-                  "id": 1488,
+                  "functionReturnParameters": 1483,
+                  "id": 1491,
                   "nodeType": "Return",
                   "src": "1069:11:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1490,
+            "id": 1493,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1477,
+                "id": 1480,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1476,
+                  "id": 1479,
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1365,
+                  "referencedDeclaration": 1368,
                   "src": "975:19:10",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1236,15 +1236,15 @@
             "name": "removeHandler",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1475,
+              "id": 1478,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1474,
+                  "id": 1477,
                   "name": "_handlerAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1490,
+                  "scope": 1493,
                   "src": "944:20:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1253,7 +1253,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1473,
+                    "id": 1476,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "944:7:10",
@@ -1270,15 +1270,15 @@
               "src": "943:22:10"
             },
             "returnParameters": {
-              "id": 1480,
+              "id": 1483,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1479,
+                  "id": 1482,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1490,
+                  "scope": 1493,
                   "src": "1003:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1287,7 +1287,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1478,
+                    "id": 1481,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1003:4:10",
@@ -1302,14 +1302,14 @@
               ],
               "src": "1002:6:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "920:165:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1492,
+        "scope": 1495,
         "src": "56:1034:10"
       }
     ],
@@ -1319,14 +1319,14 @@
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/UpdatableHandleable.sol",
     "exportedSymbols": {
       "UpdatableHandleable": [
-        1491
+        1494
       ]
     },
-    "id": 1492,
+    "id": 1495,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1404,
+        "id": 1407,
         "literals": [
           "solidity",
           "^",
@@ -1339,10 +1339,10 @@
       {
         "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/Updatable.sol",
         "file": "./Updatable.sol",
-        "id": 1405,
+        "id": 1408,
         "nodeType": "ImportDirective",
-        "scope": 1492,
-        "sourceUnit": 1403,
+        "scope": 1495,
+        "sourceUnit": 1406,
         "src": "27:25:10",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1353,45 +1353,45 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1406,
+              "id": 1409,
               "name": "Updatable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1402,
+              "referencedDeclaration": 1405,
               "src": "88:9:10",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Updatable_$1402",
+                "typeIdentifier": "t_contract$_Updatable_$1405",
                 "typeString": "contract Updatable"
               }
             },
-            "id": 1407,
+            "id": 1410,
             "nodeType": "InheritanceSpecifier",
             "src": "88:9:10"
           }
         ],
         "contractDependencies": [
-          1980,
-          2063,
-          1402
+          2066,
+          1983,
+          1405
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1491,
+        "id": 1494,
         "linearizedBaseContracts": [
-          1491,
-          1402,
-          2063,
-          1980
+          1494,
+          1405,
+          2066,
+          1983
         ],
         "name": "UpdatableHandleable",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 1411,
+            "id": 1414,
             "name": "handlerAddrPermission",
             "nodeType": "VariableDeclaration",
-            "scope": 1491,
+            "scope": 1494,
             "src": "107:54:10",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1400,9 +1400,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 1410,
+              "id": 1413,
               "keyType": {
-                "id": 1408,
+                "id": 1411,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "115:7:10",
@@ -1418,7 +1418,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 1409,
+                "id": 1412,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "126:4:10",
@@ -1433,13 +1433,13 @@
           },
           {
             "body": {
-              "id": 1419,
+              "id": 1422,
               "nodeType": "Block",
               "src": "237:8:10",
               "statements": []
             },
             "documentation": null,
-            "id": 1420,
+            "id": 1423,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [
@@ -1447,11 +1447,11 @@
                 "arguments": [
                   {
                     "argumentTypes": null,
-                    "id": 1416,
+                    "id": 1419,
                     "name": "upgraderInfo",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1413,
+                    "referencedDeclaration": 1416,
                     "src": "215:12:10",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1459,17 +1459,17 @@
                     }
                   }
                 ],
-                "id": 1417,
+                "id": 1420,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1415,
+                  "id": 1418,
                   "name": "Updatable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1402,
+                  "referencedDeclaration": 1405,
                   "src": "205:9:10",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1402_$",
+                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1405_$",
                     "typeString": "type(contract Updatable)"
                   }
                 },
@@ -1480,15 +1480,15 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1414,
+              "id": 1417,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1413,
+                  "id": 1416,
                   "name": "upgraderInfo",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1420,
+                  "scope": 1423,
                   "src": "183:20:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1497,7 +1497,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1412,
+                    "id": 1415,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "183:7:10",
@@ -1514,12 +1514,12 @@
               "src": "182:22:10"
             },
             "returnParameters": {
-              "id": 1418,
+              "id": 1421,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "237:0:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "170:75:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1527,7 +1527,7 @@
           },
           {
             "body": {
-              "id": 1429,
+              "id": 1432,
               "nodeType": "Block",
               "src": "407:84:10",
               "statements": [
@@ -1540,18 +1540,18 @@
                         "arguments": [],
                         "expression": {
                           "argumentTypes": [],
-                          "id": 1423,
+                          "id": 1426,
                           "name": "isHandler",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1454,
+                          "referencedDeclaration": 1457,
                           "src": "420:9:10",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                             "typeString": "function () view returns (bool)"
                           }
                         },
-                        "id": 1424,
+                        "id": 1427,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1568,7 +1568,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "446f206e6f742068617665207468652068616e646c6572207065726d697373696f6e20746f20777269746521",
-                        "id": 1425,
+                        "id": 1428,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1595,21 +1595,21 @@
                           "typeString": "literal_string \"Do not have the handler permission to write!\""
                         }
                       ],
-                      "id": 1422,
+                      "id": 1425,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2318,
-                        2319
+                        2321,
+                        2322
                       ],
-                      "referencedDeclaration": 2319,
+                      "referencedDeclaration": 2322,
                       "src": "412:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1426,
+                    "id": 1429,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1623,23 +1623,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1427,
+                  "id": 1430,
                   "nodeType": "ExpressionStatement",
                   "src": "412:68:10"
                 },
                 {
-                  "id": 1428,
+                  "id": 1431,
                   "nodeType": "PlaceholderStatement",
                   "src": "485:1:10"
                 }
               ]
             },
             "documentation": "Check if msg.sender is a Handler of this contract. It is used for setters.\r\nIf fail, throw PermissionException.\r",
-            "id": 1430,
+            "id": 1433,
             "name": "onlyHandler",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1421,
+              "id": 1424,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "407:0:10"
@@ -1649,7 +1649,7 @@
           },
           {
             "body": {
-              "id": 1442,
+              "id": 1445,
               "nodeType": "Block",
               "src": "527:107:10",
               "statements": [
@@ -1663,7 +1663,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 1437,
+                        "id": 1440,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1673,18 +1673,18 @@
                           "arguments": [],
                           "expression": {
                             "argumentTypes": [],
-                            "id": 1433,
+                            "id": 1436,
                             "name": "isHandler",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1454,
+                            "referencedDeclaration": 1457,
                             "src": "540:9:10",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                               "typeString": "function () view returns (bool)"
                             }
                           },
-                          "id": 1434,
+                          "id": 1437,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1705,18 +1705,18 @@
                           "arguments": [],
                           "expression": {
                             "argumentTypes": [],
-                            "id": 1435,
+                            "id": 1438,
                             "name": "isAllowedUpgrader",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1381,
+                            "referencedDeclaration": 1384,
                             "src": "555:17:10",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                               "typeString": "function () view returns (bool)"
                             }
                           },
-                          "id": 1436,
+                          "id": 1439,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1739,7 +1739,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "446f206e6f742068617665207468652068616e646c6572207065726d697373696f6e20746f20777269746521",
-                        "id": 1438,
+                        "id": 1441,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1766,21 +1766,21 @@
                           "typeString": "literal_string \"Do not have the handler permission to write!\""
                         }
                       ],
-                      "id": 1432,
+                      "id": 1435,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2318,
-                        2319
+                        2321,
+                        2322
                       ],
-                      "referencedDeclaration": 2319,
+                      "referencedDeclaration": 2322,
                       "src": "532:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1439,
+                    "id": 1442,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1794,23 +1794,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1440,
+                  "id": 1443,
                   "nodeType": "ExpressionStatement",
                   "src": "532:91:10"
                 },
                 {
-                  "id": 1441,
+                  "id": 1444,
                   "nodeType": "PlaceholderStatement",
                   "src": "628:1:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1443,
+            "id": 1446,
             "name": "onlyHandlerOrUpgrader",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1431,
+              "id": 1434,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "527:0:10"
@@ -1820,7 +1820,7 @@
           },
           {
             "body": {
-              "id": 1453,
+              "id": 1456,
               "nodeType": "Block",
               "src": "690:59:10",
               "statements": [
@@ -1829,34 +1829,34 @@
                     "argumentTypes": null,
                     "baseExpression": {
                       "argumentTypes": null,
-                      "id": 1448,
+                      "id": 1451,
                       "name": "handlerAddrPermission",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1411,
+                      "referencedDeclaration": 1414,
                       "src": "708:21:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
                         "typeString": "mapping(address => bool)"
                       }
                     },
-                    "id": 1451,
+                    "id": 1454,
                     "indexExpression": {
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 1449,
+                        "id": 1452,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2315,
+                        "referencedDeclaration": 2318,
                         "src": "730:3:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 1450,
+                      "id": 1453,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1881,36 +1881,36 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 1447,
-                  "id": 1452,
+                  "functionReturnParameters": 1450,
+                  "id": 1455,
                   "nodeType": "Return",
                   "src": "701:40:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1454,
+            "id": 1457,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "isHandler",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1444,
+              "id": 1447,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "660:2:10"
             },
             "returnParameters": {
-              "id": 1447,
+              "id": 1450,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1446,
+                  "id": 1449,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1454,
+                  "scope": 1457,
                   "src": "684:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1919,7 +1919,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1445,
+                    "id": 1448,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "684:4:10",
@@ -1934,7 +1934,7 @@
               ],
               "src": "683:6:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "642:107:10",
             "stateMutability": "view",
             "superFunction": null,
@@ -1942,14 +1942,14 @@
           },
           {
             "body": {
-              "id": 1471,
+              "id": 1474,
               "nodeType": "Block",
               "src": "841:74:10",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1467,
+                    "id": 1470,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1958,25 +1958,25 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 1463,
+                        "id": 1466,
                         "name": "handlerAddrPermission",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1411,
+                        "referencedDeclaration": 1414,
                         "src": "852:21:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
                           "typeString": "mapping(address => bool)"
                         }
                       },
-                      "id": 1465,
+                      "id": 1468,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 1464,
+                        "id": 1467,
                         "name": "_handlerAddr",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1456,
+                        "referencedDeclaration": 1459,
                         "src": "874:12:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -1999,7 +1999,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "74727565",
-                      "id": 1466,
+                      "id": 1469,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2020,7 +2020,7 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1468,
+                  "id": 1471,
                   "nodeType": "ExpressionStatement",
                   "src": "852:42:10"
                 },
@@ -2028,7 +2028,7 @@
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 1469,
+                    "id": 1472,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -2043,28 +2043,28 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 1462,
-                  "id": 1470,
+                  "functionReturnParameters": 1465,
+                  "id": 1473,
                   "nodeType": "Return",
                   "src": "899:11:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1472,
+            "id": 1475,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1459,
+                "id": 1462,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1458,
+                  "id": 1461,
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1365,
+                  "referencedDeclaration": 1368,
                   "src": "806:19:10",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2078,15 +2078,15 @@
             "name": "addHandler",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1457,
+              "id": 1460,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1456,
+                  "id": 1459,
                   "name": "_handlerAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1472,
+                  "scope": 1475,
                   "src": "775:20:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2095,7 +2095,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1455,
+                    "id": 1458,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "775:7:10",
@@ -2112,15 +2112,15 @@
               "src": "774:22:10"
             },
             "returnParameters": {
-              "id": 1462,
+              "id": 1465,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1461,
+                  "id": 1464,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1472,
+                  "scope": 1475,
                   "src": "834:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2129,7 +2129,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1460,
+                    "id": 1463,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "834:4:10",
@@ -2144,7 +2144,7 @@
               ],
               "src": "833:6:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "754:161:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -2152,14 +2152,14 @@
           },
           {
             "body": {
-              "id": 1489,
+              "id": 1492,
               "nodeType": "Block",
               "src": "1010:75:10",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1485,
+                    "id": 1488,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2168,25 +2168,25 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 1481,
+                        "id": 1484,
                         "name": "handlerAddrPermission",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1411,
+                        "referencedDeclaration": 1414,
                         "src": "1021:21:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
                           "typeString": "mapping(address => bool)"
                         }
                       },
-                      "id": 1483,
+                      "id": 1486,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 1482,
+                        "id": 1485,
                         "name": "_handlerAddr",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1474,
+                        "referencedDeclaration": 1477,
                         "src": "1043:12:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -2209,7 +2209,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "66616c7365",
-                      "id": 1484,
+                      "id": 1487,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2230,7 +2230,7 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1486,
+                  "id": 1489,
                   "nodeType": "ExpressionStatement",
                   "src": "1021:43:10"
                 },
@@ -2238,7 +2238,7 @@
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 1487,
+                    "id": 1490,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -2253,28 +2253,28 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 1480,
-                  "id": 1488,
+                  "functionReturnParameters": 1483,
+                  "id": 1491,
                   "nodeType": "Return",
                   "src": "1069:11:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 1490,
+            "id": 1493,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1477,
+                "id": 1480,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1476,
+                  "id": 1479,
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1365,
+                  "referencedDeclaration": 1368,
                   "src": "975:19:10",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2288,15 +2288,15 @@
             "name": "removeHandler",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1475,
+              "id": 1478,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1474,
+                  "id": 1477,
                   "name": "_handlerAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1490,
+                  "scope": 1493,
                   "src": "944:20:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2305,7 +2305,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1473,
+                    "id": 1476,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "944:7:10",
@@ -2322,15 +2322,15 @@
               "src": "943:22:10"
             },
             "returnParameters": {
-              "id": 1480,
+              "id": 1483,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1479,
+                  "id": 1482,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1490,
+                  "scope": 1493,
                   "src": "1003:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2339,7 +2339,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1478,
+                    "id": 1481,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1003:4:10",
@@ -2354,14 +2354,14 @@
               ],
               "src": "1002:6:10"
             },
-            "scope": 1491,
+            "scope": 1494,
             "src": "920:165:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1492,
+        "scope": 1495,
         "src": "56:1034:10"
       }
     ],
@@ -2373,7 +2373,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-09-20T14:39:12.120Z",
+  "updatedAt": "2019-09-23T14:01:41.835Z",
   "devdoc": {
     "methods": {
       "pause()": {
