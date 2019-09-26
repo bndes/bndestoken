@@ -55,7 +55,7 @@ contract Upgrader1 is Upgrader {
         bndesRegistry.addPauser(governance.owner());
         bndesRegistry.addPauser(ui.getAdminAddr());
 
-        governance.setIdRegistryAddr(bndesRegistry);
+        governance.setIdRegistryAddr(address(bndesRegistry));
 
         storageContract.addHandler(legalEntityMappingAddr);
         legalEntityMapping.addHandler(bndesRegistryAddr);

@@ -6,6 +6,7 @@ import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./GovernanceDecision.sol";
 import "./UpgraderInfo.sol";
 import "./Upgrader.sol";
+import "./IdRegistry.sol";
 
 
 contract Governance is Pausable, Ownable() {
@@ -27,10 +28,9 @@ contract Governance is Pausable, Ownable() {
     }
 
     ChangeDataStructure[] private governingChanges;
+    uint[] governanceMembersId;
 
     UpgraderInfo private upgraderInfo;
-
-    uint[] governanceMembersId;
     IdRegistry private idRegistry;
 
     modifier onlyAllowedUpgrader() {
@@ -38,10 +38,9 @@ contract Governance is Pausable, Ownable() {
         _;
     }
 
-    constructor (address adminOfNewContractsAddr, uint[] memory _governanceMembersId) public {
-        addPauser(adminOfNewContractsAddr);
+    constructor (address adminOfNewContractsAddr, uint[] memory initialGovernanceMembersId) public {
         upgraderInfo = new UpgraderInfo(adminOfNewContractsAddr);
-        governanceMembersId = _governanceMembersId;
+        governanceMembersId = initialGovernanceMembersId;
     }
 
     //TODO: metodos para mudar governanceMembersId
@@ -160,5 +159,12 @@ contract Governance is Pausable, Ownable() {
         upgraderInfo.setAdminAddr(newAddr);
     }
 
+    function upgraderInfoAddr() public returns (address) {
+        return address(upgraderInfo);
+    }
+
+    function idRegistryAddr() public returns (address) {
+        return address(idRegistry);
+    }
 
  }
