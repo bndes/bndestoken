@@ -35,6 +35,9 @@ contract GovernanceDecision is Ownable() {
 		_;
 	}
 
+//If idRegistryAddr changes, the old contract will be still able to answer id Queries (unless it is destroyed).
+//If the answer of the old version of the contract is not ok, the decision contract should be cancelled.
+
 	constructor (uint[] memory _votersId, uint256 _percentage, address idRegistryAddr, uint256 _changeNumber) public {
 
 		_addVoters(_votersId);
@@ -117,4 +120,7 @@ contract GovernanceDecision is Ownable() {
 		}
 	}
 
+	function getChangeNumber () public view returns(uint256) {
+		return changeNumber;
+	}
 }

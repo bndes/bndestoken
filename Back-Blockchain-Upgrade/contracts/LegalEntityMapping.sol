@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
-import "./Storage.sol";
-import "./UpdatableHandleable.sol";
+import "./appGovernanceUpgrade/Storage.sol";
+import "./appGovernanceUpgrade/UpdatableHandleable.sol";
 
 /*
 

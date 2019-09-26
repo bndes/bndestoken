@@ -5,17 +5,13 @@ import "./UpgraderInfo.sol";
 
 contract Updatable is Pausable {
 
-    address public upgraderInfoAddr;
-    bool public dataAvailable;
+    UpgraderInfo private upgraderInfo;
+    bool private _dataAvailable;
 
 
     constructor (address newAddr) public {
-        upgraderInfoAddr = newAddr;
-        dataAvailable = true;
-
-//avaliar se fica aqui. Problema é se mudar Admin
-        UpgraderInfo ui = UpgraderInfo(newAddr);
-        addPauser(ui.getAdminAddr());
+        upgraderInfo = UpgraderInfo (newAddr);
+        _dataAvailable = true;
     }
 
     modifier onlyAllowedUpgrader() {
@@ -24,15 +20,19 @@ contract Updatable is Pausable {
     }
 
     function isAllowedUpgrader() public view returns (bool) {
-        UpgraderInfo ui = UpgraderInfo (upgraderInfoAddr);
-        return ui.isAllowedUpgrader();
+        return upgraderInfo.isAllowedUpgrader();
     }
 
-    function getDataAvailable () external view returns (bool) {
-        return dataAvailable;
+    function dataAvailable() external view returns (bool) {
+        return _dataAvailable;
     }
 
     function setDataAvailable (bool b) external onlyAllowedUpgrader {
-        dataAvailable = b;
+        _dataAvailable = b;
     }
+
+    function upgraderInfoAddr() view public returns(address) {
+        return address(upgraderInfo);
+    }
+
 }

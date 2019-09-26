@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
-import "./Governance.sol";
-import "./Resolver.sol";
+import "../appGovernanceUpgrade/Governance.sol";
+import "../appGovernanceUpgrade/Resolver.sol";
 
 
 contract PreUpgrader {

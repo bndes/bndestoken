@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+
 import "./GovernanceDecision.sol";
 import "./UpgraderInfo.sol";
 import "./Upgrader.sol";
@@ -25,9 +26,9 @@ contract Governance is Pausable, Ownable() {
         ChangeState changeState;
     }
 
-    ChangeDataStructure[] public governingChanges;
+    ChangeDataStructure[] private governingChanges;
 
-    UpgraderInfo public upgraderInfo;
+    UpgraderInfo private upgraderInfo;
 
     uint[] governanceMembersId;
     IdRegistry private idRegistry;
@@ -35,7 +36,7 @@ contract Governance is Pausable, Ownable() {
     modifier onlyAllowedUpgrader() {
         require(upgraderInfo.isAllowedUpgrader(), "This function can only be executed by Upgraders");
         _;
-    }    
+    }
 
     constructor (address adminOfNewContractsAddr, uint[] memory _governanceMembersId) public {
         addPauser(adminOfNewContractsAddr);
@@ -45,7 +46,7 @@ contract Governance is Pausable, Ownable() {
 
     //TODO: metodos para mudar governanceMembersId
 
-
+    //It is necessary to call this function before any governance decision
     function setIdRegistryAddr(address idRegistryAddr) public onlyAllowedUpgrader {
         idRegistry = IdRegistry(idRegistryAddr);
     }
@@ -151,6 +152,12 @@ contract Governance is Pausable, Ownable() {
     function getChange(uint changeNumber) public view returns (bytes32, address, address, ChangeState) {
         ChangeDataStructure memory cds = governingChanges[changeNumber];
         return (cds.hashChangeMotivation, cds.upgraderContractAddr, cds.decisionContractAddr, cds.changeState);
+    }
+
+    //This function should not be called alone. In order to change the admin, it is necessary to change the pausables.
+    function setAdminAddr (address newAddr) public {
+        require(upgraderInfo.isAllowedUpgrader(), "This function can only be executed by Upgraders");
+        upgraderInfo.setAdminAddr(newAddr);
     }
 
 

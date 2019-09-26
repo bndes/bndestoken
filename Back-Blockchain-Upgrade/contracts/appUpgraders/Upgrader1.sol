@@ -1,11 +1,12 @@
 pragma solidity ^0.5.0;
 
-import "./Upgrader.sol";
+import "../appGovernanceUpgrade/Upgrader.sol";
+import "../appGovernanceUpgrade/Governance.sol";
+import "../appGovernanceUpgrade/Storage.sol";
+
 import "./PreUpgrader.sol";
-import "./LegalEntityMapping.sol";
-import "./Storage.sol";
-import "./BNDESRegistry.sol";
-import "./Governance.sol";
+import "../LegalEntityMapping.sol";
+import "../BNDESRegistry.sol";
 
 
 contract Upgrader1 is Upgrader {
@@ -34,16 +35,27 @@ contract Upgrader1 is Upgrader {
 
         Governance governance = Governance (governanceAddr);
         address upgraderInfoAddr = governance.getUpgraderInfoAddr();
+        UpgraderInfo ui = UpgraderInfo(upgraderInfoAddr);
 
         Storage storageContract = new Storage(upgraderInfoAddr);
         storageContractAddr = address(storageContract);
-        
+        storageContract.addPauser(ui.getAdminAddr());
+
+        //Owner is a pausable because it enables him to remove other pausers
+        storageContract.addPauser(governance.owner());
+
         LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,storageContractAddr);
         legalEntityMappingAddr = address(legalEntityMapping);
+        legalEntityMapping.addPauser(ui.getAdminAddr());
+        legalEntityMapping.addPauser(governance.owner());
 
         BNDESRegistry bndesRegistry = new BNDESRegistry(upgraderInfoAddr, legalEntityMappingAddr);
         bndesRegistryAddr = address(bndesRegistry);
-        //TODO: setar o registry na governanca
+        bndesRegistry.addPauser(resolverAddr);
+        bndesRegistry.addPauser(governance.owner());
+        bndesRegistry.addPauser(ui.getAdminAddr());
+
+        governance.setIdRegistryAddr(bndesRegistry);
 
         storageContract.addHandler(legalEntityMappingAddr);
         legalEntityMapping.addHandler(bndesRegistryAddr);

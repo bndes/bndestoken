@@ -26,19 +26,19 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.0;\r\n\r\ncontract IdRegistry  {\r\n\r\n    function getId(address addr) external returns (uint);\r\n\r\n}\r\n",
-  "sourcePath": "D:\\Workspace\\bndestoken\\Back-Blockchain-Upgrade\\contracts\\IdRegistry.sol",
+  "sourcePath": "D:\\Workspace\\bndestoken\\Back-Blockchain-Upgrade\\contracts\\appGovernanceUpgrade\\IdRegistry.sol",
   "ast": {
-    "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/IdRegistry.sol",
+    "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/IdRegistry.sol",
     "exportedSymbols": {
       "IdRegistry": [
-        791
+        973
       ]
     },
-    "id": 792,
+    "id": 974,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 783,
+        "id": 965,
         "literals": [
           "solidity",
           "^",
@@ -46,7 +46,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:5"
       },
       {
         "baseContracts": [],
@@ -54,9 +54,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 791,
+        "id": 973,
         "linearizedBaseContracts": [
-          791
+          973
         ],
         "name": "IdRegistry",
         "nodeType": "ContractDefinition",
@@ -64,23 +64,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 790,
+            "id": 972,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getId",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 786,
+              "id": 968,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 785,
+                  "id": 967,
                   "name": "addr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 790,
-                  "src": "72:12:3",
+                  "scope": 972,
+                  "src": "72:12:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -88,10 +88,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 784,
+                    "id": 966,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "72:7:3",
+                    "src": "72:7:5",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -102,19 +102,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "71:14:3"
+              "src": "71:14:5"
             },
             "returnParameters": {
-              "id": 789,
+              "id": 971,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 788,
+                  "id": 970,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 790,
-                  "src": "104:4:3",
+                  "scope": 972,
+                  "src": "104:4:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -122,10 +122,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 787,
+                    "id": 969,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:4:3",
+                    "src": "104:4:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -135,33 +135,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "103:6:3"
+              "src": "103:6:5"
             },
-            "scope": 791,
-            "src": "57:53:3",
+            "scope": 973,
+            "src": "57:53:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 792,
-        "src": "27:88:3"
+        "scope": 974,
+        "src": "27:88:5"
       }
     ],
-    "src": "0:117:3"
+    "src": "0:117:5"
   },
   "legacyAST": {
-    "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/IdRegistry.sol",
+    "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/IdRegistry.sol",
     "exportedSymbols": {
       "IdRegistry": [
-        791
+        973
       ]
     },
-    "id": 792,
+    "id": 974,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 783,
+        "id": 965,
         "literals": [
           "solidity",
           "^",
@@ -169,7 +169,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:5"
       },
       {
         "baseContracts": [],
@@ -177,9 +177,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 791,
+        "id": 973,
         "linearizedBaseContracts": [
-          791
+          973
         ],
         "name": "IdRegistry",
         "nodeType": "ContractDefinition",
@@ -187,23 +187,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 790,
+            "id": 972,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getId",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 786,
+              "id": 968,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 785,
+                  "id": 967,
                   "name": "addr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 790,
-                  "src": "72:12:3",
+                  "scope": 972,
+                  "src": "72:12:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -211,10 +211,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 784,
+                    "id": 966,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "72:7:3",
+                    "src": "72:7:5",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -225,19 +225,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "71:14:3"
+              "src": "71:14:5"
             },
             "returnParameters": {
-              "id": 789,
+              "id": 971,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 788,
+                  "id": 970,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 790,
-                  "src": "104:4:3",
+                  "scope": 972,
+                  "src": "104:4:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -245,10 +245,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 787,
+                    "id": 969,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:4:3",
+                    "src": "104:4:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -258,20 +258,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "103:6:3"
+              "src": "103:6:5"
             },
-            "scope": 791,
-            "src": "57:53:3",
+            "scope": 973,
+            "src": "57:53:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 792,
-        "src": "27:88:3"
+        "scope": 974,
+        "src": "27:88:5"
       }
     ],
-    "src": "0:117:3"
+    "src": "0:117:5"
   },
   "compiler": {
     "name": "solc",
@@ -279,7 +279,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-09-23T14:01:41.823Z",
+  "updatedAt": "2019-09-26T18:22:50.583Z",
   "devdoc": {
     "methods": {}
   },
