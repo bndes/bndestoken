@@ -23,6 +23,17 @@ module.exports = {
       network_id: 3,
       gas:   4612388
     }
+  },
+  compilers: {
+    solc: {
+      version: "^0.5.0",
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200
+        }  
+      }
+    }  
   }
 
 };

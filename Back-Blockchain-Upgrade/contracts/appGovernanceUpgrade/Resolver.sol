@@ -6,7 +6,9 @@ contract Resolver is Updatable {
     
     mapping (string => address) nameToAddress;
     mapping (string => address[]) nameToPreviousAddresses;
-    address[] allValidContracts;
+
+    //todo: metodo para acessar essa estrutura?
+    address[] private allValidContracts;
 
     constructor (address upgraderInfoAddr) Updatable (upgraderInfoAddr) public {
     }
@@ -48,7 +50,7 @@ contract Resolver is Updatable {
 
     function pauseAll() public {
         UpgraderInfo upgraderInfo = UpgraderInfo (upgraderInfoAddr());
-        require (upgraderInfo.isAdmin(), "A ação só pode ser executada pelo admin da governança");
+        require (upgraderInfo.isAdmin(msg.sender), "A ação só pode ser executada pelo admin da governança");
         for (uint i=0; i<allValidContracts.length; i++) {
             Pausable pausable = Pausable(allValidContracts[i]);
             pausable.pause();

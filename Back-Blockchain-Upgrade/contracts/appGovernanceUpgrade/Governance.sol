@@ -50,10 +50,6 @@ contract Governance is Pausable, Ownable() {
         idRegistry = IdRegistry(idRegistryAddr);
     }
 
-    function getUpgraderInfoAddr() public view returns (address) {
-        return upgraderInfo.getAllowedUpgraderAddr();
-    }
-
     event NewChangeCreated(uint changeNumber, bytes32 hashChangeMotivation, address upgraderContractAddr,
             address decisionContractAddr);
     event ChangeApproved(uint changeNumber);
@@ -79,7 +75,7 @@ contract Governance is Pausable, Ownable() {
                 cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
                                     address(0), ChangeState.APPROVED);
                 emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(0));
-                cds.changeState = ChangeState.APPROVED;
+                governingChanges[changeNumber].changeState = ChangeState.APPROVED;
                 emit ChangeApproved(changeNumber);
 
             }
@@ -98,13 +94,13 @@ contract Governance is Pausable, Ownable() {
 
         if (governanceDecision.makeResult()) {
            
-            cds.changeState = ChangeState.APPROVED;
+            governingChanges[changeNumber].changeState = ChangeState.APPROVED;
             emit ChangeApproved(changeNumber);
             return true;
         }
 		else {
 
-            cds.changeState = ChangeState.DISAPPROVED;
+            governingChanges[changeNumber].changeState = ChangeState.DISAPPROVED;
             emit ChangeDisapproved(changeNumber);
 			return false;
 		}
@@ -115,18 +111,18 @@ contract Governance is Pausable, Ownable() {
 
         require (changeNumber<governingChanges.length, "Invalid change number");
 
-        require (upgraderInfo.isAdmin(), "A mudança só pode ser executada pelo admin da governança");
+        require (upgraderInfo.isAdmin(msg.sender), "A mudança só pode ser executada pelo admin da governança");
 
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
-        require(cds.changeState==ChangeState.APPROVED, "A mudança precisa estar no estado aprovada");
+//        require(cds.changeState==ChangeState.APPROVED, "A mudança precisa estar no estado aprovada");
 
-        address upgraderContractAddr = cds.upgraderContractAddr;
-        upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
-        Upgrader upgrader = Upgrader(upgraderContractAddr);
-        upgrader.upgrade();
+//        address upgraderContractAddr = cds.upgraderContractAddr;
+//        upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
+//        Upgrader upgrader = Upgrader(upgraderContractAddr);
+//        upgrader.upgrade();
 
-        cds.changeState = ChangeState.FINISHED;
+        governingChanges[changeNumber].changeState = ChangeState.FINISHED;
 
         emit ChangeExecuted(changeNumber);
     }
@@ -141,7 +137,7 @@ contract Governance is Pausable, Ownable() {
         require(cds.changeState==ChangeState.WAITING || cds.changeState==ChangeState.APPROVED,
             "A mudança precisa estar no estado de espera da decisão da mudança ou aprovada");
 
-        cds.changeState = ChangeState.CANCELED;
+        governingChanges[changeNumber].changeState = ChangeState.CANCELED;
 
         //TODO: cancelar no contrato de decisão
 
@@ -159,11 +155,11 @@ contract Governance is Pausable, Ownable() {
         upgraderInfo.setAdminAddr(newAddr);
     }
 
-    function upgraderInfoAddr() public returns (address) {
+    function upgraderInfoAddr() public view returns (address) {
         return address(upgraderInfo);
     }
 
-    function idRegistryAddr() public returns (address) {
+    function idRegistryAddr() public view returns (address) {
         return address(idRegistry);
     }
 

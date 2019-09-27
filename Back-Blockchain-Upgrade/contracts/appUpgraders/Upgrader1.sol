@@ -4,7 +4,7 @@ import "../appGovernanceUpgrade/Upgrader.sol";
 import "../appGovernanceUpgrade/Governance.sol";
 import "../appGovernanceUpgrade/Storage.sol";
 
-import "./PreUpgrader.sol";
+import "./PreUpgrader2.sol";
 import "../LegalEntityMapping.sol";
 import "../BNDESRegistry.sol";
 
@@ -20,10 +20,10 @@ contract Upgrader1 is Upgrader {
     address public legalEntityMappingAddr;
     address public bndesRegistryAddr;
 
-    constructor (address preUpgraderAddr) public {
-        PreUpgrader preUpgrader = PreUpgrader(preUpgraderAddr);
-        governanceAddr = preUpgrader.governanceAddr();
-        resolverAddr = preUpgrader.resolverAddr();
+    constructor (address preUpgraderAddr2) public {
+        PreUpgrader2 preUpgrader2 = PreUpgrader2(preUpgraderAddr2);
+        governanceAddr = preUpgrader2.governanceAddr();
+        resolverAddr = preUpgrader2.resolverAddr();
     }
 
     modifier onlyGovernance() {
@@ -34,26 +34,31 @@ contract Upgrader1 is Upgrader {
     function upgrade () external onlyGovernance {
 
         Governance governance = Governance (governanceAddr);
-        address upgraderInfoAddr = governance.getUpgraderInfoAddr();
+        address upgraderInfoAddr = governance.upgraderInfoAddr();
         UpgraderInfo ui = UpgraderInfo(upgraderInfoAddr);
 
         Storage storageContract = new Storage(upgraderInfoAddr);
         storageContractAddr = address(storageContract);
-        storageContract.addPauser(ui.getAdminAddr());
-
+        
         //Owner is a pausable because it enables him to remove other pausers
         storageContract.addPauser(governance.owner());
+        storageContract.addPauser(ui.adminAddr());
+        storageContract.renouncePauser();
+
 
         LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,storageContractAddr);
         legalEntityMappingAddr = address(legalEntityMapping);
-        legalEntityMapping.addPauser(ui.getAdminAddr());
         legalEntityMapping.addPauser(governance.owner());
+        legalEntityMapping.addPauser(ui.adminAddr());
+        legalEntityMapping.renouncePauser();
+
 
         BNDESRegistry bndesRegistry = new BNDESRegistry(upgraderInfoAddr, legalEntityMappingAddr);
         bndesRegistryAddr = address(bndesRegistry);
         bndesRegistry.addPauser(resolverAddr);
         bndesRegistry.addPauser(governance.owner());
-        bndesRegistry.addPauser(ui.getAdminAddr());
+        bndesRegistry.addPauser(ui.adminAddr());
+        bndesRegistry.renouncePauser();
 
         governance.setIdRegistryAddr(address(bndesRegistry));
 
@@ -62,10 +67,7 @@ contract Upgrader1 is Upgrader {
 
         Resolver resolver = Resolver(resolverAddr);
         resolver.changeContract("BNDESRegistry", bndesRegistryAddr);
-       
-        storageContract.renouncePauser();
-        legalEntityMapping.renouncePauser();
-        bndesRegistry.renouncePauser();
+
 
     }
 

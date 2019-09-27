@@ -7,14 +7,14 @@ contract UpgraderInfo is Ownable() {
 
     address private allowedUpgraderAddr;
 
-    address private adminAddr;
+    address private _adminAddr;
 
     event AllowedUpgraderChanged(address indexed previousAddr, address indexed newAddr);
     event AdminChanged(address indexed previousAddr, address indexed newAddr);
 
     constructor (address newAdmin) public {
-       emit AdminChanged(adminAddr, newAdmin);
-       adminAddr = newAdmin;
+       emit AdminChanged(_adminAddr, newAdmin);
+       _adminAddr = newAdmin;
     }
 
     function getAllowedUpgraderAddr() public view returns (address) {
@@ -31,24 +31,20 @@ contract UpgraderInfo is Ownable() {
         allowedUpgraderAddr = newAddr;
     }
 
-    function setNoUpgrader() public onlyOwner {
-        setAllowedUpgrader(address(0));
+    function isAdmin(address possibleAdmin) public view returns (bool) {
+        return _adminAddr==possibleAdmin;
     }
 
-    function isAdmin() public view returns (bool) {
-        return msg.sender == adminAddr;
-    }
-
-    function getAdminAddr() public view returns (address) {
-        return adminAddr;
+    function adminAddr() public view returns (address) {
+        return _adminAddr;
     }
 
 //se mudar admin precisa setar em cada contrato o novo pauser!!!!!!!!!
 //avaliar se esse metodo deve existir
     function setAdminAddr (address newAddr) public onlyOwner {
         require(newAddr!=address(0), "NewAddr is not a valid address");
-        emit AdminChanged(adminAddr, newAddr);
-        adminAddr = newAddr;
+        emit AdminChanged(_adminAddr, newAddr);
+        _adminAddr = newAddr;
     }
 
 
