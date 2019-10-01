@@ -12,33 +12,33 @@ import "../BNDESRegistry.sol";
 contract Upgrader1 is Upgrader {
 
     //Variables from previous Migration
-    address public governanceAddr;
-    address public resolverAddr;
+    address private _governanceAddr;
+    address private _resolverAddr;
 
     //New variables
-    address public storageContractAddr;
-    address public legalEntityMappingAddr;
-    address public bndesRegistryAddr;
+    address private _storageContractAddr;
+    address private _legalEntityMappingAddr;
+    address private _bndesRegistryAddr;
 
     constructor (address preUpgraderAddr2) public {
         PreUpgrader2 preUpgrader2 = PreUpgrader2(preUpgraderAddr2);
-        governanceAddr = preUpgrader2.governanceAddr();
-        resolverAddr = preUpgrader2.resolverAddr();
+        _governanceAddr = preUpgrader2.governanceAddr();
+        _resolverAddr = preUpgrader2.resolverAddr();
     }
 
     modifier onlyGovernance() {
-        require(governanceAddr==msg.sender, "This function can only be executed by the Governance");
+        require(_governanceAddr==msg.sender, "This function can only be executed by the Governance");
         _;
     }
 
     function upgrade () external onlyGovernance {
 
-        Governance governance = Governance (governanceAddr);
+        Governance governance = Governance (_governanceAddr);
         address upgraderInfoAddr = governance.upgraderInfoAddr();
         UpgraderInfo ui = UpgraderInfo(upgraderInfoAddr);
 
         Storage storageContract = new Storage(upgraderInfoAddr);
-        storageContractAddr = address(storageContract);
+        _storageContractAddr = address(storageContract);
         
         //Owner is a pausable because it enables him to remove other pausers
         storageContract.addPauser(governance.owner());
@@ -46,29 +46,45 @@ contract Upgrader1 is Upgrader {
         storageContract.renouncePauser();
 
 
-        LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,storageContractAddr);
-        legalEntityMappingAddr = address(legalEntityMapping);
+        LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,_storageContractAddr);
+        _legalEntityMappingAddr = address(legalEntityMapping);
         legalEntityMapping.addPauser(governance.owner());
         legalEntityMapping.addPauser(ui.adminAddr());
         legalEntityMapping.renouncePauser();
 
 
-        BNDESRegistry bndesRegistry = new BNDESRegistry(upgraderInfoAddr, legalEntityMappingAddr);
-        bndesRegistryAddr = address(bndesRegistry);
-        bndesRegistry.addPauser(resolverAddr);
+        BNDESRegistry bndesRegistry = new BNDESRegistry(upgraderInfoAddr, _legalEntityMappingAddr);
+        _bndesRegistryAddr = address(bndesRegistry);
+        bndesRegistry.addPauser(_resolverAddr);
         bndesRegistry.addPauser(governance.owner());
         bndesRegistry.addPauser(ui.adminAddr());
         bndesRegistry.renouncePauser();
 
         governance.setIdRegistryAddr(address(bndesRegistry));
 
-        storageContract.addHandler(legalEntityMappingAddr);
-        legalEntityMapping.addHandler(bndesRegistryAddr);
+        storageContract.addHandler(_legalEntityMappingAddr);
+        legalEntityMapping.addHandler(_bndesRegistryAddr);
 
-        Resolver resolver = Resolver(resolverAddr);
-        resolver.changeContract("BNDESRegistry", bndesRegistryAddr);
+        Resolver resolver = Resolver(_resolverAddr);
+        resolver.changeContract("BNDESRegistry", _bndesRegistryAddr);
+    }
 
+    function governanceAddr() public view returns (address) {
+        return _governanceAddr;
+    }
 
+    function resolverAddr() public view returns (address) {
+        return _resolverAddr;
+    }
+
+    function storageContractAddr() public view returns (address) {
+        return _storageContractAddr;
+    }
+    function legalEntityMappingAddr() public view returns (address) {
+        return _legalEntityMappingAddr;
+    }
+    function bndesRegistryAddr() public view returns (address) {
+        return _bndesRegistryAddr;
     }
 
 

@@ -201,14 +201,14 @@
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/Updatable.sol",
     "exportedSymbols": {
       "Updatable": [
-        1482
+        1498
       ]
     },
-    "id": 1483,
+    "id": 1499,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1407,
+        "id": 1423,
         "literals": [
           "solidity",
           "^",
@@ -221,10 +221,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/lifecycle/Pausable.sol",
         "file": "openzeppelin-solidity/contracts/lifecycle/Pausable.sol",
-        "id": 1408,
+        "id": 1424,
         "nodeType": "ImportDirective",
-        "scope": 1483,
-        "sourceUnit": 2393,
+        "scope": 1499,
+        "sourceUnit": 2401,
         "src": "27:64:9",
         "symbolAliases": [],
         "unitAlias": ""
@@ -232,10 +232,10 @@
       {
         "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/UpgraderInfo.sol",
         "file": "./UpgraderInfo.sol",
-        "id": 1409,
+        "id": 1425,
         "nodeType": "ImportDirective",
-        "scope": 1483,
-        "sourceUnit": 1697,
+        "scope": 1499,
+        "sourceUnit": 1713,
         "src": "93:28:9",
         "symbolAliases": [],
         "unitAlias": ""
@@ -246,59 +246,59 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1410,
+              "id": 1426,
               "name": "Pausable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2392,
+              "referencedDeclaration": 2400,
               "src": "147:8:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Pausable_$2392",
+                "typeIdentifier": "t_contract$_Pausable_$2400",
                 "typeString": "contract Pausable"
               }
             },
-            "id": 1411,
+            "id": 1427,
             "nodeType": "InheritanceSpecifier",
             "src": "147:8:9"
           }
         ],
         "contractDependencies": [
-          2309,
-          2392
+          2317,
+          2400
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1482,
+        "id": 1498,
         "linearizedBaseContracts": [
-          1482,
-          2392,
-          2309
+          1498,
+          2400,
+          2317
         ],
         "name": "Updatable",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 1413,
+            "id": 1429,
             "name": "upgraderInfo",
             "nodeType": "VariableDeclaration",
-            "scope": 1482,
+            "scope": 1498,
             "src": "165:33:9",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+              "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
               "typeString": "contract UpgraderInfo"
             },
             "typeName": {
               "contractScope": null,
-              "id": 1412,
+              "id": 1428,
               "name": "UpgraderInfo",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1696,
+              "referencedDeclaration": 1712,
               "src": "165:12:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                 "typeString": "contract UpgraderInfo"
               }
             },
@@ -307,10 +307,10 @@
           },
           {
             "constant": false,
-            "id": 1415,
+            "id": 1431,
             "name": "_dataAvailable",
             "nodeType": "VariableDeclaration",
-            "scope": 1482,
+            "scope": 1498,
             "src": "205:27:9",
             "stateVariable": true,
             "storageLocation": "default",
@@ -319,7 +319,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 1414,
+              "id": 1430,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "205:4:9",
@@ -333,28 +333,28 @@
           },
           {
             "body": {
-              "id": 1430,
+              "id": 1446,
               "nodeType": "Block",
               "src": "280:88:9",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1424,
+                    "id": 1440,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1420,
+                      "id": 1436,
                       "name": "upgraderInfo",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1413,
+                      "referencedDeclaration": 1429,
                       "src": "291:12:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                        "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                         "typeString": "contract UpgraderInfo"
                       }
                     },
@@ -365,11 +365,11 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 1422,
+                          "id": 1438,
                           "name": "newAddr",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1417,
+                          "referencedDeclaration": 1433,
                           "src": "320:7:9",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -384,18 +384,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 1421,
+                        "id": 1437,
                         "name": "UpgraderInfo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1696,
+                        "referencedDeclaration": 1712,
                         "src": "306:12:9",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_UpgraderInfo_$1696_$",
+                          "typeIdentifier": "t_type$_t_contract$_UpgraderInfo_$1712_$",
                           "typeString": "type(contract UpgraderInfo)"
                         }
                       },
-                      "id": 1423,
+                      "id": 1439,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -405,35 +405,35 @@
                       "nodeType": "FunctionCall",
                       "src": "306:22:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                        "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                         "typeString": "contract UpgraderInfo"
                       }
                     },
                     "src": "291:37:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                      "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                       "typeString": "contract UpgraderInfo"
                     }
                   },
-                  "id": 1425,
+                  "id": 1441,
                   "nodeType": "ExpressionStatement",
                   "src": "291:37:9"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1428,
+                    "id": 1444,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1426,
+                      "id": 1442,
                       "name": "_dataAvailable",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1415,
+                      "referencedDeclaration": 1431,
                       "src": "339:14:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -445,7 +445,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "74727565",
-                      "id": 1427,
+                      "id": 1443,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -466,29 +466,29 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1429,
+                  "id": 1445,
                   "nodeType": "ExpressionStatement",
                   "src": "339:21:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1431,
+            "id": 1447,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1418,
+              "id": 1434,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1417,
+                  "id": 1433,
                   "name": "newAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1431,
+                  "scope": 1447,
                   "src": "256:15:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -497,7 +497,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1416,
+                    "id": 1432,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "256:7:9",
@@ -514,12 +514,12 @@
               "src": "255:17:9"
             },
             "returnParameters": {
-              "id": 1419,
+              "id": 1435,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "280:0:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "243:125:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -527,7 +527,7 @@
           },
           {
             "body": {
-              "id": 1440,
+              "id": 1456,
               "nodeType": "Block",
               "src": "407:110:9",
               "statements": [
@@ -540,18 +540,18 @@
                         "arguments": [],
                         "expression": {
                           "argumentTypes": [],
-                          "id": 1434,
+                          "id": 1450,
                           "name": "isAllowedUpgrader",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1451,
+                          "referencedDeclaration": 1467,
                           "src": "426:17:9",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                             "typeString": "function () view returns (bool)"
                           }
                         },
-                        "id": 1435,
+                        "id": 1451,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -568,7 +568,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "546869732066756e6374696f6e2063616e206f6e6c7920626520657865637574656420627920557067726164657273",
-                        "id": 1436,
+                        "id": 1452,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -595,21 +595,21 @@
                           "typeString": "literal_string \"This function can only be executed by Upgraders\""
                         }
                       ],
-                      "id": 1433,
+                      "id": 1449,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2647,
-                        2648
+                        2655,
+                        2656
                       ],
-                      "referencedDeclaration": 2648,
+                      "referencedDeclaration": 2656,
                       "src": "418:7:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1437,
+                    "id": 1453,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -623,23 +623,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1438,
+                  "id": 1454,
                   "nodeType": "ExpressionStatement",
                   "src": "418:79:9"
                 },
                 {
-                  "id": 1439,
+                  "id": 1455,
                   "nodeType": "PlaceholderStatement",
                   "src": "508:1:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1441,
+            "id": 1457,
             "name": "onlyAllowedUpgrader",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1432,
+              "id": 1448,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "404:2:9"
@@ -649,7 +649,7 @@
           },
           {
             "body": {
-              "id": 1450,
+              "id": 1466,
               "nodeType": "Block",
               "src": "581:58:9",
               "statements": [
@@ -661,32 +661,32 @@
                       "argumentTypes": [],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 1446,
+                        "id": 1462,
                         "name": "upgraderInfo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1413,
+                        "referencedDeclaration": 1429,
                         "src": "599:12:9",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                          "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                           "typeString": "contract UpgraderInfo"
                         }
                       },
-                      "id": 1447,
+                      "id": 1463,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "isAllowedUpgrader",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1632,
+                      "referencedDeclaration": 1648,
                       "src": "599:30:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_bool_$",
                         "typeString": "function () view external returns (bool)"
                       }
                     },
-                    "id": 1448,
+                    "id": 1464,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -700,36 +700,36 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 1445,
-                  "id": 1449,
+                  "functionReturnParameters": 1461,
+                  "id": 1465,
                   "nodeType": "Return",
                   "src": "592:39:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1451,
+            "id": 1467,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "isAllowedUpgrader",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1442,
+              "id": 1458,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "551:2:9"
             },
             "returnParameters": {
-              "id": 1445,
+              "id": 1461,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1444,
+                  "id": 1460,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1451,
+                  "scope": 1467,
                   "src": "575:4:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -738,7 +738,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1443,
+                    "id": 1459,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "575:4:9",
@@ -753,7 +753,7 @@
               ],
               "src": "574:6:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "525:114:9",
             "stateMutability": "view",
             "superFunction": null,
@@ -761,54 +761,54 @@
           },
           {
             "body": {
-              "id": 1458,
+              "id": 1474,
               "nodeType": "Block",
               "src": "701:40:9",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1456,
+                    "id": 1472,
                     "name": "_dataAvailable",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1415,
+                    "referencedDeclaration": 1431,
                     "src": "719:14:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 1455,
-                  "id": 1457,
+                  "functionReturnParameters": 1471,
+                  "id": 1473,
                   "nodeType": "Return",
                   "src": "712:21:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1459,
+            "id": 1475,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "dataAvailable",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1452,
+              "id": 1468,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "669:2:9"
             },
             "returnParameters": {
-              "id": 1455,
+              "id": 1471,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1454,
+                  "id": 1470,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1459,
+                  "scope": 1475,
                   "src": "695:4:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -817,7 +817,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1453,
+                    "id": 1469,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "695:4:9",
@@ -832,7 +832,7 @@
               ],
               "src": "694:6:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "647:94:9",
             "stateMutability": "view",
             "superFunction": null,
@@ -840,25 +840,25 @@
           },
           {
             "body": {
-              "id": 1470,
+              "id": 1486,
               "nodeType": "Block",
               "src": "813:37:9",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1468,
+                    "id": 1484,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1466,
+                      "id": 1482,
                       "name": "_dataAvailable",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1415,
+                      "referencedDeclaration": 1431,
                       "src": "824:14:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -869,11 +869,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 1467,
+                      "id": 1483,
                       "name": "b",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1461,
+                      "referencedDeclaration": 1477,
                       "src": "841:1:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -886,27 +886,27 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1469,
+                  "id": 1485,
                   "nodeType": "ExpressionStatement",
                   "src": "824:18:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1471,
+            "id": 1487,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1464,
+                "id": 1480,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1463,
+                  "id": 1479,
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1441,
+                  "referencedDeclaration": 1457,
                   "src": "793:19:9",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -920,15 +920,15 @@
             "name": "setDataAvailable",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1462,
+              "id": 1478,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1461,
+                  "id": 1477,
                   "name": "b",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1471,
+                  "scope": 1487,
                   "src": "776:6:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -937,7 +937,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1460,
+                    "id": 1476,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "776:4:9",
@@ -953,12 +953,12 @@
               "src": "775:8:9"
             },
             "returnParameters": {
-              "id": 1465,
+              "id": 1481,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "813:0:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "749:101:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -966,7 +966,7 @@
           },
           {
             "body": {
-              "id": 1480,
+              "id": 1496,
               "nodeType": "Block",
               "src": "915:47:9",
               "statements": [
@@ -976,14 +976,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1477,
+                        "id": 1493,
                         "name": "upgraderInfo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1413,
+                        "referencedDeclaration": 1429,
                         "src": "941:12:9",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                          "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                           "typeString": "contract UpgraderInfo"
                         }
                       }
@@ -991,11 +991,11 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                          "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                           "typeString": "contract UpgraderInfo"
                         }
                       ],
-                      "id": 1476,
+                      "id": 1492,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1008,7 +1008,7 @@
                       },
                       "typeName": "address"
                     },
-                    "id": 1478,
+                    "id": 1494,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1022,36 +1022,36 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 1475,
-                  "id": 1479,
+                  "functionReturnParameters": 1491,
+                  "id": 1495,
                   "nodeType": "Return",
                   "src": "926:28:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1481,
+            "id": 1497,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "upgraderInfoAddr",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1472,
+              "id": 1488,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "883:2:9"
             },
             "returnParameters": {
-              "id": 1475,
+              "id": 1491,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1474,
+                  "id": 1490,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1481,
+                  "scope": 1497,
                   "src": "906:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1060,7 +1060,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1473,
+                    "id": 1489,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "906:7:9",
@@ -1076,14 +1076,14 @@
               ],
               "src": "905:9:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "858:104:9",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1483,
+        "scope": 1499,
         "src": "125:842:9"
       }
     ],
@@ -1093,14 +1093,14 @@
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/Updatable.sol",
     "exportedSymbols": {
       "Updatable": [
-        1482
+        1498
       ]
     },
-    "id": 1483,
+    "id": 1499,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1407,
+        "id": 1423,
         "literals": [
           "solidity",
           "^",
@@ -1113,10 +1113,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/lifecycle/Pausable.sol",
         "file": "openzeppelin-solidity/contracts/lifecycle/Pausable.sol",
-        "id": 1408,
+        "id": 1424,
         "nodeType": "ImportDirective",
-        "scope": 1483,
-        "sourceUnit": 2393,
+        "scope": 1499,
+        "sourceUnit": 2401,
         "src": "27:64:9",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1124,10 +1124,10 @@
       {
         "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/UpgraderInfo.sol",
         "file": "./UpgraderInfo.sol",
-        "id": 1409,
+        "id": 1425,
         "nodeType": "ImportDirective",
-        "scope": 1483,
-        "sourceUnit": 1697,
+        "scope": 1499,
+        "sourceUnit": 1713,
         "src": "93:28:9",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1138,59 +1138,59 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1410,
+              "id": 1426,
               "name": "Pausable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2392,
+              "referencedDeclaration": 2400,
               "src": "147:8:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Pausable_$2392",
+                "typeIdentifier": "t_contract$_Pausable_$2400",
                 "typeString": "contract Pausable"
               }
             },
-            "id": 1411,
+            "id": 1427,
             "nodeType": "InheritanceSpecifier",
             "src": "147:8:9"
           }
         ],
         "contractDependencies": [
-          2309,
-          2392
+          2317,
+          2400
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1482,
+        "id": 1498,
         "linearizedBaseContracts": [
-          1482,
-          2392,
-          2309
+          1498,
+          2400,
+          2317
         ],
         "name": "Updatable",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 1413,
+            "id": 1429,
             "name": "upgraderInfo",
             "nodeType": "VariableDeclaration",
-            "scope": 1482,
+            "scope": 1498,
             "src": "165:33:9",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+              "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
               "typeString": "contract UpgraderInfo"
             },
             "typeName": {
               "contractScope": null,
-              "id": 1412,
+              "id": 1428,
               "name": "UpgraderInfo",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1696,
+              "referencedDeclaration": 1712,
               "src": "165:12:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                 "typeString": "contract UpgraderInfo"
               }
             },
@@ -1199,10 +1199,10 @@
           },
           {
             "constant": false,
-            "id": 1415,
+            "id": 1431,
             "name": "_dataAvailable",
             "nodeType": "VariableDeclaration",
-            "scope": 1482,
+            "scope": 1498,
             "src": "205:27:9",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1211,7 +1211,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 1414,
+              "id": 1430,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "205:4:9",
@@ -1225,28 +1225,28 @@
           },
           {
             "body": {
-              "id": 1430,
+              "id": 1446,
               "nodeType": "Block",
               "src": "280:88:9",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1424,
+                    "id": 1440,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1420,
+                      "id": 1436,
                       "name": "upgraderInfo",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1413,
+                      "referencedDeclaration": 1429,
                       "src": "291:12:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                        "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                         "typeString": "contract UpgraderInfo"
                       }
                     },
@@ -1257,11 +1257,11 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 1422,
+                          "id": 1438,
                           "name": "newAddr",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1417,
+                          "referencedDeclaration": 1433,
                           "src": "320:7:9",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -1276,18 +1276,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 1421,
+                        "id": 1437,
                         "name": "UpgraderInfo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1696,
+                        "referencedDeclaration": 1712,
                         "src": "306:12:9",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_UpgraderInfo_$1696_$",
+                          "typeIdentifier": "t_type$_t_contract$_UpgraderInfo_$1712_$",
                           "typeString": "type(contract UpgraderInfo)"
                         }
                       },
-                      "id": 1423,
+                      "id": 1439,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1297,35 +1297,35 @@
                       "nodeType": "FunctionCall",
                       "src": "306:22:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                        "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                         "typeString": "contract UpgraderInfo"
                       }
                     },
                     "src": "291:37:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                      "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                       "typeString": "contract UpgraderInfo"
                     }
                   },
-                  "id": 1425,
+                  "id": 1441,
                   "nodeType": "ExpressionStatement",
                   "src": "291:37:9"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1428,
+                    "id": 1444,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1426,
+                      "id": 1442,
                       "name": "_dataAvailable",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1415,
+                      "referencedDeclaration": 1431,
                       "src": "339:14:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -1337,7 +1337,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "74727565",
-                      "id": 1427,
+                      "id": 1443,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1358,29 +1358,29 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1429,
+                  "id": 1445,
                   "nodeType": "ExpressionStatement",
                   "src": "339:21:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1431,
+            "id": 1447,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1418,
+              "id": 1434,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1417,
+                  "id": 1433,
                   "name": "newAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1431,
+                  "scope": 1447,
                   "src": "256:15:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1389,7 +1389,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1416,
+                    "id": 1432,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "256:7:9",
@@ -1406,12 +1406,12 @@
               "src": "255:17:9"
             },
             "returnParameters": {
-              "id": 1419,
+              "id": 1435,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "280:0:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "243:125:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1419,7 +1419,7 @@
           },
           {
             "body": {
-              "id": 1440,
+              "id": 1456,
               "nodeType": "Block",
               "src": "407:110:9",
               "statements": [
@@ -1432,18 +1432,18 @@
                         "arguments": [],
                         "expression": {
                           "argumentTypes": [],
-                          "id": 1434,
+                          "id": 1450,
                           "name": "isAllowedUpgrader",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1451,
+                          "referencedDeclaration": 1467,
                           "src": "426:17:9",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_bool_$",
                             "typeString": "function () view returns (bool)"
                           }
                         },
-                        "id": 1435,
+                        "id": 1451,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1460,7 +1460,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "546869732066756e6374696f6e2063616e206f6e6c7920626520657865637574656420627920557067726164657273",
-                        "id": 1436,
+                        "id": 1452,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1487,21 +1487,21 @@
                           "typeString": "literal_string \"This function can only be executed by Upgraders\""
                         }
                       ],
-                      "id": 1433,
+                      "id": 1449,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2647,
-                        2648
+                        2655,
+                        2656
                       ],
-                      "referencedDeclaration": 2648,
+                      "referencedDeclaration": 2656,
                       "src": "418:7:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1437,
+                    "id": 1453,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1515,23 +1515,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1438,
+                  "id": 1454,
                   "nodeType": "ExpressionStatement",
                   "src": "418:79:9"
                 },
                 {
-                  "id": 1439,
+                  "id": 1455,
                   "nodeType": "PlaceholderStatement",
                   "src": "508:1:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1441,
+            "id": 1457,
             "name": "onlyAllowedUpgrader",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1432,
+              "id": 1448,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "404:2:9"
@@ -1541,7 +1541,7 @@
           },
           {
             "body": {
-              "id": 1450,
+              "id": 1466,
               "nodeType": "Block",
               "src": "581:58:9",
               "statements": [
@@ -1553,32 +1553,32 @@
                       "argumentTypes": [],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 1446,
+                        "id": 1462,
                         "name": "upgraderInfo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1413,
+                        "referencedDeclaration": 1429,
                         "src": "599:12:9",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                          "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                           "typeString": "contract UpgraderInfo"
                         }
                       },
-                      "id": 1447,
+                      "id": 1463,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "isAllowedUpgrader",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1632,
+                      "referencedDeclaration": 1648,
                       "src": "599:30:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_bool_$",
                         "typeString": "function () view external returns (bool)"
                       }
                     },
-                    "id": 1448,
+                    "id": 1464,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1592,36 +1592,36 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 1445,
-                  "id": 1449,
+                  "functionReturnParameters": 1461,
+                  "id": 1465,
                   "nodeType": "Return",
                   "src": "592:39:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1451,
+            "id": 1467,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "isAllowedUpgrader",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1442,
+              "id": 1458,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "551:2:9"
             },
             "returnParameters": {
-              "id": 1445,
+              "id": 1461,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1444,
+                  "id": 1460,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1451,
+                  "scope": 1467,
                   "src": "575:4:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1630,7 +1630,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1443,
+                    "id": 1459,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "575:4:9",
@@ -1645,7 +1645,7 @@
               ],
               "src": "574:6:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "525:114:9",
             "stateMutability": "view",
             "superFunction": null,
@@ -1653,54 +1653,54 @@
           },
           {
             "body": {
-              "id": 1458,
+              "id": 1474,
               "nodeType": "Block",
               "src": "701:40:9",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1456,
+                    "id": 1472,
                     "name": "_dataAvailable",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1415,
+                    "referencedDeclaration": 1431,
                     "src": "719:14:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 1455,
-                  "id": 1457,
+                  "functionReturnParameters": 1471,
+                  "id": 1473,
                   "nodeType": "Return",
                   "src": "712:21:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1459,
+            "id": 1475,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "dataAvailable",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1452,
+              "id": 1468,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "669:2:9"
             },
             "returnParameters": {
-              "id": 1455,
+              "id": 1471,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1454,
+                  "id": 1470,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1459,
+                  "scope": 1475,
                   "src": "695:4:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1709,7 +1709,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1453,
+                    "id": 1469,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "695:4:9",
@@ -1724,7 +1724,7 @@
               ],
               "src": "694:6:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "647:94:9",
             "stateMutability": "view",
             "superFunction": null,
@@ -1732,25 +1732,25 @@
           },
           {
             "body": {
-              "id": 1470,
+              "id": 1486,
               "nodeType": "Block",
               "src": "813:37:9",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1468,
+                    "id": 1484,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1466,
+                      "id": 1482,
                       "name": "_dataAvailable",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1415,
+                      "referencedDeclaration": 1431,
                       "src": "824:14:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -1761,11 +1761,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 1467,
+                      "id": 1483,
                       "name": "b",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1461,
+                      "referencedDeclaration": 1477,
                       "src": "841:1:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -1778,27 +1778,27 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1469,
+                  "id": 1485,
                   "nodeType": "ExpressionStatement",
                   "src": "824:18:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1471,
+            "id": 1487,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1464,
+                "id": 1480,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1463,
+                  "id": 1479,
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1441,
+                  "referencedDeclaration": 1457,
                   "src": "793:19:9",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1812,15 +1812,15 @@
             "name": "setDataAvailable",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1462,
+              "id": 1478,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1461,
+                  "id": 1477,
                   "name": "b",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1471,
+                  "scope": 1487,
                   "src": "776:6:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1829,7 +1829,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1460,
+                    "id": 1476,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "776:4:9",
@@ -1845,12 +1845,12 @@
               "src": "775:8:9"
             },
             "returnParameters": {
-              "id": 1465,
+              "id": 1481,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "813:0:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "749:101:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1858,7 +1858,7 @@
           },
           {
             "body": {
-              "id": 1480,
+              "id": 1496,
               "nodeType": "Block",
               "src": "915:47:9",
               "statements": [
@@ -1868,14 +1868,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1477,
+                        "id": 1493,
                         "name": "upgraderInfo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1413,
+                        "referencedDeclaration": 1429,
                         "src": "941:12:9",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                          "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                           "typeString": "contract UpgraderInfo"
                         }
                       }
@@ -1883,11 +1883,11 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_UpgraderInfo_$1696",
+                          "typeIdentifier": "t_contract$_UpgraderInfo_$1712",
                           "typeString": "contract UpgraderInfo"
                         }
                       ],
-                      "id": 1476,
+                      "id": 1492,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1900,7 +1900,7 @@
                       },
                       "typeName": "address"
                     },
-                    "id": 1478,
+                    "id": 1494,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1914,36 +1914,36 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 1475,
-                  "id": 1479,
+                  "functionReturnParameters": 1491,
+                  "id": 1495,
                   "nodeType": "Return",
                   "src": "926:28:9"
                 }
               ]
             },
             "documentation": null,
-            "id": 1481,
+            "id": 1497,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "upgraderInfoAddr",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1472,
+              "id": 1488,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "883:2:9"
             },
             "returnParameters": {
-              "id": 1475,
+              "id": 1491,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1474,
+                  "id": 1490,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1481,
+                  "scope": 1497,
                   "src": "906:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1952,7 +1952,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1473,
+                    "id": 1489,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "906:7:9",
@@ -1968,14 +1968,14 @@
               ],
               "src": "905:9:9"
             },
-            "scope": 1482,
+            "scope": 1498,
             "src": "858:104:9",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1483,
+        "scope": 1499,
         "src": "125:842:9"
       }
     ],
@@ -1987,7 +1987,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-09-27T21:01:08.586Z",
+  "updatedAt": "2019-10-01T16:26:32.482Z",
   "devdoc": {
     "methods": {
       "pause()": {

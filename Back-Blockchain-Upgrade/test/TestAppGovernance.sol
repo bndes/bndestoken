@@ -13,20 +13,28 @@ import "../contracts/appGovernanceUpgrade/Resolver.sol";
 
 
 contract TestAppGovernance {
-
-  PreUpgrader1 preUpgrader1;
-
-  function beforeEach() public {
-    uint[] memory governanceMembersId;
-    preUpgrader1 = new PreUpgrader1(address(this), address(this), governanceMembersId);
-  }
-
 /*
+  PreUpgrader1 public preUpgrader1;
+  PreUpgrader2 public preUpgrader2;
+
+
   function testHelloWorld() public {
     HelloWorld hw = new HelloWorld();
     Assert.equal(hw.get1(), 1, "False");
   }
 
+  function testSetupPreUpgrader1() public {
+    uint[] memory governanceMembersId;
+    address addressThis = address(this);
+    preUpgrader1 = new PreUpgrader1(addressThis, addressThis, governanceMembersId);
+  }
+
+  
+  function testSetupPreUpgrader2() public {
+    preUpgrader2 = new PreUpgrader2(address(preUpgrader1));
+  }
+
+/*
 
   function testGovernanceCreation() public {
 
@@ -86,36 +94,35 @@ contract TestAppGovernance {
   function testGovernanceChangeCreationWithoutDecision() public {
     Governance governance = Governance (preUpgrader1.governanceAddr());
     bytes32 hashChangeMotivation = keccak256("justification");
-    PreUpgrader2 preUpgrader2 = PreUpgrader2(address(preUpgrader1));
+
     address upgraderContractAddr = address(preUpgrader2);
+
     governance.createNewChange(hashChangeMotivation, upgraderContractAddr, 0);
     (bytes32 hashChangeMotivation2, address upgraderContractAddr2, address decisionContractAddr, Governance.ChangeState state) = governance.getChange(0);
-    
+
+    Assert.equal(hashChangeMotivation, hashChangeMotivation, "obvio");
     Assert.equal(hashChangeMotivation, hashChangeMotivation2, "Hash deveriam ser iguais");
     Assert.equal(upgraderContractAddr, upgraderContractAddr2, "Upgraders deveriam ser iguais");
     Assert.equal(decisionContractAddr, address(0), "Decision address deveriam ser iguais");
     Assert.equal(uint(state), uint(Governance.ChangeState.APPROVED), "Estado deveria ser APPROVED");
-
   }
 */
+/*
   function testGovernanceExecuteChange() public {
     Governance governance = Governance (preUpgrader1.governanceAddr());
     bytes32 hashChangeMotivation = keccak256("justification");
-    PreUpgrader2 preUpgrader2 = PreUpgrader2(address(preUpgrader1));
     address upgraderContractAddr = address(preUpgrader2);
     governance.createNewChange(hashChangeMotivation, upgraderContractAddr, 0);
-   
+
     governance.executeChange(0);
     
     (bytes32 hashChangeMotivation2, address upgraderContractAddr2, address decisionContractAddr, Governance.ChangeState state) = governance.getChange(0);
-    
     Assert.equal(hashChangeMotivation, hashChangeMotivation2, "Hash deveriam ser iguais");
     Assert.equal(upgraderContractAddr, upgraderContractAddr2, "Upgraders deveriam ser iguais");
     Assert.equal(decisionContractAddr, address(0), "Decision address deveriam ser iguais");
     Assert.equal(uint(state), uint(Governance.ChangeState.FINISHED), "Estado deveria ser FINISHED");
-
   }
-
+*/
 /*
   function testGovernanceChangeCreationWithDecision() public {
     Governance governance = Governance (preUpgrader1.governanceAddr());

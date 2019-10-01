@@ -75,7 +75,7 @@ contract Governance is Pausable, Ownable() {
                 cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
                                     address(0), ChangeState.APPROVED);
                 emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(0));
-                governingChanges[changeNumber].changeState = ChangeState.APPROVED;
+                cds.changeState = ChangeState.APPROVED;
                 emit ChangeApproved(changeNumber);
 
             }
@@ -115,12 +115,12 @@ contract Governance is Pausable, Ownable() {
 
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
-//        require(cds.changeState==ChangeState.APPROVED, "A mudança precisa estar no estado aprovada");
+        require(cds.changeState==ChangeState.APPROVED, "A mudança precisa estar no estado aprovada");
 
-//        address upgraderContractAddr = cds.upgraderContractAddr;
-//        upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
-//        Upgrader upgrader = Upgrader(upgraderContractAddr);
-//        upgrader.upgrade();
+        address upgraderContractAddr = cds.upgraderContractAddr;
+        upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
+        Upgrader upgrader = Upgrader(upgraderContractAddr);
+        upgrader.upgrade();
 
         governingChanges[changeNumber].changeState = ChangeState.FINISHED;
 
@@ -163,4 +163,12 @@ contract Governance is Pausable, Ownable() {
         return address(idRegistry);
     }
 
+//teste
+/*
+    function retorna1() public pure returns (uint) {
+        return 1;
+    }
+    
+    uint public test = 1;
+*/    
  }

@@ -320,7 +320,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 133,
-        "sourceUnit": 2393,
+        "sourceUnit": 2401,
         "src": "27:64:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -331,7 +331,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 133,
-        "sourceUnit": 989,
+        "sourceUnit": 1005,
         "src": "95:47:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -342,7 +342,7 @@
         "id": 4,
         "nodeType": "ImportDirective",
         "scope": 133,
-        "sourceUnit": 1483,
+        "sourceUnit": 1499,
         "src": "144:46:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -367,10 +367,10 @@
               "id": 6,
               "name": "Updatable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1482,
+              "referencedDeclaration": 1498,
               "src": "258:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Updatable_$1482",
+                "typeIdentifier": "t_contract$_Updatable_$1498",
                 "typeString": "contract Updatable"
               }
             },
@@ -385,10 +385,10 @@
               "id": 8,
               "name": "IdRegistry",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 988,
+              "referencedDeclaration": 1004,
               "src": "269:10:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IdRegistry_$988",
+                "typeIdentifier": "t_contract$_IdRegistry_$1004",
                 "typeString": "contract IdRegistry"
               }
             },
@@ -398,10 +398,10 @@
           }
         ],
         "contractDependencies": [
-          1482,
-          2309,
-          2392,
-          988
+          1004,
+          1498,
+          2317,
+          2400
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -409,10 +409,10 @@
         "id": 132,
         "linearizedBaseContracts": [
           132,
-          988,
-          1482,
-          2392,
-          2309
+          1004,
+          1498,
+          2400,
+          2317
         ],
         "name": "BNDESRegistry",
         "nodeType": "ContractDefinition",
@@ -633,10 +633,10 @@
                   "name": "Updatable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1482,
+                  "referencedDeclaration": 1498,
                   "src": "459:9:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1482_$",
+                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1498_$",
                     "typeString": "type(contract Updatable)"
                   }
                 },
@@ -823,7 +823,7 @@
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1441,
+                  "referencedDeclaration": 1457,
                   "src": "637:19:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1103,7 +1103,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2644,
+                              "referencedDeclaration": 2652,
                               "src": "997:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -1201,7 +1201,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2644,
+                          "referencedDeclaration": 2652,
                           "src": "1047:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1765,7 +1765,7 @@
             "scope": 132,
             "src": "1301:85:0",
             "stateMutability": "nonpayable",
-            "superFunction": 987,
+            "superFunction": 1003,
             "visibility": "external"
           },
           {
@@ -1846,7 +1846,7 @@
                       "name": "selfdestruct",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2652,
+                      "referencedDeclaration": 2660,
                       "src": "1451:12:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_selfdestruct_nonpayable$_t_address_payable_$returns$__$",
@@ -1887,7 +1887,7 @@
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1441,
+                  "referencedDeclaration": 1457,
                   "src": "1420:19:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1952,7 +1952,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 133,
-        "sourceUnit": 2393,
+        "sourceUnit": 2401,
         "src": "27:64:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1963,7 +1963,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 133,
-        "sourceUnit": 989,
+        "sourceUnit": 1005,
         "src": "95:47:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1974,7 +1974,7 @@
         "id": 4,
         "nodeType": "ImportDirective",
         "scope": 133,
-        "sourceUnit": 1483,
+        "sourceUnit": 1499,
         "src": "144:46:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1999,10 +1999,10 @@
               "id": 6,
               "name": "Updatable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1482,
+              "referencedDeclaration": 1498,
               "src": "258:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Updatable_$1482",
+                "typeIdentifier": "t_contract$_Updatable_$1498",
                 "typeString": "contract Updatable"
               }
             },
@@ -2017,10 +2017,10 @@
               "id": 8,
               "name": "IdRegistry",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 988,
+              "referencedDeclaration": 1004,
               "src": "269:10:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IdRegistry_$988",
+                "typeIdentifier": "t_contract$_IdRegistry_$1004",
                 "typeString": "contract IdRegistry"
               }
             },
@@ -2030,10 +2030,10 @@
           }
         ],
         "contractDependencies": [
-          1482,
-          2309,
-          2392,
-          988
+          1004,
+          1498,
+          2317,
+          2400
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -2041,10 +2041,10 @@
         "id": 132,
         "linearizedBaseContracts": [
           132,
-          988,
-          1482,
-          2392,
-          2309
+          1004,
+          1498,
+          2400,
+          2317
         ],
         "name": "BNDESRegistry",
         "nodeType": "ContractDefinition",
@@ -2265,10 +2265,10 @@
                   "name": "Updatable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1482,
+                  "referencedDeclaration": 1498,
                   "src": "459:9:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1482_$",
+                    "typeIdentifier": "t_type$_t_contract$_Updatable_$1498_$",
                     "typeString": "type(contract Updatable)"
                   }
                 },
@@ -2455,7 +2455,7 @@
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1441,
+                  "referencedDeclaration": 1457,
                   "src": "637:19:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2735,7 +2735,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2644,
+                              "referencedDeclaration": 2652,
                               "src": "997:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2833,7 +2833,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2644,
+                          "referencedDeclaration": 2652,
                           "src": "1047:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -3397,7 +3397,7 @@
             "scope": 132,
             "src": "1301:85:0",
             "stateMutability": "nonpayable",
-            "superFunction": 987,
+            "superFunction": 1003,
             "visibility": "external"
           },
           {
@@ -3478,7 +3478,7 @@
                       "name": "selfdestruct",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2652,
+                      "referencedDeclaration": 2660,
                       "src": "1451:12:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_selfdestruct_nonpayable$_t_address_payable_$returns$__$",
@@ -3519,7 +3519,7 @@
                   "name": "onlyAllowedUpgrader",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1441,
+                  "referencedDeclaration": 1457,
                   "src": "1420:19:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3570,7 +3570,7 @@
     }
   },
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-09-27T21:01:08.581Z",
+  "updatedAt": "2019-10-01T16:26:32.458Z",
   "devdoc": {
     "methods": {
       "pause()": {
