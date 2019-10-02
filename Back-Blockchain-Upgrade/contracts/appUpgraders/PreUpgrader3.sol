@@ -9,7 +9,7 @@ import "../LegalEntityMapping.sol";
 import "../BNDESRegistry.sol";
 
 
-contract Upgrader1 is Upgrader {
+contract PreUpgrader3 is Upgrader {
 
     //Variables from previous Migration
     address private _governanceAddr;
@@ -24,6 +24,7 @@ contract Upgrader1 is Upgrader {
         PreUpgrader2 preUpgrader2 = PreUpgrader2(preUpgraderAddr2);
         _governanceAddr = preUpgrader2.governanceAddr();
         _resolverAddr = preUpgrader2.resolverAddr();
+        _storageContractAddr = preUpgrader2.storageContractAddr();
     }
 
     modifier onlyGovernance() {
@@ -36,20 +37,15 @@ contract Upgrader1 is Upgrader {
         Governance governance = Governance (_governanceAddr);
         address upgraderInfoAddr = governance.upgraderInfoAddr();
         UpgraderInfo ui = UpgraderInfo(upgraderInfoAddr);
-
-        Storage storageContract = new Storage(upgraderInfoAddr);
-        _storageContractAddr = address(storageContract);
-        
-        //Owner is a pausable because it enables him to remove other pausers
-        storageContract.addPauser(governance.owner());
-        storageContract.addPauser(ui.adminAddr());
-        storageContract.renouncePauser();
+        Storage storageContract = Storage(_storageContractAddr);
 
 
         LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,_storageContractAddr);
         _legalEntityMappingAddr = address(legalEntityMapping);
         legalEntityMapping.addPauser(governance.owner());
-        legalEntityMapping.addPauser(ui.adminAddr());
+        if (governance.owner()!=ui.adminAddr()) {
+            legalEntityMapping.addPauser(ui.adminAddr());
+        }
         legalEntityMapping.renouncePauser();
 
 
@@ -57,9 +53,12 @@ contract Upgrader1 is Upgrader {
         _bndesRegistryAddr = address(bndesRegistry);
         bndesRegistry.addPauser(_resolverAddr);
         bndesRegistry.addPauser(governance.owner());
-        bndesRegistry.addPauser(ui.adminAddr());
+        if (governance.owner()!=ui.adminAddr()) {
+            bndesRegistry.addPauser(ui.adminAddr());
+        }
         bndesRegistry.renouncePauser();
 
+        //Very important: The governance now knows how to identify the governance members
         governance.setIdRegistryAddr(address(bndesRegistry));
 
         storageContract.addHandler(_legalEntityMappingAddr);

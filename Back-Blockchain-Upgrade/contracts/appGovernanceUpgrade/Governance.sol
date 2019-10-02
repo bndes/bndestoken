@@ -34,7 +34,7 @@ contract Governance is Pausable, Ownable() {
     IdRegistry private idRegistry;
 
     modifier onlyAllowedUpgrader() {
-        require(upgraderInfo.isAllowedUpgrader(), "This function can only be executed by Upgraders");
+        require(upgraderInfo.isAllowedUpgrader(msg.sender), "This function can only be executed by Upgraders");
         _;
     }
 
@@ -88,7 +88,7 @@ contract Governance is Pausable, Ownable() {
         
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
-        require(cds.changeState==ChangeState.WAITING, "A mudança precisa estar no estado WAITING");
+        require(cds.changeState==ChangeState.WAITING, "The change needs to be in WAITING state");
 
         GovernanceDecision governanceDecision = GovernanceDecision(cds.decisionContractAddr);
 
@@ -107,15 +107,16 @@ contract Governance is Pausable, Ownable() {
 
 	}
 
+//TODO: include the possibility to have more than one upgrader.
     function executeChange (uint changeNumber) public {
 
         require (changeNumber<governingChanges.length, "Invalid change number");
 
-        require (upgraderInfo.isAdmin(msg.sender), "A mudança só pode ser executada pelo admin da governança");
+        require (upgraderInfo.isAdmin(msg.sender), "The change needs to be executed by Admin");
 
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
-        require(cds.changeState==ChangeState.APPROVED, "A mudança precisa estar no estado aprovada");
+        require(cds.changeState==ChangeState.APPROVED, "The change needs to be in APPROVED state");
 
         address upgraderContractAddr = cds.upgraderContractAddr;
         upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
@@ -125,6 +126,7 @@ contract Governance is Pausable, Ownable() {
         governingChanges[changeNumber].changeState = ChangeState.FINISHED;
 
         emit ChangeExecuted(changeNumber);
+
     }
 
 
@@ -135,7 +137,7 @@ contract Governance is Pausable, Ownable() {
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
         require(cds.changeState==ChangeState.WAITING || cds.changeState==ChangeState.APPROVED,
-            "A mudança precisa estar no estado de espera da decisão da mudança ou aprovada");
+            "The change needs to be in WAITING or APPROVED state");
 
         governingChanges[changeNumber].changeState = ChangeState.CANCELED;
 
@@ -145,17 +147,19 @@ contract Governance is Pausable, Ownable() {
     }
 
     function getChange(uint changeNumber) public view returns (bytes32, address, address, ChangeState) {
+
+        require (changeNumber<governingChanges.length, "Invalid change number");
+
         ChangeDataStructure memory cds = governingChanges[changeNumber];
         return (cds.hashChangeMotivation, cds.upgraderContractAddr, cds.decisionContractAddr, cds.changeState);
     }
 
     //This function should not be called alone. In order to change the admin, it is necessary to change the pausables.
-    function setAdminAddr (address newAddr) public {
-        require(upgraderInfo.isAllowedUpgrader(), "This function can only be executed by Upgraders");
+    function setAdminAddr (address newAddr) public onlyAllowedUpgrader {
         upgraderInfo.setAdminAddr(newAddr);
     }
 
-    function upgraderInfoAddr() public view returns (address) {
+    function upgraderInfoAddr() public view returns (address)  {
         return address(upgraderInfo);
     }
 
@@ -163,12 +167,5 @@ contract Governance is Pausable, Ownable() {
         return address(idRegistry);
     }
 
-//teste
-/*
-    function retorna1() public pure returns (uint) {
-        return 1;
-    }
-    
-    uint public test = 1;
-*/    
+   
  }

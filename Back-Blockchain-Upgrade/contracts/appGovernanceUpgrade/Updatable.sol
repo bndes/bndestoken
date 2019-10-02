@@ -13,14 +13,14 @@ contract Updatable is Pausable {
         upgraderInfo = UpgraderInfo (newAddr);
         _dataAvailable = true;
     }
-
+    
     modifier onlyAllowedUpgrader() {
-        require(isAllowedUpgrader(), "This function can only be executed by Upgraders");
+        require(upgraderInfo.isAllowedUpgrader(msg.sender), "This function can only be executed by Upgraders");
         _;
     }
 
     function isAllowedUpgrader() public view returns (bool) {
-        return upgraderInfo.isAllowedUpgrader();
+        return upgraderInfo.isAllowedUpgrader(msg.sender);
     }
 
     function dataAvailable() external view returns (bool) {

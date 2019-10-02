@@ -4,7 +4,9 @@ import "../appGovernanceUpgrade/Upgrader.sol";
 import "../appGovernanceUpgrade/Governance.sol";
 import "../appGovernanceUpgrade/Resolver.sol";
 import "../appGovernanceUpgrade/UpgraderInfo.sol";
+import "../appGovernanceUpgrade/Storage.sol";
 import "./PreUpgrader1.sol";
+
 
 contract PreUpgrader2 is Upgrader {
 
@@ -13,6 +15,9 @@ contract PreUpgrader2 is Upgrader {
 
     //New variables
     address private _resolverAddr;
+
+    //New variables
+    address private _storageContractAddr;
 
     constructor(address preUpgraderAddr1) public {
         
@@ -40,6 +45,16 @@ contract PreUpgrader2 is Upgrader {
         resolver.renouncePauser();
         
         _resolverAddr = address(resolver);
+
+        Storage storageContract = new Storage(governance.upgraderInfoAddr());
+        _storageContractAddr = address(storageContract);
+        
+        //Owner is a pausable because it enables him to remove other pausers
+        storageContract.addPauser(governance.owner());
+        if (governance.owner()!=ui.adminAddr()) {
+            storageContract.addPauser(ui.adminAddr());
+        }
+        storageContract.renouncePauser();
     }
 
     function governanceAddr() public view returns (address) {
@@ -50,4 +65,7 @@ contract PreUpgrader2 is Upgrader {
         return _resolverAddr;
     }
 
+    function storageContractAddr() public view returns (address) {
+        return _storageContractAddr;
+    }
 }

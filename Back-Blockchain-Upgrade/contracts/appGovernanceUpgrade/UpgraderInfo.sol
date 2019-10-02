@@ -21,8 +21,8 @@ contract UpgraderInfo is Ownable() {
         return allowedUpgraderAddr;
     }
 
-    function isAllowedUpgrader() public view returns (bool) {
-        return msg.sender == allowedUpgraderAddr;
+    function isAllowedUpgrader(address sender) public view returns (bool) {
+        return sender == allowedUpgraderAddr;
     }
 
     function setAllowedUpgrader(address newAddr) public onlyOwner {

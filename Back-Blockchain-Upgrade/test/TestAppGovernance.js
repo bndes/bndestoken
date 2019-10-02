@@ -4,7 +4,7 @@ var Resolver = artifacts.require("./appGovernanceUpgrade/Resolver.sol");
 
 var PreUprgader1 = artifacts.require("./appUpgraders/PreUpgrader1.sol");
 var PreUprgader2 = artifacts.require("./appUpgraders/PreUpgrader2.sol");
-var Upgrader1 = artifacts.require("./appUpgraders/Upgrader1.sol");
+var PreUpgrader3 = artifacts.require("./appUpgraders/PreUpgrader3.sol");
 
 
 var expectThrow = require('./helper.js');
@@ -12,17 +12,17 @@ var expectThrow = require('./helper.js');
 
 contract('GovernanceInAction', async accounts => {
 
+    const nullAddr = "0x0000000000000000000000000000000000000000";
+
     let bndesAddr = accounts[0];
     let governanceAddr;
     let governanceInstance;
     let upgraderInfo;
-    const nullAddr = "0x0000000000000000000000000000000000000000";
 
     let preUpgrader1;
     let preUpgrader2;
-    let upgrader1;
+    let preUpgrader3;
 
-//  let emp1Addr = accounts[1];
   let governanceMembersId = [];
 
  
@@ -71,7 +71,7 @@ contract('GovernanceInAction', async accounts => {
     assert.equal(resultGetChange['1'], upgraderContractAddr, "Upgraders deveriam ser iguais");
     assert.equal(resultGetChange['2'], nullAddr, "Decision address deveriam ser iguais");
     assert.equal(resultGetChange['3'], 1, "Estado deveria ser APPROVED");
-    
+
   });
 
 
@@ -80,34 +80,51 @@ contract('GovernanceInAction', async accounts => {
     await governanceInstance.executeChange(0);
     let resultGetChange  = await governanceInstance.getChange(0);
     let resolverAddr = await preUpgrader2.resolverAddr();
-
-//    console.log(resolverAddr);      
+     
     assert.equal(resultGetChange['3'], 4, "Estado deveria ser FINALIZED");
     assert.notEqual(resolverAddr, nullAddr, "Resolver deveria ser um endereço válido");
     
   });
 
 
-  it("should create the change upgrader1 -- async", async () => {
+  it("should create the change PreUpgrader3 -- async", async () => {
+
+    preUpgrader3 = await PreUpgrader3.new(preUpgrader2.address);
 
     let hashChangeMotivation = web3.utils.asciiToHex('justification upgrader1');
-    upgrader1 = await Upgrader1.new(preUpgrader2.address);
-    let upgraderContractAddr = upgrader1.address;
-
-    //????
-    let resolverAddr = await preUpgrader2.resolverAddr();
-    assert.equal(resolverAddr, nullAddr, "Resolver deve ser null");
+    let upgraderContractAddr = preUpgrader3.address;
+    let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
+    assert.equal(bndesRegistryAddr, nullAddr, "bndesRegistryAddr deve ser null");
 
     await governanceInstance.createNewChange(hashChangeMotivation, upgraderContractAddr, 0);
-
     let resultGetChange  = await governanceInstance.getChange(1);
 
     assert.equal(resultGetChange['1'], upgraderContractAddr, "Upgraders deveriam ser iguais");
     assert.equal(resultGetChange['2'], nullAddr, "Decision address deveriam ser iguais");
     assert.equal(resultGetChange['3'], 1, "Estado deveria ser APPROVED");
+  });
+
+  it("should execute the change PreUpgrader3 -- async", async () => {
+
+    await governanceInstance.executeChange(1);
+
+    let resultGetChange  = await governanceInstance.getChange(1);
+    let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
+     
+    assert.equal(resultGetChange['3'], 4, "Estado deveria ser FINALIZED");
+    assert.notEqual(bndesRegistryAddr, nullAddr, "bndesRegistryAddr deveria ser um endereço válido");
     
   });
 
+  it("should have the correct address of BNDESRegistry in Resolver -- async", async () => {
+
+    let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
+    let resolverAddr = await preUpgrader2.resolverAddr();
+    let resolver = await Resolver.at(resolverAddr);
+    let bndesRegistryAddrByResolver = await resolver.getAddr("BNDESRegistry");
+    assert.equal(bndesRegistryAddr, bndesRegistryAddrByResolver, "Endereço do BNDESRegistry recuperado do resolver não é o correto");
+    
+  });
 
 
 });
