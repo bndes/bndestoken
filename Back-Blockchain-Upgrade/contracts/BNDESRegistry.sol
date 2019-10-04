@@ -11,7 +11,7 @@ contract BNDESRegistry is Updatable, IdRegistry {
 
     LegalEntityMapping private legalEntityMapping;
 
-    event evnDebug (address addr, uint cnpj);
+    event evnRegistry (address addr, uint cnpj);
 
     constructor (address upgraderInfo, address legalEntityMappingAddr) Updatable (upgraderInfo) public {
         legalEntityMapping = LegalEntityMapping(legalEntityMappingAddr);
@@ -21,28 +21,21 @@ contract BNDESRegistry is Updatable, IdRegistry {
         legalEntityMapping = LegalEntityMapping(newAddr);
     }
 
-    function getLegalEntity (address addr) internal returns (LegalEntityMapping) {
-        legalEntityMapping.setAddrLegalEntityToPoint(addr);
-        return legalEntityMapping;
-    }
-
     function registryLegalEntity(uint64 cnpj) public {
-        getLegalEntity(msg.sender).setCNPJ(cnpj);
-        emit evnDebug(msg.sender, cnpj);
+        setCNPJ(msg.sender, cnpj);
+        emit evnRegistry(msg.sender, cnpj);
     }
 
-    function getCNPJ(address addr) public returns (uint) {
-        uint cnpj = getLegalEntity(addr).getCNPJ();
-        emit evnDebug(addr, cnpj);
-        return cnpj;
+    function getCNPJ(address addr) public view returns (uint) {
+        return legalEntityMapping.getCNPJ(addr);
     }
 
     //Implemented because of IdRegistry
-    function getId(address addr) external returns (uint) {
-        getCNPJ(addr);
+    function getId(address addr) external view returns (uint) {
+        return getCNPJ(addr);
     }
 
-    function kill () external onlyAllowedUpgrader {
+    function kill() external onlyAllowedUpgrader {
         selfdestruct(address(0));
     }
 

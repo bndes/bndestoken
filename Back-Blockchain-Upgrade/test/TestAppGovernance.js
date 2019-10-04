@@ -6,6 +6,8 @@ var PreUprgader1 = artifacts.require("./appUpgraders/PreUpgrader1.sol");
 var PreUprgader2 = artifacts.require("./appUpgraders/PreUpgrader2.sol");
 var PreUpgrader3 = artifacts.require("./appUpgraders/PreUpgrader3.sol");
 
+var BNDESRegistry = artifacts.require("./BNDESRegistry.sol");
+
 
 var expectThrow = require('./helper.js');
 
@@ -15,9 +17,12 @@ contract('GovernanceInAction', async accounts => {
     const nullAddr = "0x0000000000000000000000000000000000000000";
 
     let bndesAddr = accounts[0];
+
     let governanceAddr;
     let governanceInstance;
     let upgraderInfo;
+    let resolver;
+    let bndesRegistry;
 
     let preUpgrader1;
     let preUpgrader2;
@@ -120,9 +125,24 @@ contract('GovernanceInAction', async accounts => {
 
     let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
     let resolverAddr = await preUpgrader2.resolverAddr();
-    let resolver = await Resolver.at(resolverAddr);
+    resolver = await Resolver.at(resolverAddr);
     let bndesRegistryAddrByResolver = await resolver.getAddr("BNDESRegistry");
     assert.equal(bndesRegistryAddr, bndesRegistryAddrByResolver, "Endereço do BNDESRegistry recuperado do resolver não é o correto");
+    
+  });
+
+  it("should save and recover the CNPJ -- async", async () => {
+
+    let bndesRegistryAddrByResolver = await resolver.getAddr("BNDESRegistry");
+    bndesRegistry = await BNDESRegistry.at(bndesRegistryAddrByResolver);
+    let cnpjConst = 12345678901;
+    await bndesRegistry.registryLegalEntity(cnpjConst);
+
+    let cnpj = await bndesRegistry.getCNPJ(bndesAddr);
+    let cnpjById = await bndesRegistry.getId(bndesAddr);
+
+    assert.equal(cnpj, cnpjConst, "CNPJ was not saved or recovered in a correct form");
+    assert.equal(cnpjById, cnpjConst, "ID was not saved or recovered in a correct form");    
     
   });
 

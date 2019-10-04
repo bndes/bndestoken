@@ -19,23 +19,18 @@ import "./appGovernanceUpgrade/UpdatableHandleable.sol";
 contract LegalEntityMapping is UpdatableHandleable {
 
     Storage storageContract;
-    address addrLegalEntityToPoint;
 
-    constructor (address upgraderInfo,address storageContractAddr) UpdatableHandleable (upgraderInfo) public {
+    constructor (address upgraderInfo, address storageContractAddr) UpdatableHandleable (upgraderInfo) public {
         storageContract = Storage(storageContractAddr);
     }
 
-    function setAddrLegalEntityToPoint(address newAddr) public {
-        addrLegalEntityToPoint = newAddr;
-    }
-
-    function getCNPJ() view public returns (uint) {
-        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntityToPoint,"cnpj"));
+    function getCNPJ(address addrLegalEntity) view public returns (uint) {
+        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntity,"cnpj"));
         return storageContract.getUint(key);
     }
 
-    function setCNPJ(uint cnpj) public onlyHandler {
-        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntityToPoint,"cnpj"));
+    function setCNPJ(address addrLegalEntity, uint cnpj) public onlyHandler {
+        bytes32 key = keccak256(abi.encodePacked("LegalEntityInfo",addrLegalEntity,"cnpj"));
         storageContract.setUint(key, cnpj);
     }
 
