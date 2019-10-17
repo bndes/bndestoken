@@ -2,7 +2,7 @@
   "contractName": "IdRegistry",
   "abi": [
     {
-      "constant": false,
+      "constant": true,
       "inputs": [
         {
           "name": "addr",
@@ -17,7 +17,7 @@
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     }
   ],
@@ -25,20 +25,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\r\n\r\ncontract IdRegistry  {\r\n\r\n    function getId(address addr) external returns (uint);\r\n\r\n}\r\n",
+  "source": "pragma solidity ^0.5.0;\r\n\r\ncontract IdRegistry  {\r\n\r\n    function getId(address addr) external view returns (uint);\r\n\r\n}\r\n",
   "sourcePath": "D:\\Workspace\\bndestoken\\Back-Blockchain-Upgrade\\contracts\\appGovernanceUpgrade\\IdRegistry.sol",
   "ast": {
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/IdRegistry.sol",
     "exportedSymbols": {
       "IdRegistry": [
-        1009
+        1085
       ]
     },
-    "id": 1010,
+    "id": 1086,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1001,
+        "id": 1077,
         "literals": [
           "solidity",
           "^",
@@ -54,9 +54,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1009,
+        "id": 1085,
         "linearizedBaseContracts": [
-          1009
+          1085
         ],
         "name": "IdRegistry",
         "nodeType": "ContractDefinition",
@@ -64,22 +64,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1008,
+            "id": 1084,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getId",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1004,
+              "id": 1080,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1003,
+                  "id": 1079,
                   "name": "addr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1008,
+                  "scope": 1084,
                   "src": "72:12:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -88,7 +88,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1002,
+                    "id": 1078,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "72:7:6",
@@ -105,16 +105,16 @@
               "src": "71:14:6"
             },
             "returnParameters": {
-              "id": 1007,
+              "id": 1083,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1006,
+                  "id": 1082,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1008,
-                  "src": "104:4:6",
+                  "scope": 1084,
+                  "src": "109:4:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -122,10 +122,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1005,
+                    "id": 1081,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:4:6",
+                    "src": "109:4:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -135,33 +135,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "103:6:6"
+              "src": "108:6:6"
             },
-            "scope": 1009,
-            "src": "57:53:6",
-            "stateMutability": "nonpayable",
+            "scope": 1085,
+            "src": "57:58:6",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1010,
-        "src": "27:88:6"
+        "scope": 1086,
+        "src": "27:93:6"
       }
     ],
-    "src": "0:117:6"
+    "src": "0:122:6"
   },
   "legacyAST": {
     "absolutePath": "/D/Workspace/bndestoken/Back-Blockchain-Upgrade/contracts/appGovernanceUpgrade/IdRegistry.sol",
     "exportedSymbols": {
       "IdRegistry": [
-        1009
+        1085
       ]
     },
-    "id": 1010,
+    "id": 1086,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1001,
+        "id": 1077,
         "literals": [
           "solidity",
           "^",
@@ -177,9 +177,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1009,
+        "id": 1085,
         "linearizedBaseContracts": [
-          1009
+          1085
         ],
         "name": "IdRegistry",
         "nodeType": "ContractDefinition",
@@ -187,22 +187,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1008,
+            "id": 1084,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getId",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1004,
+              "id": 1080,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1003,
+                  "id": 1079,
                   "name": "addr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1008,
+                  "scope": 1084,
                   "src": "72:12:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -211,7 +211,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1002,
+                    "id": 1078,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "72:7:6",
@@ -228,16 +228,16 @@
               "src": "71:14:6"
             },
             "returnParameters": {
-              "id": 1007,
+              "id": 1083,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1006,
+                  "id": 1082,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1008,
-                  "src": "104:4:6",
+                  "scope": 1084,
+                  "src": "109:4:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -245,10 +245,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1005,
+                    "id": 1081,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:4:6",
+                    "src": "109:4:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -258,20 +258,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "103:6:6"
+              "src": "108:6:6"
             },
-            "scope": 1009,
-            "src": "57:53:6",
-            "stateMutability": "nonpayable",
+            "scope": 1085,
+            "src": "57:58:6",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1010,
-        "src": "27:88:6"
+        "scope": 1086,
+        "src": "27:93:6"
       }
     ],
-    "src": "0:117:6"
+    "src": "0:122:6"
   },
   "compiler": {
     "name": "solc",
@@ -279,7 +279,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-10-02T19:57:14.690Z",
+  "updatedAt": "2019-10-17T17:55:51.080Z",
   "devdoc": {
     "methods": {}
   },

@@ -11,7 +11,7 @@ import "./IdRegistry.sol";
 
 contract Governance is Pausable, Ownable() {
 
-    enum ChangeState { WAITING, APPROVED, DISAPPROVED, CANCELED, FINISHED }
+    enum ChangeState { WAITING, APPROVED, EXECUTING, DISAPPROVED, CANCELED, FINISHED }
 
     struct ChangeDataStructure {
         
@@ -19,7 +19,10 @@ contract Governance is Pausable, Ownable() {
         bytes32 hashChangeMotivation;
         
         //Address of upgrader contract
-        address upgraderContractAddr;
+        address[] upgraderContractsAddr;
+
+        //Stores the next executed upgrader of this change data structure - it will finish with upgraderContractsAddr.lenght
+        uint upgraderContractToBeExecutedIndex;
 
         //Address of decision contract (if necessary)
         address decisionContractAddr;
@@ -43,22 +46,23 @@ contract Governance is Pausable, Ownable() {
         governanceMembersId = initialGovernanceMembersId;
     }
 
-    //TODO: metodos para mudar governanceMembersId
+    //TODO: metodos para mudar governanceMembersId por um novo papel
 
     //It is necessary to call this function before any governance decision
     function setIdRegistryAddr(address idRegistryAddr) public onlyAllowedUpgrader {
         idRegistry = IdRegistry(idRegistryAddr);
     }
 
-    event NewChangeCreated(uint changeNumber, bytes32 hashChangeMotivation, address upgraderContractAddr,
+    event NewChangeCreated(uint changeNumber, bytes32 hashChangeMotivation, address[] upgraderContractsAddr,
             address decisionContractAddr);
     event ChangeApproved(uint changeNumber);
+    event ChangePartialExecuted(uint changeNumber, uint index);
     event ChangeExecuted(uint changeNumber);
     event ChangeDisapproved(uint changeNumber);
     event ChangeCancelled(uint changeNumber);
     
 
-    function createNewChange (bytes32 hashChangeMotivation, address upgraderContractAddr,
+    function createNewChange (bytes32 hashChangeMotivation, address[] memory upgraderContractsAddr,
             uint256 percentageDecision) public onlyOwner {
             
             uint changeNumber = governingChanges.length;
@@ -66,15 +70,15 @@ contract Governance is Pausable, Ownable() {
             ChangeDataStructure memory cds;
             if (percentageDecision != 0) {
                 GovernanceDecision governanceDecision = new GovernanceDecision(governanceMembersId, percentageDecision, address(idRegistry), changeNumber);
-                cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
+                cds = ChangeDataStructure(hashChangeMotivation, upgraderContractsAddr, 0,
                         address(governanceDecision), ChangeState.WAITING);
-                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(governanceDecision));
+                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractsAddr, address(governanceDecision));
 
             }
             else { //The owner decided by itself
-                cds = ChangeDataStructure(hashChangeMotivation, upgraderContractAddr,
+                cds = ChangeDataStructure(hashChangeMotivation, upgraderContractsAddr, 0,
                                     address(0), ChangeState.APPROVED);
-                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractAddr, address(0));
+                emit NewChangeCreated(changeNumber, hashChangeMotivation, upgraderContractsAddr, address(0));
                 cds.changeState = ChangeState.APPROVED;
                 emit ChangeApproved(changeNumber);
 
@@ -107,8 +111,11 @@ contract Governance is Pausable, Ownable() {
 
 	}
 
-//TODO: include the possibility to have more than one upgrader.
     function executeChange (uint changeNumber) public {
+        executeChange(changeNumber, 0);
+    }
+
+    function executeChange (uint changeNumber, uint index) public {
 
         require (changeNumber<governingChanges.length, "Invalid change number");
 
@@ -116,17 +123,32 @@ contract Governance is Pausable, Ownable() {
 
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
-        require(cds.changeState==ChangeState.APPROVED, "The change needs to be in APPROVED state");
+        require(cds.changeState==ChangeState.APPROVED || cds.changeState==ChangeState.EXECUTING,
+            "The change needs to be in APPROVED or in EXECUTING state");
 
-        address upgraderContractAddr = cds.upgraderContractAddr;
-        upgraderInfo.setAllowedUpgrader(upgraderContractAddr);
-        Upgrader upgrader = Upgrader(upgraderContractAddr);
+        address[] memory upgraderContractsAddr = cds.upgraderContractsAddr;
+
+        require (index < upgraderContractsAddr.length, "index must be lower than the total size of Upgraders");
+        require (!(index < cds.upgraderContractToBeExecutedIndex), "index belongs to a change that was already executed");
+        require (!(index > cds.upgraderContractToBeExecutedIndex), "it is necessary to execute an upgrader with lower index first");
+
+        address upgraderAddr = upgraderContractsAddr[index];
+        upgraderInfo.setAllowedUpgrader(upgraderAddr);
+        Upgrader upgrader = Upgrader(upgraderAddr);
         upgrader.upgrade();
+        cds.upgraderContractToBeExecutedIndex++;
 
-        governingChanges[changeNumber].changeState = ChangeState.FINISHED;
-
-        emit ChangeExecuted(changeNumber);
-
+        if (cds.upgraderContractToBeExecutedIndex < upgraderContractsAddr.length) { //still need to execute more changes
+            emit ChangePartialExecuted(changeNumber, index);
+            if (governingChanges[changeNumber].changeState == ChangeState.APPROVED) {
+                governingChanges[changeNumber].changeState = ChangeState.EXECUTING;
+            }
+        }
+        
+        else if (cds.upgraderContractToBeExecutedIndex == upgraderContractsAddr.length) {
+            governingChanges[changeNumber].changeState = ChangeState.FINISHED;
+            emit ChangeExecuted(changeNumber);
+        }
     }
 
 
@@ -136,8 +158,8 @@ contract Governance is Pausable, Ownable() {
 
         ChangeDataStructure memory cds = governingChanges[changeNumber];
 
-        require(cds.changeState==ChangeState.WAITING || cds.changeState==ChangeState.APPROVED,
-            "The change needs to be in WAITING or APPROVED state");
+        require(cds.changeState==ChangeState.WAITING || cds.changeState==ChangeState.APPROVED || cds.changeState==ChangeState.EXECUTING,
+            "The change needs to be in WAITING or APPROVED or EXECUTING state");
 
         governingChanges[changeNumber].changeState = ChangeState.CANCELED;
 
@@ -146,12 +168,14 @@ contract Governance is Pausable, Ownable() {
         emit ChangeCancelled(changeNumber);
     }
 
-    function getChange(uint changeNumber) public view returns (bytes32, address, address, ChangeState) {
+    function getChange(uint changeNumber) public view returns (bytes32, address[] memory, uint, address, ChangeState) {
 
         require (changeNumber<governingChanges.length, "Invalid change number");
 
         ChangeDataStructure memory cds = governingChanges[changeNumber];
-        return (cds.hashChangeMotivation, cds.upgraderContractAddr, cds.decisionContractAddr, cds.changeState);
+        return (cds.hashChangeMotivation, cds.upgraderContractsAddr, cds.upgraderContractToBeExecutedIndex,
+                cds.decisionContractAddr, cds.changeState);
+
     }
 
     //This function should not be called alone. In order to change the admin, it is necessary to change the pausables.

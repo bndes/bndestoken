@@ -22,7 +22,7 @@ contract BNDESRegistry is Updatable, IdRegistry {
     }
 
     function registryLegalEntity(uint64 cnpj) public {
-        setCNPJ(msg.sender, cnpj);
+        legalEntityMapping.setCNPJ(msg.sender, cnpj);
         emit evnRegistry(msg.sender, cnpj);
     }
 
