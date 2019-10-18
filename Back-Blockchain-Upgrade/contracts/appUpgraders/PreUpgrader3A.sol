@@ -9,7 +9,7 @@ import "../LegalEntityMapping.sol";
 import "../BNDESRegistry.sol";
 
 
-contract PreUpgrader3 is Upgrader {
+contract PreUpgrader3A is Upgrader {
 
     //Variables from previous Migration
     address private _governanceAddr;
@@ -37,8 +37,6 @@ contract PreUpgrader3 is Upgrader {
         Governance governance = Governance (_governanceAddr);
         address upgraderInfoAddr = governance.upgraderInfoAddr();
         UpgraderInfo ui = UpgraderInfo(upgraderInfoAddr);
-        Storage storageContract = Storage(_storageContractAddr);
-
 
         LegalEntityMapping legalEntityMapping = new LegalEntityMapping(upgraderInfoAddr,_storageContractAddr);
         _legalEntityMappingAddr = address(legalEntityMapping);
@@ -58,14 +56,6 @@ contract PreUpgrader3 is Upgrader {
         }
         bndesRegistry.renouncePauser();
 
-        //Very important: The governance now knows how to identify the governance members
-        governance.setIdRegistryAddr(address(bndesRegistry));
-
-        storageContract.addHandler(_legalEntityMappingAddr);
-        legalEntityMapping.addHandler(_bndesRegistryAddr);
-
-        Resolver resolver = Resolver(_resolverAddr);
-        resolver.changeContract("BNDESRegistry", _bndesRegistryAddr);
     }
 
     function governanceAddr() public view returns (address) {
@@ -79,9 +69,11 @@ contract PreUpgrader3 is Upgrader {
     function storageContractAddr() public view returns (address) {
         return _storageContractAddr;
     }
+
     function legalEntityMappingAddr() public view returns (address) {
         return _legalEntityMappingAddr;
     }
+    
     function bndesRegistryAddr() public view returns (address) {
         return _bndesRegistryAddr;
     }

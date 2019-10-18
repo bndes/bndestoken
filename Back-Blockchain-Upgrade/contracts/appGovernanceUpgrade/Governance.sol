@@ -31,22 +31,22 @@ contract Governance is Pausable, Ownable() {
     }
 
     ChangeDataStructure[] private governingChanges;
-    uint[] governanceMembersId;
+    uint[] private governanceMembersId;
 
     UpgraderInfo private upgraderInfo;
     IdRegistry private idRegistry;
+    address private _resposibleForAssigningGovernanceMembers;
 
     modifier onlyAllowedUpgrader() {
         require(upgraderInfo.isAllowedUpgrader(msg.sender), "This function can only be executed by Upgraders");
         _;
     }
 
-    constructor (address adminOfNewContractsAddr, uint[] memory initialGovernanceMembersId) public {
+    constructor (address adminOfNewContractsAddr, uint[] memory initialGovernanceMembersId, address resposibleForAssigningGovernanceMembers) public {
         upgraderInfo = new UpgraderInfo(adminOfNewContractsAddr);
         governanceMembersId = initialGovernanceMembersId;
+        _resposibleForAssigningGovernanceMembers = resposibleForAssigningGovernanceMembers;
     }
-
-    //TODO: metodos para mudar governanceMembersId por um novo papel
 
     //It is necessary to call this function before any governance decision
     function setIdRegistryAddr(address idRegistryAddr) public onlyAllowedUpgrader {
@@ -60,6 +60,8 @@ contract Governance is Pausable, Ownable() {
     event ChangeExecuted(uint changeNumber);
     event ChangeDisapproved(uint changeNumber);
     event ChangeCancelled(uint changeNumber);
+    event NewGovernanceMemberAdded(uint memberId);
+    event GovernanceMemberRemoved(uint memberId);
     
 
     function createNewChange (bytes32 hashChangeMotivation, address[] memory upgraderContractsAddr,
@@ -136,16 +138,16 @@ contract Governance is Pausable, Ownable() {
         upgraderInfo.setAllowedUpgrader(upgraderAddr);
         Upgrader upgrader = Upgrader(upgraderAddr);
         upgrader.upgrade();
-        cds.upgraderContractToBeExecutedIndex++;
+        governingChanges[changeNumber].upgraderContractToBeExecutedIndex++;
 
-        if (cds.upgraderContractToBeExecutedIndex < upgraderContractsAddr.length) { //still need to execute more changes
+        if (governingChanges[changeNumber].upgraderContractToBeExecutedIndex < upgraderContractsAddr.length) { //still need to execute more changes
             emit ChangePartialExecuted(changeNumber, index);
             if (governingChanges[changeNumber].changeState == ChangeState.APPROVED) {
                 governingChanges[changeNumber].changeState = ChangeState.EXECUTING;
             }
         }
         
-        else if (cds.upgraderContractToBeExecutedIndex == upgraderContractsAddr.length) {
+        else if (governingChanges[changeNumber].upgraderContractToBeExecutedIndex == upgraderContractsAddr.length) {
             governingChanges[changeNumber].changeState = ChangeState.FINISHED;
             emit ChangeExecuted(changeNumber);
         }
@@ -176,6 +178,38 @@ contract Governance is Pausable, Ownable() {
         return (cds.hashChangeMotivation, cds.upgraderContractsAddr, cds.upgraderContractToBeExecutedIndex,
                 cds.decisionContractAddr, cds.changeState);
 
+    }
+
+    function includeNewGovernanceMember(uint newMember) public {
+        require (msg.sender == _resposibleForAssigningGovernanceMembers, "Should be called by the address responsible for assigning governance members");
+        governanceMembersId.push(newMember);
+        emit NewGovernanceMemberAdded(newMember);
+    }
+
+
+    function removeGovernanceMember(uint memberId) public {
+        require (msg.sender == _resposibleForAssigningGovernanceMembers, "Should be called by the address responsible for assigning governance members");
+        (bool find, uint index) = findIndexGovernanceMember(memberId);
+        require (find==true, "Member not found");
+        governanceMembersId[index]=governanceMembersId[governanceMembersId.length-1];
+        governanceMembersId.length--;
+        emit GovernanceMemberRemoved(memberId);
+    }
+
+    function findIndexGovernanceMember(uint newMember) view internal returns (bool, uint) {
+        uint i=0;
+        bool find = false;
+        for (;i<governanceMembersId.length; i++) {
+            if (governanceMembersId[i]==newMember) {
+                find = true;
+                break;
+            }
+        }
+        return (find,i);
+    }
+
+    function governanceMembers() view public returns (uint[] memory) {
+        return governanceMembersId;
     }
 
     //This function should not be called alone. In order to change the admin, it is necessary to change the pausables.

@@ -4,7 +4,8 @@ var Resolver = artifacts.require("./appGovernanceUpgrade/Resolver.sol");
 
 var PreUprgader1 = artifacts.require("./appUpgraders/PreUpgrader1.sol");
 var PreUprgader2 = artifacts.require("./appUpgraders/PreUpgrader2.sol");
-var PreUpgrader3 = artifacts.require("./appUpgraders/PreUpgrader3.sol");
+var PreUpgrader3A = artifacts.require("./appUpgraders/PreUpgrader3A.sol");
+var PreUpgrader3B = artifacts.require("./appUpgraders/PreUpgrader3B.sol");
 
 var BNDESRegistry = artifacts.require("./BNDESRegistry.sol");
 
@@ -17,6 +18,9 @@ contract('GovernanceInAction', async accounts => {
     const nullAddr = "0x0000000000000000000000000000000000000000";
 
     let bndesAddr = accounts[0];
+    let id1 = accounts[0];
+    let id2 = accounts[1];
+    let id3 = accounts[2];
 
     let governanceAddr;
     let governanceInstance;
@@ -26,13 +30,14 @@ contract('GovernanceInAction', async accounts => {
 
     let preUpgrader1;
     let preUpgrader2;
-    let preUpgrader3;
+    let preUpgrader3A;
+    let preUpgrader3B;    
 
   let governanceMembersId = [];
 
  
   it("should create the PreUpgrader contract with Governance - async", async () => {
-    preUpgrader1 = await PreUprgader1.new(bndesAddr,bndesAddr,governanceMembersId);
+    preUpgrader1 = await PreUprgader1.new(bndesAddr,bndesAddr,governanceMembersId, bndesAddr);
     governanceAddr = await preUpgrader1.governanceAddr();
     assert.notEqual(governanceAddr, bndesAddr, "Endereços deveriam ser diferentes");
     assert.notEqual(governanceAddr, "0x0", "Endereços não deveria ser zero");
@@ -52,7 +57,6 @@ contract('GovernanceInAction', async accounts => {
 
   });
 
-
   it("should have admin of UpgraderInfo the same the address of Governance - async", async () => {
 
     let adminAddr = await upgraderInfo.adminAddr();    
@@ -71,9 +75,8 @@ contract('GovernanceInAction', async accounts => {
     await governanceInstance.createNewChange(hashChangeMotivation, [upgraderContractAddr], 0);
 
     let resultGetChange  = await governanceInstance.getChange(0);
-
-//    console.log(resultGetChange);     
-    assert.equal(resultGetChange['1'], upgraderContractAddr, "Upgraders deveriam ser iguais");
+  
+    assert.equal(resultGetChange['1'][0], upgraderContractAddr, "Upgraders deveriam ser iguais");
     assert.equal(resultGetChange['3'], nullAddr, "Decision address deveriam ser iguais");
     assert.equal(resultGetChange['4'], 1, "Estado deveria ser APPROVED");
 
@@ -93,39 +96,57 @@ contract('GovernanceInAction', async accounts => {
 
   it("should create the change PreUpgrader3 -- async", async () => {
 
-    preUpgrader3 = await PreUpgrader3.new(preUpgrader2.address);
+    preUpgrader3A = await PreUpgrader3A.new(preUpgrader2.address);
+    preUpgrader3B = await PreUpgrader3B.new(preUpgrader3A.address);
 
-    let hashChangeMotivation = web3.utils.asciiToHex('justification upgrader1');
-    let upgraderContractAddr = preUpgrader3.address;
-    let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
+    let hashChangeMotivation = web3.utils.asciiToHex('justification upgrader3');
+    let upgraderContractAddrA = preUpgrader3A.address;
+    let upgraderContractAddrB = preUpgrader3B.address;
+
+    let bndesRegistryAddr = await preUpgrader3A.bndesRegistryAddr();
     assert.equal(bndesRegistryAddr, nullAddr, "bndesRegistryAddr deve ser null");
 
-    await governanceInstance.createNewChange(hashChangeMotivation, [upgraderContractAddr], 0);
+    await governanceInstance.createNewChange(hashChangeMotivation, [upgraderContractAddrA, upgraderContractAddrB], 0);
     let resultGetChange  = await governanceInstance.getChange(1);
 
-    assert.equal(resultGetChange['1'], upgraderContractAddr, "Upgraders deveriam ser iguais");
+    assert.equal(resultGetChange['1'][0], upgraderContractAddrA, "Upgraders A deveriam ser iguais");
+    assert.equal(resultGetChange['1'][1], upgraderContractAddrB, "Upgraders B deveriam ser iguais");
     assert.equal(resultGetChange['3'], nullAddr, "Decision address deveriam ser iguais");
     assert.equal(resultGetChange['4'], 1, "Estado deveria ser APPROVED");
   });
 
 
+  it("should execute the change PreUpgrader3A -- async", async () => {
 
-  it("should execute the change PreUpgrader3 -- async", async () => {
-
-    await governanceInstance.executeChange(1);
+    await governanceInstance.executeChange(1,0);
 
     let resultGetChange  = await governanceInstance.getChange(1);
-    let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
+    let bndesRegistryAddr = await preUpgrader3A.bndesRegistryAddr();
      
-    assert.equal(resultGetChange['4'], 5, "Estado deveria ser FINALIZED");
+    assert.equal(resultGetChange['4'], 2, "Estado deveria ser EXECUTING");
     assert.notEqual(bndesRegistryAddr, nullAddr, "bndesRegistryAddr deveria ser um endereço válido");
     
   });
 
+  it("should execute the change PreUpgrader3B -- async", async () => {
+
+    let resultGetChange  = await governanceInstance.getChange(1);
+    assert.equal(resultGetChange['4'], 2, "Estado deveria ser EXECUTING");
+    assert.equal(resultGetChange['2'], 1, "upgraderContractToBeExecutedIndex should be 1");
+    await governanceInstance.executeChange(1,1);
+    resultGetChange  = await governanceInstance.getChange(1);
+    let bndesRegistryAddr = await preUpgrader3B.bndesRegistryAddr();
+     
+    assert.equal(resultGetChange['4'], 5, "Estado deveria ser FINISHED");
+    assert.notEqual(bndesRegistryAddr, nullAddr, "bndesRegistryAddr deveria ser um endereço válido");
+    
+  });
+
+
   it("should have the correct address of BNDESRegistry in Resolver -- async", async () => {
 
-    let bndesRegistryAddr = await preUpgrader3.bndesRegistryAddr();
-    let resolverAddr = await preUpgrader2.resolverAddr();
+    let bndesRegistryAddr = await preUpgrader3B.bndesRegistryAddr();
+    let resolverAddr = await preUpgrader3B.resolverAddr();
     resolver = await Resolver.at(resolverAddr);
     let bndesRegistryAddrByResolver = await resolver.getAddr("BNDESRegistry");
     assert.equal(bndesRegistryAddr, bndesRegistryAddrByResolver, "Endereço do BNDESRegistry recuperado do resolver não é o correto");
@@ -146,6 +167,22 @@ contract('GovernanceInAction', async accounts => {
     assert.equal(cnpjById, cnpjConst, "ID was not saved or recovered in a correct form");    
     
   });
+
+  it("should include and remove new members in governance -- async", async () => {
+
+    let governanceMembers = await governanceInstance.governanceMembers();
+    assert.equal(governanceMembers.length, 0, "There is a governance member");
+
+    await governanceInstance.includeNewGovernanceMember(9999);
+    governanceMembers = await governanceInstance.governanceMembers();    
+    assert.equal(governanceMembers.length, 1, "There is not 1 governance member");    
+
+    await governanceInstance.removeGovernanceMember(9999);
+    governanceMembers = await governanceInstance.governanceMembers();    
+    assert.equal(governanceMembers.length, 0, "There is not 0 governance member");    
+
+  });
+
 
 });
 

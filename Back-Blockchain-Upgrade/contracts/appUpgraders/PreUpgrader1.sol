@@ -8,9 +8,9 @@ contract PreUpgrader1 {
     address private _governanceAddr;
 
     //owner and admin must be different
-    constructor(address ownerOfGovernanceAddr, address adminOfNewContractsAddr, uint[] memory governanceMembersId) public {
+    constructor(address ownerOfGovernanceAddr, address adminOfNewContractsAddr, uint[] memory governanceMembersId, address resposibleForAssigningGovernanceMembers) public {
 
-        Governance governance = new Governance(adminOfNewContractsAddr, governanceMembersId);
+        Governance governance = new Governance(adminOfNewContractsAddr, governanceMembersId, resposibleForAssigningGovernanceMembers);
         governance.addPauser(ownerOfGovernanceAddr);
         if (ownerOfGovernanceAddr!=adminOfNewContractsAddr) {
             governance.addPauser(adminOfNewContractsAddr);
