@@ -38,12 +38,17 @@ contract Upgrader1 is Upgrader {
     function upgrade () external onlyGovernance {
 
         Governance governance = Governance (_governanceAddr);
-        Storage storageContract = Storage(_storageContractAddr);
+        //Storage storageContract = Storage(_storageContractAddr);
         LegalEntityMapping legalEntityMapping = LegalEntityMapping(_legalEntityMappingAddr);
 
         //Change a data in storage
-        
+        address ownerOfGovernanceAddr = governance.owner();
 
+        legalEntityMapping.addHandler(address(this));
+
+        legalEntityMapping.setCNPJ(ownerOfGovernanceAddr, 666);
+
+        legalEntityMapping.removeHandler(address(this));
     }
 
     function governanceAddr() public view returns (address) {
