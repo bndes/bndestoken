@@ -4,12 +4,13 @@ import "../appGovernanceUpgrade/Upgrader.sol";
 import "../appGovernanceUpgrade/Governance.sol";
 import "../appGovernanceUpgrade/Storage.sol";
 
-import {PreUpgrader3B as LastUpgrader} from './PreUpgrader3B.sol';
+import {Upgrader1 as LastUpgrader} from './Upgrader1.sol';
 import "../LegalEntityMapping.sol";
+import "../LegalEntityMapping2.sol";
 import "../BNDESRegistry.sol";
 
 
-contract Upgrader1 is Upgrader {
+contract Upgrader2 is Upgrader {
 
     LastUpgrader lastUpgrader;
     
@@ -31,23 +32,35 @@ contract Upgrader1 is Upgrader {
     }
 
     modifier onlyGovernance() {
-        require(_governanceAddr==msg.sender, "Upgrader 1 - This function can only be executed by the Governance");
+        require(_governanceAddr==msg.sender, "Upgrader 2 - This function can only be executed by the Governance");
         _;
     }
 
     function upgrade () external onlyGovernance {
 
         Governance governance = Governance (_governanceAddr);
+        address upgraderInfoAddr = governance.upgraderInfoAddr();
+        UpgraderInfo ui = UpgraderInfo(upgraderInfoAddr);
+        BNDESRegistry bndesRegistry = BNDESRegistry(_bndesRegistryAddr);
+        Storage storageContract = Storage(_storageContractAddr);
         LegalEntityMapping legalEntityMapping = LegalEntityMapping(_legalEntityMappingAddr);
 
-        //Change data in storage
-        address ownerOfGovernanceAddr = governance.owner();
+        LegalEntityMapping2 legalEntityMapping2 = new LegalEntityMapping2(upgraderInfoAddr,_storageContractAddr);
+        address _legalEntityMappingAddr2 = address(legalEntityMapping2);
+        legalEntityMapping2.addPauser(governance.owner());
+        if (governance.owner()!=ui.adminAddr()) {
+            legalEntityMapping2.addPauser(ui.adminAddr());
+        }
+        legalEntityMapping2.renouncePauser();
 
-        legalEntityMapping.addHandler(address(this));
+        bndesRegistry.setLegalEntityMapping(_legalEntityMappingAddr2);
 
-        legalEntityMapping.setCNPJ(ownerOfGovernanceAddr, 666);
+        storageContract.addHandler(_legalEntityMappingAddr2);
+        legalEntityMapping2.addHandler(_bndesRegistryAddr);
 
-        legalEntityMapping.removeHandler(address(this));
+        storageContract.removeHandler(_legalEntityMappingAddr);
+        legalEntityMapping.pause();
+       
     }
 
     function governanceAddr() public view returns (address) {
