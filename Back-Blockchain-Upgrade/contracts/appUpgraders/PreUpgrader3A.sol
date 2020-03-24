@@ -14,9 +14,9 @@ contract PreUpgrader3A is Upgrader {
     //Variables from previous Migration
     address private _governanceAddr;
     address private _resolverAddr;
-
-    //New variables
     address private _storageContractAddr;
+    
+    //New variables
     address private _legalEntityMappingAddr;
     address private _bndesRegistryAddr;
 

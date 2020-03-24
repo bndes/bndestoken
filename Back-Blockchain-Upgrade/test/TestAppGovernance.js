@@ -6,6 +6,8 @@ var PreUprgader1 = artifacts.require("./appUpgraders/PreUpgrader1.sol");
 var PreUprgader2 = artifacts.require("./appUpgraders/PreUpgrader2.sol");
 var PreUpgrader3A = artifacts.require("./appUpgraders/PreUpgrader3A.sol");
 var PreUpgrader3B = artifacts.require("./appUpgraders/PreUpgrader3B.sol");
+var Upgrader1 = artifacts.require("./appUpgraders/upgrader1.sol");
+var Upgrader2 = artifacts.require("./appUpgraders/Upgrader2.sol");
 
 var BNDESRegistry = artifacts.require("./BNDESRegistry.sol");
 
@@ -32,6 +34,8 @@ contract('GovernanceInAction', async accounts => {
     let preUpgrader2;
     let preUpgrader3A;
     let preUpgrader3B;    
+    let upgrader1;      
+    let upgrader2;     
 
   let governanceMembersId = [];
 
@@ -184,6 +188,61 @@ contract('GovernanceInAction', async accounts => {
   });
 
 
+
+
+  it("should create the change upgrader1 -- async", async () => {
+
+    let hashChangeMotivation = web3.utils.asciiToHex('justification upgrader');
+    upgrader1 = await Upgrader1.new(preUpgrader3B.address);
+    let upgraderContractAddr = upgrader1.address;
+
+    await governanceInstance.createNewChange(hashChangeMotivation, [upgraderContractAddr], 0);
+
+    let resultGetChange  = await governanceInstance.getChange(2);
+  
+    assert.equal(resultGetChange['1'][0], upgraderContractAddr, "Upgraders deveriam ser iguais");
+    assert.equal(resultGetChange['3'], nullAddr, "Decision address deveriam ser iguais");
+    assert.equal(resultGetChange['4'], 1, "Estado deveria ser APPROVED");
+
+  });
+
+  it("should execute the change upgrader1 -- async", async () => {
+
+    await governanceInstance.executeChange(2);
+    let resultGetChange  = await governanceInstance.getChange(2);
+    let cnpj = await bndesRegistry.getCNPJ(bndesAddr);
+
+    assert.equal(resultGetChange['4'], 5, "Estado deveria ser FINISHED");
+    assert.equal(cnpj, 666, "CNPJ was not saved or recovered in a correct form");    
+  });
+
+
+  it("should create the change upgrader2 -- async", async () => {
+
+    let hashChangeMotivation = web3.utils.asciiToHex('justification upgrader2');
+    upgrader2 = await Upgrader2.new(upgrader1.address);
+    let upgraderContractAddr = upgrader2.address;
+
+    await governanceInstance.createNewChange(hashChangeMotivation, [upgraderContractAddr], 0);
+
+    let resultGetChange  = await governanceInstance.getChange(3);
+  
+    assert.equal(resultGetChange['1'][0], upgraderContractAddr, "Upgraders deveriam ser iguais");
+    assert.equal(resultGetChange['3'], nullAddr, "Decision address deveriam ser iguais");
+    assert.equal(resultGetChange['4'], 1, "Estado deveria ser APPROVED");
+
+  });
+/*
+  it("should execute the change upgrader2 -- async", async () => {
+
+    await governanceInstance.executeChange(3);
+    let resultGetChange  = await governanceInstance.getChange(3);
+//    let cnpj = await bndesRegistry.getCNPJ(bndesAddr);
+
+    assert.equal(resultGetChange['4'], 5, "Estado deveria ser FINISHED");
+//    assert.equal(cnpj, 666, "CNPJ was not saved or recovered in a correct form");    
+  });
+*/
 });
 
 
